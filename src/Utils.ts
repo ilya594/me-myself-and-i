@@ -31,6 +31,18 @@ export function addSourceStamp(canvas:HTMLCanvasElement, source:string):HTMLCanv
     return canvas;
 }
 
+export function addIdentifierStamp(canvas:HTMLCanvasElement, identifier:string):HTMLCanvasElement {
+    const context = canvas.getContext('2d');
+    context.font = '20px Courier New';
+    context.fillStyle = "green";
+    context.fillText('[target] : ' + identifier, 25, 70);
+    return canvas;
+}
+
+export function log(str:string) {
+    document.querySelector("textarea").value += '<' + moment().format('HH:mm:ss.SSS') + '> ' + str + '\r\n';
+}
+
 export class Pool {
     private _free:Array<any>;
     private _busy:Array<any>;

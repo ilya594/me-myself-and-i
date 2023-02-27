@@ -1,7 +1,5 @@
-import { ME, SHPAK, VIDEO_HEIGHT, VIDEO_WIDTH } from "./Constants";
+import { VIDEO_HEIGHT, VIDEO_WIDTH } from "./Constants";
 import Snaphots from "./Snaphots";
-import * as faceapi from "face-api.js";
-
 
 class Entry {
 
@@ -25,29 +23,8 @@ class Entry {
 
         this._snapshots = new Snaphots();
 
-        setTimeout(window.console.clear, 1000);
+        setTimeout(window.console.clear, 100);
     };
-
-    private tmp = async () => {
-        //await faceapi.loadTinyFaceDetectorModel("/");
-        //await faceapi.nets.tinyFaceDetector.load("/");
-        //await faceapi.loadFaceLandmarkModel("/");
-        await faceapi.loadSsdMobilenetv1Model("/");
-        await faceapi.loadAgeGenderModel("/");
-        await faceapi.loadFaceExpressionModel("/");
-        await faceapi.loadFaceRecognitionModel("/");
-        await faceapi.nets.faceLandmark68Net.load("/");
-        const input = document.querySelector("img");
-        
-        //debugger;
-        //const faceMatcher = new faceapi.FaceMatcher(detectionsWithLandmarks);
-        //debugger;
-        //const match = faceMatcher.findBestMatch(SHPAK);
-        debugger;
-
-        //console.log('-->' + detectionsWithLandmarks[0].descriptor + '<--');
-        debugger;
-    }
 }
 
 new Entry();

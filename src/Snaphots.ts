@@ -1,6 +1,4 @@
-
-import * as TWEEN from "@tweenjs/tween.js";
-
+import * as TWEEN from '@tweenjs/tween.js';
 import { 
     VIDEO_WIDTH, 
     VIDEO_HEIGHT, 
@@ -8,10 +6,11 @@ import {
     SNAP_HEIGHT, 
     SNAP_COUNT, 
 } from "./Constants";
-import FaceDetector from "./detectors/FaceDetector";
+import FaceDetector from "./detection/FaceDetector";
 import * as Utils from "./Utils";
 import * as Events from "./Events";
-import MotionDetector from "./detectors/MotionDetector";
+import MotionDetector from "./detection/MotionDetector";
+import FaceRecognizer from './recognition/FaceRecognizer';
 
 export default class Snaphots {
 
@@ -31,12 +30,50 @@ export default class Snaphots {
         this.initializeDetectors();
     }
 
-    private initializeDetectors = () => {
-       new FaceDetector(this._viewport).addEventListener(Events.FACE_DETECTED, 
-            (data:any) => this.createSnaphot(Utils.addSourceStamp(data.source, Events.FACE_DETECTED)));
-       
-       new MotionDetector(this._viewport).addEventListener(Events.MOTION_DETECTED, 
-            (data:any) => this.createSnaphot(Utils.addSourceStamp(data.source, Events.MOTION_DETECTED)));
+    private initializeDetectors = async () => {
+
+        Utils.log('[Snapshots.initializeDetectors] initilization started');
+
+        
+
+        
+
+        /*const onFaceRecognized = (data:any) => {
+            Utils.log('[Snapshots.Event] FACE_RECOGNIZED');
+            this.createSnaphot(Utils.addIdentifierStamp(Utils.addSourceStamp(data.source, Events.FACE_DETECTED), data?.person))
+            this._viewport.play();
+        };
+
+        const onFaceDetected = (data:any) => {
+            this._viewport.pause();
+        };*/
+
+        MotionDetector.initialize(this._viewport);
+        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, (data:any) => this.onMotionDetectionStarted(data));
+
+        /*await FaceDetector.initialize(this._viewport);  
+
+        FaceDetector.addEventListener(Events.FACE_DETECTED, (data:any) => onFaceDetected(data));
+
+        await FaceRecognizer.initialize();
+
+        FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, (data:any) => onFaceRecognized(data));*/
+
+        Utils.log('[Snapshots.initializeDetectors] initilization completed');
+    };
+
+    private onMotionDetectionStarted = (data:any) => 
+    {
+        //debugger;
+        Utils.log('[Snapshots.Event] MOTION_DETECTED');
+        data.frame.close();
+        MotionDetector.addEventListener(Events.MOTION_DETECTION_FINISHED, this.onMotionDetectionFinished);
+
+        //this.createSnaphot(Utils.addSourceStamp(data.source, Events.MOTION_DETECTED))
+    };
+
+    private onMotionDetectionFinished = () => {
+
     };
 
     
@@ -78,12 +115,13 @@ export default class Snaphots {
     };
 
     private onViewportClick = () => {        
-        this.createSnaphot(Utils.drawCanvasFromVideo(this._proxy, this._viewport, { timestamp:true, source: 'manual' }));
+        Utils.log('[Snapshots.onViewportClick]');
+        this.createSnaphot(Utils.drawCanvasFromVideo(this._proxy, this._viewport, { timestamp: true, source: 'manual' }));
     };
 
     private createSnaphot = (source: HTMLCanvasElement) => { 
 
-        console.log('createSnapshot : tween : ' + !!this._tween);
+        Utils.log('[Snapshots.createSnapshot] tween.isPlaying : [' + !!this._tween?.isPlaying + ']');
 
         if (this._tween?.isPlaying) {
             this._tween.stop();
@@ -105,7 +143,7 @@ export default class Snaphots {
     };
 
     private startSaverTween = (w:number, h:number) => {
-        console.log('startSaverTween');
+        Utils.log('[Snapshots.startSaverTween] size : ['+ w + ',' + h + ']');
         const ini = { scaleX: 1,            scaleY: 1,             x: 0,           y: 0 };
         const end = { scaleX: SNAP_WIDTH/w, scaleY: SNAP_HEIGHT/h, x: (w - SNAP_WIDTH)/2, y: -(h - SNAP_HEIGHT)/2 };   
         this._tween = new TWEEN.Tween(ini)
@@ -120,7 +158,7 @@ export default class Snaphots {
     }
 
     private onSaverTweenComplete = () => {
-        console.log('onSaverTweenComplete');
+        Utils.log('[Snapshots.onSaverTweenComplete] snaps count : ' + this._count);
 
         this._snapshot.getContext('2d').globalAlpha = 1;
         this._snapshot.getContext('2d').clearRect(0, 0, SNAP_WIDTH + 1, SNAP_HEIGHT) + 1;
@@ -140,6 +178,7 @@ export default class Snaphots {
     }
 
     private flushBuffer = () => {
+        Utils.log('[Snapshots.flushBuffer]');
         this.viewSnapshotCollection();
         this._buffer.getContext('2d').clearRect(0, 0, VIDEO_WIDTH * SNAP_COUNT, VIDEO_HEIGHT * SNAP_COUNT);
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
@@ -148,8 +187,12 @@ export default class Snaphots {
     };
 
     private viewSnapshotCollection = () => {
+        Utils.log('[Snapshots.viewSnapshotCollection]');
         const tab = window.open();
-        tab.document.body.innerHTML = '<img src="' + this._buffer.toDataURL() + '" width="' + VIDEO_WIDTH + 'px" height="' + VIDEO_HEIGHT + 'px">';
+        tab.document.body.style.width = tab.document.body.style.height = '100%';
+        tab.document.body.style.overflow = 'hidden';
+        tab.document.body.innerHTML = '<div width="100%" height="100%">' + 
+        '<img src="' + this._buffer.toDataURL() + '" width="' + VIDEO_WIDTH + 'px" height="' + VIDEO_HEIGHT + 'px">' + '</div>';
     }
 
     private tick = (time:number) => {

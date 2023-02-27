@@ -24,4 +24,6 @@ export class EventHandler {
   }
 
   export const FACE_DETECTED = 'face_detected';
-  export const MOTION_DETECTED = 'motion_detected';
+  export const FACE_RECOGNIZED = 'face_recognized';
+  export const MOTION_DETECTION_STARTED = 'motion_detection_started';
+  export const MOTION_DETECTION_FINISHED = 'motion_detection_finished';

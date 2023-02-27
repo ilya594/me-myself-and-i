@@ -32,50 +32,25 @@ export default class Snaphots {
 
     private initializeDetectors = async () => {
 
-        Utils.log('[Snapshots.initializeDetectors] initilization started');
+        Utils.log('[Snapshots.initializeDetectors] initilization started');       
 
-        
-
-        
-
-        /*const onFaceRecognized = (data:any) => {
+        const onFaceRecognized = (data:any) => {
             Utils.log('[Snapshots.Event] FACE_RECOGNIZED');
             this.createSnaphot(Utils.addIdentifierStamp(Utils.addSourceStamp(data.source, Events.FACE_DETECTED), data?.person))
-            this._viewport.play();
         };
 
-        const onFaceDetected = (data:any) => {
-            this._viewport.pause();
-        };*/
 
-        MotionDetector.initialize(this._viewport);
-        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, (data:any) => this.onMotionDetectionStarted(data));
+        ///MotionDetector.initialize(this._viewport);
+        ///MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, (data:any) => this.onMotionDetectionStarted(data));
 
-        /*await FaceDetector.initialize(this._viewport);  
+        await FaceDetector.initialize(this._viewport);  
 
-        FaceDetector.addEventListener(Events.FACE_DETECTED, (data:any) => onFaceDetected(data));
+        //await FaceRecognizer.initialize();
 
-        await FaceRecognizer.initialize();
-
-        FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, (data:any) => onFaceRecognized(data));*/
+        //FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, (data:any) => onFaceRecognized(data));
 
         Utils.log('[Snapshots.initializeDetectors] initilization completed');
     };
-
-    private onMotionDetectionStarted = (data:any) => 
-    {
-        //debugger;
-        Utils.log('[Snapshots.Event] MOTION_DETECTED');
-        data.frame.close();
-        MotionDetector.addEventListener(Events.MOTION_DETECTION_FINISHED, this.onMotionDetectionFinished);
-
-        //this.createSnaphot(Utils.addSourceStamp(data.source, Events.MOTION_DETECTED))
-    };
-
-    private onMotionDetectionFinished = () => {
-
-    };
-
     
 
     private initializeDefaults = () => {

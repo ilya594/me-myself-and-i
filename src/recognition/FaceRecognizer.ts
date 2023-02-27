@@ -27,15 +27,8 @@ class FaceRecognizer extends Events.EventHandler {
 
         FaceDetector.addEventListener(Events.FACE_DETECTED, (data:any) => this.analyzeDetections(data));
 
-        /*const tmp = document.querySelector("img");
-        const can = Utils.drawCanvasFromVideo(new Utils.Pool(tmp).get(), tmp);
-        setTimeout(() => {
-            this.analyzeDetections({ source: can })
-        }, 4000);
+     
 
-        setTimeout(() => {
-            this.analyzeDetections({ source: can })
-        }, 7000);*/
     };
 
     public analyzeDetections = async(data:any) => {

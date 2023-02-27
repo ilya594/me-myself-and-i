@@ -4,6 +4,8 @@ import {
     FACE_DETECT_INTERVAL, 
     FACE_DETECT_DELAY } from "./../Constants";
 import * as Events from "../Events";
+import * as tf from "@tensorflow/tfjs";
+import { TinyFaceDetectorOptions, TNetInput } from "face-api.js";
     
 
 class FaceDetector extends Events.EventHandler {
@@ -11,6 +13,10 @@ class FaceDetector extends Events.EventHandler {
     private _viewport:HTMLVideoElement;
     private _collection:Utils.Pool;
     private _interval:any;
+    private _frame:tf.Tensor4D;
+    private _camera:any;
+    private _options:TinyFaceDetectorOptions;
+    private _detections:any = [];
 
     constructor() {
         super();  
@@ -18,8 +24,13 @@ class FaceDetector extends Events.EventHandler {
 
     public initialize = async (viewport:HTMLVideoElement) => {
         this._viewport = viewport;
-        this._collection = new Utils.Pool(viewport);
+        this._viewport.width = 1280/2;
+        this._viewport.height = 720/2;
+
+        this._camera  = await tf.data.webcam(this._viewport);
+        
         await this.initializeFaceDetection();
+
         return this;
     };
 
@@ -28,7 +39,9 @@ class FaceDetector extends Events.EventHandler {
         await faceapi.nets.tinyFaceDetector.load("../models/");
         await faceapi.loadSsdMobilenetv1Model("../models/");
 
-        //this.startDetectionInterval();
+        this._options = new faceapi.TinyFaceDetectorOptions();
+
+        this.startDetectionInterval();
     }
 
     private startDetectionInterval = () => {
@@ -38,17 +51,24 @@ class FaceDetector extends Events.EventHandler {
     };
 
     private analyzeVideoFrame = async () => {
-        const frame:HTMLCanvasElement = Utils.drawCanvasFromVideo(this._collection.get(), this._viewport);
-        const options = new faceapi.TinyFaceDetectorOptions();
+        this._frame = await this._camera.capture();       
 
-        const detections = await faceapi.detectAllFaces(frame, options);
+        if (!this._frame) return this.dispose();
+        //@ts-ignore
+        this._detections = await faceapi.detectAllFaces(this._frame, this._options);
 
-        if (detections.length) {
-            this.stopDetectionInterval();
-            this.dispatchEvent(Events.FACE_DETECTED, { source: frame, detections: detections });
-        }  
-        this._collection.put(frame);          
-        return detections;        
+        if (!this._detections?.length) return this.dispose();
+
+        this.stopDetectionInterval();
+
+        this.dispatchEvent(Events.FACE_DETECTED, { source: this._frame, detections: this._detections }); 
+
+        return this.dispose();
+    };
+
+    private dispose = () => {
+        this._frame?.dispose();
+        this._frame = null;     
     };
 
     private stopDetectionInterval = () => {

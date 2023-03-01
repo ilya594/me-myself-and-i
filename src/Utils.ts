@@ -15,10 +15,20 @@ export function drawCanvasFromVideo(canvas:HTMLCanvasElement, video:any, options
     return canvas;
 };
 
+export function addFaceBox(canvas:HTMLCanvasElement, box:any):HTMLCanvasElement {
+    const context = canvas.getContext('2d');
+    context.beginPath();
+    context.lineWidth = 2;
+    context.strokeStyle = "#00ff30";
+    context.rect(box.x - 5, box.y - 5, box.width + 10, box.height + 10);
+    context.stroke();
+    return canvas;
+}
+
 export function addTimeStamp(canvas:HTMLCanvasElement):HTMLCanvasElement {
     const context = canvas.getContext('2d');
     context.font = '20px Courier New';
-    context.fillStyle = "green";
+    context.fillStyle = "#00ff30";
     context.fillText(moment().format('DD.MM.YYYY HH:mm:ss.SSS'), 30, 30);
     return canvas;
 }
@@ -26,7 +36,7 @@ export function addTimeStamp(canvas:HTMLCanvasElement):HTMLCanvasElement {
 export function addSourceStamp(canvas:HTMLCanvasElement, source:string):HTMLCanvasElement {
     const context = canvas.getContext('2d');
     context.font = '20px Courier New';
-    context.fillStyle = "green";
+    context.fillStyle = "#00ff30";
     context.fillText('[source] : ' + source, 25, 50);
     return canvas;
 }
@@ -34,7 +44,7 @@ export function addSourceStamp(canvas:HTMLCanvasElement, source:string):HTMLCanv
 export function addIdentifierStamp(canvas:HTMLCanvasElement, identifier:string):HTMLCanvasElement {
     const context = canvas.getContext('2d');
     context.font = '20px Courier New';
-    context.fillStyle = "green";
+    context.fillStyle = "#00ff30";
     context.fillText('[target] : ' + identifier, 25, 70);
     return canvas;
 }

@@ -9,7 +9,7 @@ import {
 import FaceDetector from "./detection/FaceDetector";
 import * as Utils from "./Utils";
 import * as Events from "./Events";
-import MotionDetector from "./detection/MotionDetector";
+import * as tf from '@tensorflow/tfjs';
 import FaceRecognizer from './recognition/FaceRecognizer';
 
 export default class Snaphots {
@@ -32,24 +32,27 @@ export default class Snaphots {
 
     private initializeDetectors = async () => {
 
-        Utils.log('[Snapshots.initializeDetectors] initilization started');       
+        Utils.log('[Snapshots.initializeDetectors] initilization started');      
 
-        const onFaceRecognized = (data:any) => {
-            Utils.log('[Snapshots.Event] FACE_RECOGNIZED');
-            this.createSnaphot(Utils.addIdentifierStamp(Utils.addSourceStamp(data.source, Events.FACE_DETECTED), data?.person))
-        };
+        await FaceDetector.initialize(this._viewport);          
 
+        await FaceRecognizer.initialize();
 
-        ///MotionDetector.initialize(this._viewport);
-        ///MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, (data:any) => this.onMotionDetectionStarted(data));
+        FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, async (data:any) => { 
+            Utils.log('[Snapshots.FACE_RECOGNIZED] person: [' + data.person + ']');  
+            const canvas = document.createElement("canvas");
+            canvas.width = data.frame.shape.width;
+            canvas.height = data.frame.shape.height;
+            await tf.browser.toPixels(data.frame, canvas);
+            data.frame.dispose();
+            Utils.addFaceBox(canvas, data.box);
+            Utils.addTimeStamp(canvas);
+            Utils.addSourceStamp(canvas, Events.FACE_DETECTED + ',' + Events.FACE_RECOGNIZED);
+            Utils.addIdentifierStamp(canvas, data.person);
+            this.createSnaphot(canvas);
+         });
 
-        await FaceDetector.initialize(this._viewport);  
-
-        //await FaceRecognizer.initialize();
-
-        //FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, (data:any) => onFaceRecognized(data));
-
-        Utils.log('[Snapshots.initializeDetectors] initilization completed');
+        Utils.log('[Snapshots.initializeDetectors] initilization completed');  
     };
     
 
@@ -85,6 +88,10 @@ export default class Snaphots {
         this._buffer.getContext('2d').strokeStyle = "black";
         this._buffer.getContext('2d').rect(0, 0, VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
         this._buffer.getContext('2d').stroke();
+
+        var audio = document.createElement('audio');
+        audio.setAttribute('src', '/audio/initialization.mp3');
+        audio.play();
 
         requestAnimationFrame(this.tick);
     };

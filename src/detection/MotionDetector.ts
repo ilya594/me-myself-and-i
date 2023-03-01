@@ -23,7 +23,7 @@ class MotionDetector extends Events.EventHandler {
         this._viewport = viewport;        
         this._frame = document.createElement("canvas");
         this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = 'difference';
-        this._frame = Utils.drawCanvasFromVideo(this._frame, viewport, { timestamp: false });
+        //this._frame = Utils.drawCanvasFromVideo(this._frame, viewport, { timestamp: false });
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
         return this;
     };
@@ -55,7 +55,7 @@ class MotionDetector extends Events.EventHandler {
 
     private analyzeVideoFrame = ():boolean => {
 
-        Utils.drawCanvasFromVideo(this._frame, this._viewport, { timestamp: false });
+        //Utils.drawCanvasFromVideo(this._frame, this._viewport, { timestamp: false });
 
         const boundaries = this._viewport.getBoundingClientRect();
         const size = { w: boundaries.width, h: boundaries.height };   

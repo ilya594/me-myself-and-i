@@ -1,5 +1,5 @@
-export const VIDEO_WIDTH = 1280;
-export const VIDEO_HEIGHT = 720;
+export const VIDEO_WIDTH = 1280  / 1.2;
+export const VIDEO_HEIGHT = 720  / 1.2;
 
 export const SNAP_WIDTH = 222;
 export const SNAP_HEIGHT = 124;

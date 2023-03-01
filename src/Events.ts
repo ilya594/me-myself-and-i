@@ -1,3 +1,6 @@
+import * as tf from '@tensorflow/tfjs';
+import Person from './recognition/FaceRecognizer';
+
 export class EventHandler {
 
     private readonly events:any = {};
@@ -21,6 +24,12 @@ export class EventHandler {
         });
       }
     }
+  }
+
+  export interface DetectionData {
+    frame: tf.Tensor;
+    person?: typeof Person;
+    bounds?:any;
   }
 
   export const FACE_DETECTED = 'face_detected';

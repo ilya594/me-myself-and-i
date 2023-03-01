@@ -1,17 +1,16 @@
 import * as moment from "moment";
+import * as Events from "./Events";
 
-export function drawCanvasFromVideo(canvas:HTMLCanvasElement, video:any, options:any = { timestamp: true }):HTMLCanvasElement {
-    const w:number = canvas.width = video.getBoundingClientRect().width;
-    const h:number = canvas.height = video.getBoundingClientRect().height;
-    const context = canvas.getContext('2d');
-    context.clearRect(0, 0, w, h);
-    context.drawImage(video, 0, 0, w, h);
-    if (options.timestamp) {
-        addTimeStamp(canvas);
-    }
-    if (options.source) {
-        addSourceStamp(canvas, options.source);
-    }
+export async function generateSignedCanvas(data:Events.DetectionData):Promise<HTMLCanvasElement> {
+    const canvas = document.createElement("canvas"); //@ts-ignore
+    canvas.width = data.frame.shape.width; //@ts-ignore
+    canvas.height = data.frame.shape.height; //@ts-ignore
+    await tf.browser.toPixels(data.frame, canvas);
+    data.frame?.dispose();
+    addTimeStamp(canvas);  //@ts-ignore
+    addSourceStamp(canvas, Events.FACE_DETECTED + (data.person.identified ? (',' + Events.FACE_RECOGNIZED) : ''));  //@ts-ignore
+    addIdentifierStamp(canvas, data.person.name);
+    data = data.person = data.frame = null;
     return canvas;
 };
 
@@ -77,7 +76,7 @@ export class Pool {
     private createNewCanvas = ():HTMLCanvasElement => {
         const canvas = document.createElement("canvas");
         const init = canvas.getContext('2d', { willReadFrequently: true });
-        return drawCanvasFromVideo(canvas, this._template);
+        return canvas;
     }
     public reset = ():void => {
       this._free.push(...this._busy.splice(0));

@@ -3,9 +3,9 @@ import * as facesJSON from '../descriptors.json';
 import * as Events from "../Events";
 import FaceDetector from "../detection/FaceDetector";
 import { FaceDetectionOptions, FaceMatcher } from "face-api.js";
-import * as tf from '@tensorflow/tfjs';
 import * as Utils from "./../Utils";
-import { relativeTimeThreshold } from "moment";
+
+const UNKNOWN:string = 'unknown';
 
 class FaceRecognizer extends Events.EventHandler {
 
@@ -14,7 +14,7 @@ class FaceRecognizer extends Events.EventHandler {
     private _processing:boolean = false;
     private _options:FaceDetectionOptions;
     private _detections:any;
-    private _data:DetectionData;
+    private _data:Events.DetectionData;
 
     constructor() {
         super();
@@ -33,12 +33,12 @@ class FaceRecognizer extends Events.EventHandler {
 
         this._options = new faceapi.SsdMobilenetv1Options();
 
-        FaceDetector.addEventListener(Events.FACE_DETECTED, (data:DetectionData) => this._onDetectionDataReceived(data));
+        FaceDetector.addEventListener(Events.FACE_DETECTED, (data:Events.DetectionData) => this._onDetectionDataReceived(data));
 
         return Promise.resolve();
     };
 
-    private _onDetectionDataReceived = async (data:DetectionData) => {
+    private _onDetectionDataReceived = async (data:Events.DetectionData) => {
 
         Utils.log('[FaceRecognizer._onDetectionDataReceived] is busy: [ ' + this._processing + ' ]'); 
 
@@ -52,24 +52,22 @@ class FaceRecognizer extends Events.EventHandler {
 
         Utils.log('[FaceRecognizer._onDetectionDataReceived] detections analyzed'); 
 
-        this.dispatchEvent(Events.FACE_RECOGNIZED, { frame: this._data.frame.clone(), person: result.person, box: this._data.box });
+        this.dispatchEvent(Events.FACE_RECOGNIZED, { frame: this._data.frame.clone(), person: result, bounds: this._data.bounds });
 
         this._dispose();
     };
 
-    private _analyzeDetections = async() => {         
+    private _analyzeDetections = async():Promise<Person> => {         
         //@ts-ignore
         this._detections = await faceapi.detectAllFaces(this._data.frame, this._options).withFaceLandmarks().withFaceDescriptors().withAgeAndGender();
         
-        if (!this._detections?.length) return { person : 'recognition_error' };
+        if (!this._detections?.length) return Distinguish();
 
         const detection = this._detections.pop();
 
         const match = this._matcher.findBestMatch(detection.descriptor);
-
-        if (!match || match.label == 'unknown') return { person: 'unidentified, ' + detection?.age?.toFixed(1) + ' y.o, ' + detection?.gender };
         
-        return { person : '< ' + match.label + ' >' }
+        return Distinguish(detection, match);
     };
     
     private _dispose = () => {
@@ -78,13 +76,24 @@ class FaceRecognizer extends Events.EventHandler {
         this._detections = null;
         this._processing = false;
     };
-
 }
 
-export interface DetectionData {
-    frame: tf.Tensor;
-    person?: string;
-    box?:any;
-}
+export const Distinguish = (detection:any | null = null, match:any | null = null):Person => {
+    return {
+        identified: (!!match && match.label !== UNKNOWN),
+        name: match?.label || UNKNOWN,
+        age: detection?.age?.toFixed(0),
+        sex: detection?.gender
+    };
+};
+
+export interface Person {
+    identified: boolean;
+    name: string;
+    age?:number;
+    sex?:string;
+    mood?:Array<string>;
+};
+
 
 export default new FaceRecognizer();

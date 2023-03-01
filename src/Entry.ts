@@ -1,5 +1,9 @@
 import { VIDEO_HEIGHT, VIDEO_WIDTH } from "./Constants";
-import Snaphots from "./Snaphots";
+import * as Events from "./Events";
+import Snaphots from "./view/Snaphots";
+import * as Utils from "./Utils";
+import FaceDetector from "./detection/FaceDetector";
+import FaceRecognizer from './recognition/FaceRecognizer';
 
 class Entry {
 
@@ -14,16 +18,29 @@ class Entry {
     }
 
     private initialize = async () => {
+        
         this._stream = await navigator.mediaDevices.getUserMedia(this._constraints); 
 
         this._viewport = document.querySelector("video");
-        this._viewport.onloadedmetadata = () => this._viewport.play();
-        
+        this._viewport.onloadedmetadata = () => this._viewport.play();        
         this._viewport.srcObject = this._stream;
 
         this._snapshots = new Snaphots();
 
-        setTimeout(window.console.clear, 100);
+        await FaceDetector.initialize();          
+
+        await FaceRecognizer.initialize();       
+
+        FaceRecognizer.addEventListener(Events .FACE_RECOGNIZED, async (data:Events.DetectionData) => { //@ts-ignore
+
+            Utils.log('[Snapshots.FACE_RECOGNIZED] person: [' + data.person.name + ']');  
+
+            this._snapshots.createSnaphot(await Utils.generateSignedCanvas(data));
+         });
+
+        Utils.log('[Snapshots.initializeDetectors] initilization completed');  
+
+        setTimeout(window.console.clear, 1000);
     };
 }
 

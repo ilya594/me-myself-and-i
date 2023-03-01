@@ -5,12 +5,9 @@ import {
     SNAP_WIDTH, 
     SNAP_HEIGHT, 
     SNAP_COUNT, 
-} from "./Constants";
-import FaceDetector from "./detection/FaceDetector";
-import * as Utils from "./Utils";
-import * as Events from "./Events";
-import * as tf from '@tensorflow/tfjs';
-import FaceRecognizer from './recognition/FaceRecognizer';
+} from "../Constants";
+
+import * as Utils from "../Utils";
 
 export default class Snaphots {
 
@@ -27,34 +24,7 @@ export default class Snaphots {
 
     constructor() {         
         this.initializeDefaults();
-        this.initializeDetectors();
     }
-
-    private initializeDetectors = async () => {
-
-        Utils.log('[Snapshots.initializeDetectors] initilization started');      
-
-        await FaceDetector.initialize(this._viewport);          
-
-        await FaceRecognizer.initialize();
-
-        FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, async (data:any) => { 
-            Utils.log('[Snapshots.FACE_RECOGNIZED] person: [' + data.person + ']');  
-            const canvas = document.createElement("canvas");
-            canvas.width = data.frame.shape.width;
-            canvas.height = data.frame.shape.height;
-            await tf.browser.toPixels(data.frame, canvas);
-            data.frame.dispose();
-            Utils.addFaceBox(canvas, data.box);
-            Utils.addTimeStamp(canvas);
-            Utils.addSourceStamp(canvas, Events.FACE_DETECTED + ',' + Events.FACE_RECOGNIZED);
-            Utils.addIdentifierStamp(canvas, data.person);
-            this.createSnaphot(canvas);
-         });
-
-        Utils.log('[Snapshots.initializeDetectors] initilization completed');  
-    };
-    
 
     private initializeDefaults = () => {
         this._viewport = document.querySelector("video");
@@ -98,16 +68,25 @@ export default class Snaphots {
 
     private onViewportClick = () => {        
         Utils.log('[Snapshots.onViewportClick]');
-        this.createSnaphot(Utils.drawCanvasFromVideo(this._proxy, this._viewport, { timestamp: true, source: 'manual' }));
+        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, { timestamp: true, source: 'manual' }));
     };
 
-    private createSnaphot = (source: HTMLCanvasElement) => { 
+    private drawCanvasFromVideo(canvas:HTMLCanvasElement, video:any, options:any = { timestamp: true }):HTMLCanvasElement {
+        const w:number = canvas.width = video.getBoundingClientRect().width;
+        const h:number = canvas.height = video.getBoundingClientRect().height;
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, w, h);
+        context.drawImage(video, 0, 0, w, h);
+        if (options.timestamp) Utils.addTimeStamp(canvas);        
+        if (options.source) Utils.addSourceStamp(canvas, options.source);
+        return canvas;
+    };
 
-        Utils.log('[Snapshots.createSnapshot] tween.isPlaying : [' + !!this._tween?.isPlaying + ']');
+    public createSnaphot = (source: HTMLCanvasElement) => { 
 
-        if (this._tween?.isPlaying) {
-            this._tween.stop();
-        }
+        Utils.log('[Snapshots.createSnapshot]]');
+
+        if (this._tween?.isPlaying) this._tween.stop();
         
         const w = this.w;
         const h = this.h;

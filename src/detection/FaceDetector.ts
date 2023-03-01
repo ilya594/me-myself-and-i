@@ -23,12 +23,12 @@ class FaceDetector extends Events.EventHandler {
         super();  
     }
 
-    public initialize = async (viewport:HTMLVideoElement) => {
+    public initialize = async () => {
 
-        this._viewport = viewport;
+        this._viewport = document.querySelector("video");
 
-        this._viewport.width = VIDEO_WIDTH / 1.2;
-        this._viewport.height = VIDEO_HEIGHT / 1.2;
+        this._viewport.width = VIDEO_WIDTH;
+        this._viewport.height = VIDEO_HEIGHT;
 
         this._camera  = await tf.data.webcam(this._viewport);
 
@@ -57,24 +57,22 @@ class FaceDetector extends Events.EventHandler {
 
         this._frame = await this._camera.capture();       
 
-        if (!this._frame) return this.dispose(); //@ts-ignore
+        if (!this._frame) return this._dispose(); //@ts-ignore
         
         this._detections = await faceapi.detectAllFaces(this._frame, this._options); 
 
-        if (!this._detections?.length) return this.dispose();
-
-        //debugger;
+        if (!this._detections?.length) return this._dispose();
 
         Utils.log('[FaceDetector._processVideoFrame] detections: [' + this._detections.length + ']');  
 
         this.dispatchEvent(Events.FACE_DETECTED, { frame: this._frame.clone(), box: this._detections.pop().box }); 
 
-        this.dispose();
+        this._dispose();
 
         return true;
     };
 
-    private dispose = () => {
+    private _dispose = () => {
         this._frame?.dispose();
         this._frame = null;
         this._detections = null;

@@ -6,6 +6,7 @@ import { FaceDetectionOptions, FaceMatcher } from "face-api.js";
 import * as Utils from "./../Utils";
 
 const UNKNOWN:string = 'unknown';
+const UNAVAIL:string = 'n/a';
 
 class FaceRecognizer extends Events.EventHandler {
 
@@ -22,7 +23,6 @@ class FaceRecognizer extends Events.EventHandler {
 
     public initialize = async() => {
 
-        await faceapi.loadSsdMobilenetv1Model("../models/");
         await faceapi.loadAgeGenderModel("../models/");
         await faceapi.loadFaceRecognitionModel("../models/");
         await faceapi.nets.faceLandmark68Net.load("../models/");
@@ -31,7 +31,7 @@ class FaceRecognizer extends Events.EventHandler {
 
         this._matcher = new faceapi.FaceMatcher(this._faces);
 
-        this._options = new faceapi.SsdMobilenetv1Options();
+        this._options = new faceapi.TinyFaceDetectorOptions();
 
         FaceDetector.addEventListener(Events.FACE_DETECTED, (data:Events.DetectionData) => this._onDetectionDataReceived(data));
 
@@ -52,14 +52,22 @@ class FaceRecognizer extends Events.EventHandler {
 
         Utils.log('[FaceRecognizer._onDetectionDataReceived] detections analyzed'); 
 
-        this.dispatchEvent(Events.FACE_RECOGNIZED, { frame: this._data.frame.clone(), person: result, bounds: this._data.bounds });
+        this.dispatchEvent(Events.FACE_RECOGNIZED, { 
+            frame: this._data.frame.clone(), 
+            person: result, 
+            canvas: this._data.canvas, 
+            box: this._data.box 
+        });
 
         this._dispose();
     };
 
-    private _analyzeDetections = async():Promise<Person> => {         
+    private _analyzeDetections = async(): Promise<Person> => {         
         //@ts-ignore
-        this._detections = await faceapi.detectAllFaces(this._data.frame, this._options).withFaceLandmarks().withFaceDescriptors().withAgeAndGender();
+        this._detections = await faceapi.detectAllFaces(this._data.frame, this._options)
+            .withFaceLandmarks()
+            .withFaceDescriptors()
+            .withAgeAndGender();
         
         if (!this._detections?.length) return Distinguish();
 
@@ -78,22 +86,26 @@ class FaceRecognizer extends Events.EventHandler {
     };
 }
 
-export const Distinguish = (detection:any | null = null, match:any | null = null):Person => {
+export const Distinguish = (detection:any | null = null, match:any | null = null): Person => {
+    const identified:boolean = match?.distance > 0.7;
+    const name:string = identified && match?.label ? match.label : UNKNOWN;
+    const age:string = detection?.age ? detection.age.toFixed(0) : UNAVAIL;
+    const sex:string = detection?.gender ? detection.gender : UNAVAIL;
+
     return {
-        identified: (!!match && match.label !== UNKNOWN),
-        name: match?.label || UNKNOWN,
-        age: detection?.age?.toFixed(0),
-        sex: detection?.gender
+        identified: identified ,
+        name: name,
+        age: age,
+        sex: sex
     };
 };
 
 export interface Person {
     identified: boolean;
     name: string;
-    age?:number;
-    sex?:string;
+    age:string;
+    sex:string;
     mood?:Array<string>;
 };
-
 
 export default new FaceRecognizer();

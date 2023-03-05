@@ -1,11 +1,10 @@
 import * as faceapi from "face-api.js";
 import { 
     FACE_DETECT_INTERVAL, 
-    FACE_DETECT_DELAY, 
     VIDEO_WIDTH,
     VIDEO_HEIGHT} from "./../Constants";
 import * as Events from "../Events";
-import * as tf from "@tensorflow/tfjs";
+import { data, browser, Tensor4D }  from "@tensorflow/tfjs";
 import { FaceDetectionOptions, TinyFaceDetectorOptions } from "face-api.js";
 import * as Utils from "./../Utils";
     
@@ -13,7 +12,7 @@ import * as Utils from "./../Utils";
 class FaceDetector extends Events.EventHandler {
 
     private _viewport:HTMLVideoElement;
-    private _frame:tf.Tensor4D;
+    private _frame:Tensor4D;
     private _camera:any;
     private _options:TinyFaceDetectorOptions | FaceDetectionOptions;
     private _detections:any = [];
@@ -30,7 +29,7 @@ class FaceDetector extends Events.EventHandler {
         this._viewport.width = VIDEO_WIDTH;
         this._viewport.height = VIDEO_HEIGHT;
 
-        this._camera  = await tf.data.webcam(this._viewport);
+        this._camera  = await data.webcam(this._viewport);
 
         return await this._initializeFaceDetection();
     };
@@ -45,7 +44,7 @@ class FaceDetector extends Events.EventHandler {
 
         setInterval(this._processVideoFrame, FACE_DETECT_INTERVAL);
 
-        return Promise.resolve();
+        return true;
     }
 
 
@@ -65,11 +64,19 @@ class FaceDetector extends Events.EventHandler {
 
         Utils.log('[FaceDetector._processVideoFrame] detections: [' + this._detections.length + ']');  
 
-        this.dispatchEvent(Events.FACE_DETECTED, { frame: this._frame.clone(), box: this._detections.pop().box }); 
+        this.dispatchEvent(Events.FACE_DETECTED, { frame: this._frame.clone(), canvas: await this._splashFrametoCanvas(this._frame), box: this._detections.pop().box }); 
 
         this._dispose();
 
         return true;
+    };
+
+    private _splashFrametoCanvas = async (frame:Tensor4D) => {
+        const canvas = document.createElement("canvas"); //@ts-ignore
+        canvas.width = frame.shape.width; //@ts-ignore
+        canvas.height = frame.shape.height; //@ts-ignore
+        await browser.toPixels(frame, canvas);
+        return canvas;
     };
 
     private _dispose = () => {

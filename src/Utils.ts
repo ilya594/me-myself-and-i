@@ -1,17 +1,13 @@
 import * as moment from "moment";
 import * as Events from "./Events";
 
-export async function generateSignedCanvas(data:Events.DetectionData):Promise<HTMLCanvasElement> {
-    const canvas = document.createElement("canvas"); //@ts-ignore
-    canvas.width = data.frame.shape.width; //@ts-ignore
-    canvas.height = data.frame.shape.height; //@ts-ignore
-    await tf.browser.toPixels(data.frame, canvas);
-    data.frame?.dispose();
-    addTimeStamp(canvas);  //@ts-ignore
-    addSourceStamp(canvas, Events.FACE_DETECTED + (data.person.identified ? (',' + Events.FACE_RECOGNIZED) : ''));  //@ts-ignore
-    addIdentifierStamp(canvas, data.person.name);
-    data = data.person = data.frame = null;
-    return canvas;
+
+export function signCanvas(data:Events.DetectionData):HTMLCanvasElement {
+    addTimeStamp(data.canvas);  //@ts-ignore
+    addSourceStamp(data.canvas, Events.FACE_DETECTED + (data.person.identified ? (',' + Events.FACE_RECOGNIZED) : ''));  //@ts-ignore
+    addIdentifierStamp(data.canvas, '[' + data.person.name + '] ' + data.person.age + '.' + data.person.sex);
+    if (data.box) addFaceBox(data.canvas, data.box);
+    return data.canvas;
 };
 
 export function addFaceBox(canvas:HTMLCanvasElement, box:any):HTMLCanvasElement {
@@ -19,7 +15,7 @@ export function addFaceBox(canvas:HTMLCanvasElement, box:any):HTMLCanvasElement 
     context.beginPath();
     context.lineWidth = 2;
     context.strokeStyle = "#00ff30";
-    context.rect(box.x - 5, box.y - 5, box.width + 10, box.height + 10);
+    context.rect(box.x - 15, box.y - 15, box.width + 30, box.height + 30);
     context.stroke();
     return canvas;
 }

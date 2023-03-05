@@ -59,10 +59,6 @@ export default class Snaphots {
         this._buffer.getContext('2d').rect(0, 0, VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
         this._buffer.getContext('2d').stroke();
 
-        var audio = document.createElement('audio');
-        audio.setAttribute('src', '/audio/initialization.mp3');
-        audio.play();
-
         requestAnimationFrame(this.tick);
     };
 
@@ -104,7 +100,7 @@ export default class Snaphots {
     };
 
     private startSaverTween = (w:number, h:number) => {
-        Utils.log('[Snapshots.startSaverTween] size : ['+ w + ',' + h + ']');
+        Utils.log('[Snapshots.startSaverTween] ');
         const ini = { scaleX: 1,            scaleY: 1,             x: 0,           y: 0 };
         const end = { scaleX: SNAP_WIDTH/w, scaleY: SNAP_HEIGHT/h, x: (w - SNAP_WIDTH)/2, y: -(h - SNAP_HEIGHT)/2 };   
         this._tween = new TWEEN.Tween(ini)
@@ -119,7 +115,7 @@ export default class Snaphots {
     }
 
     private onSaverTweenComplete = () => {
-        Utils.log('[Snapshots.onSaverTweenComplete] snaps count : ' + this._count);
+        Utils.log('[Snapshots.onSaverTweenComplete] ');
 
         this._snapshot.getContext('2d').globalAlpha = 1;
         this._snapshot.getContext('2d').clearRect(0, 0, SNAP_WIDTH + 1, SNAP_HEIGHT) + 1;

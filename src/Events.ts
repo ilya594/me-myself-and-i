@@ -1,4 +1,4 @@
-import * as tf from '@tensorflow/tfjs';
+import { Tensor4D } from '@tensorflow/tfjs';
 import Person from './recognition/FaceRecognizer';
 
 export class EventHandler {
@@ -27,9 +27,10 @@ export class EventHandler {
   }
 
   export interface DetectionData {
-    frame: tf.Tensor;
+    frame: Tensor4D;
+    canvas: HTMLCanvasElement;
     person?: typeof Person;
-    bounds?:any;
+    box?:any;
   }
 
   export const FACE_DETECTED = 'face_detected';

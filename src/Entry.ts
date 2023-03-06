@@ -1,20 +1,18 @@
-import { VIDEO_HEIGHT, VIDEO_WIDTH } from "./Constants";
-import * as Events from "./Events";
+import { VIDEO_HEIGHT, VIDEO_WIDTH } from "./utils/Constants";
+import * as Events from "./utils/Events";
 import Snaphots from "./view/Snaphots";
-import * as Utils from "./Utils";
+import * as Utils from "./utils/Utils";
 import FaceDetector from "./detection/FaceDetector";
 import FaceRecognizer from './recognition/FaceRecognizer'; //@ts-ignore  
 import * as Filesaver from 'file-saver';
-import * as moment from "moment";
+import moment from "moment";
+import MotionDetector from "./detection/MotionDetector";
 
 class Entry {
 
-    private _snapshots:Snaphots;
     private _constraints = { video : { width: VIDEO_WIDTH, height: VIDEO_HEIGHT } };
     private _stream:MediaStream;   
-    private _viewport:HTMLVideoElement;
-    private _speaker:HTMLAudioElement = document.createElement("audio");
- 
+    private _viewport:HTMLVideoElement; 
 
     constructor() {
        this.initialize();         
@@ -25,44 +23,34 @@ class Entry {
         this._stream = await navigator.mediaDevices.getUserMedia(this._constraints); 
 
         this._viewport = document.querySelector("video");
-        this._viewport.onloadedmetadata = () => this._viewport.play();        
+        this._viewport.onloadedmetadata = this._viewport.play;        
         this._viewport.srcObject = this._stream;
 
-        this._snapshots = new Snaphots();
+        await Snaphots.initialize();
+
+        await MotionDetector.initialize();
 
         await FaceDetector.initialize();          
 
         await FaceRecognizer.initialize();       
 
-        FaceRecognizer.addEventListener(Events .FACE_RECOGNIZED, async (data:Events.DetectionData) => { //@ts-ignore            
+        FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, async (data: Events.DetectionData) => { //@ts-ignore            
 
-            Utils.log('[Snapshots.FACE_RECOGNIZED] person: [' + data.person.name + ']');  
+            Utils.Logger.log('[Snapshots.FACE_RECOGNIZED] person: [' + data.person.name + '].');  
 
-            this._playDetectedAudio();
+            Utils.Speaker.playOnce('/audio/detected.mp3');
 
             const canvas = Utils.signCanvas(data);
 
-            this._snapshots.createSnaphot(canvas);
+            Snaphots.createSnaphot(canvas);
 
             canvas.toBlob(file => Filesaver.saveAs(file, moment().toString() + '.png'));
          });
 
-        Utils.log('[Snapshots.initializeDetectors] initilization completed');  
+        Utils.Speaker.playOnce('/audio/initialization.mp3');
 
-        this._playInitializedAudio();
-
-        setTimeout(window.console.clear, 1000);
+        Utils.Logger.log('[Entry.initialize] initilization completed.');  
     };
-
-    private _playInitializedAudio = () => {
-        this._speaker.setAttribute('src', '/audio/initialization.mp3');
-        this._speaker.play();
-    };
-
-    private _playDetectedAudio = () => {
-        this._speaker.setAttribute('src', './audio/detection.mp3');
-        this._speaker.play();
-    }
 }
 
 new Entry();

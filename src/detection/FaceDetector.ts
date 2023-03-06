@@ -1,12 +1,15 @@
 import * as faceapi from "face-api.js";
 import { 
-    FACE_DETECT_INTERVAL, 
+    FACE_DETECT_INTERVAL_ACTIVE, 
+    FACE_DETECT_INTERVAL_WORKTIME,
     VIDEO_WIDTH,
-    VIDEO_HEIGHT} from "./../Constants";
-import * as Events from "../Events";
+    VIDEO_HEIGHT,
+    FACE_DETECT_INTERVAL_LAZY} from "./../utils/Constants";
+import * as Events from "../utils/Events";
 import { data, browser, Tensor4D }  from "@tensorflow/tfjs";
 import { FaceDetectionOptions, TinyFaceDetectorOptions } from "face-api.js";
-import * as Utils from "./../Utils";
+import * as Utils from "../utils/Utils";
+import MotionDetector from "./MotionDetector";
     
 
 class FaceDetector extends Events.EventHandler {
@@ -17,6 +20,8 @@ class FaceDetector extends Events.EventHandler {
     private _options:TinyFaceDetectorOptions | FaceDetectionOptions;
     private _detections:any = [];
     private _processing: boolean = false;
+    private _timeout:any;
+    private _interval:any;
 
     constructor() {
         super();  
@@ -31,6 +36,8 @@ class FaceDetector extends Events.EventHandler {
 
         this._camera  = await data.webcam(this._viewport);
 
+        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, this._enableActiveDetectionMode);
+
         return await this._initializeFaceDetection();
     };
 
@@ -42,10 +49,27 @@ class FaceDetector extends Events.EventHandler {
 
         this._options = new faceapi.TinyFaceDetectorOptions();
 
-        setInterval(this._processVideoFrame, FACE_DETECT_INTERVAL);
+        this._enableLazyDetectionMode();
 
         return true;
-    }
+    };
+
+    private _enableActiveDetectionMode = () => {
+        Utils.Logger.log('[FaceDetector._enableActiveDetectionMode]');
+        this._restartDetectionInterval(FACE_DETECT_INTERVAL_ACTIVE);
+        this._timeout = setTimeout(this._enableLazyDetectionMode, FACE_DETECT_INTERVAL_WORKTIME);
+    };
+
+    private _enableLazyDetectionMode = () => {
+        Utils.Logger.log('[FaceDetector._enableLazyDetectionMode]');
+        this._restartDetectionInterval(FACE_DETECT_INTERVAL_LAZY);
+    };
+
+    private _restartDetectionInterval = (interval: number) => {
+        clearInterval(this._interval);
+        clearTimeout(this._timeout);
+        this._interval = setInterval(this._processVideoFrame, interval);
+    };
 
 
     private _processVideoFrame = async () => {
@@ -62,7 +86,7 @@ class FaceDetector extends Events.EventHandler {
 
         if (!this._detections?.length) return this._dispose();
 
-        Utils.log('[FaceDetector._processVideoFrame] detections: [' + this._detections.length + ']');  
+        Utils.Logger.log('[FaceDetector._processVideoFrame] detections: [' + this._detections.length + ']');  
 
         this.dispatchEvent(Events.FACE_DETECTED, { frame: this._frame.clone(), canvas: await this._splashFrametoCanvas(this._frame), box: this._detections.pop().box }); 
 

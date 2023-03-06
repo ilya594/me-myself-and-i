@@ -1,88 +1,78 @@
-
-import * as Utils from "../Utils";
 import { 
     MOTION_DETECT_IMAGE_COEF, 
-    MOTION_DETECT_INTERVAL, 
     MOTION_DETECT_PIXEL_COEF,
-    MOTION_DETECT_DELAY } from "./../Constants";
-import * as Events from "../Events";    
+    VIDEO_WIDTH,
+    VIDEO_HEIGHT } from "./../utils/Constants";
+import * as Events from "../utils/Events";    
+import * as Utils from "../utils/Utils";
+
+var counter = 0;
+const HOUR = 30 * 60 * 60;
+const Each = (count: number): boolean => {
+    return !!(++counter % count === 0);
+}
 
 class MotionDetector extends Events.EventHandler {
+
     private _frame:HTMLCanvasElement;
-    private _viewport:any;
-    private _timeout:any;
-    private _counter = 0;
+    private _viewport:HTMLVideoElement;
 
-    //private _activity:boolean = false;
 
-    constructor() {
-        super();
+    private drawVideoToCanvas = (clear: boolean) => {
+        if (clear) {
+            this._frame.width = VIDEO_WIDTH;
+            this._frame.height = VIDEO_HEIGHT;
+            this._frame.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+        }   
+        this._frame.getContext('2d').drawImage(this._viewport, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT); 
     }
 
-    public initialize = (viewport:HTMLVideoElement) => {
-        this._viewport = viewport;        
+    public initialize = async () => {
+
+        this._viewport = document.querySelector("video");     
+
+        this._frame?.remove();
         this._frame = document.createElement("canvas");
         this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = 'difference';
-        //this._frame = Utils.drawCanvasFromVideo(this._frame, viewport, { timestamp: false });
+
+        this.drawVideoToCanvas(true);
+
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
+        
         return this;
     };
 
     private onVideoEnterFrame = () => {
 
-        if (this._timeout || ++this._counter % 5 !== 0) {
-            return this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
-        }
+        if (Each(4)) this.analyzeVideoFrame();
 
-        const onTimeoutComplete = () => {
-            this._timeout = clearTimeout(this._timeout);
-            this.onVideoEnterFrame();
-        }
+        if (Each(4)) this.drawVideoToCanvas(true);
 
-        const activity = this.analyzeVideoFrame();
-        console.log('analyzing...activity : ' + activity);
-
-        if (activity) {
-            this._timeout = setTimeout(onTimeoutComplete, MOTION_DETECT_DELAY);
-            //@ts-ignore
-            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, { frame: new VideoFrame(this._viewport) });
-        } else {
-           this.dispatchEvent(Events.MOTION_DETECTION_FINISHED, null );
-        }
+        if (Each(HOUR)) return this.initialize();
 
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
     };
 
-    private analyzeVideoFrame = ():boolean => {
+    private analyzeVideoFrame = (): void => {    
 
-        //Utils.drawCanvasFromVideo(this._frame, this._viewport, { timestamp: false });
-
-        const boundaries = this._viewport.getBoundingClientRect();
-        const size = { w: boundaries.width, h: boundaries.height };   
-
-        const bitmap = this._frame.getContext('2d').getImageData(0, 0, size.w, size.h);
+        const bitmap = this._frame.getContext('2d').getImageData(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
         
-        let difference:number = 0;
+        let offset: number = 4;
+        let difference: number = 0;
         
-        for (var i = 0; i < bitmap.data.length; i += 4) {
-            const r = bitmap.data[i] / 3;
-            const g = bitmap.data[i + 1] / 3;
-            const b = bitmap.data[i + 2] / 3;
-            if ((r + g + b) > MOTION_DETECT_PIXEL_COEF) difference++;
+        for (let i = 0; i < bitmap.data.length - offset; i = i + offset) {
+            const r = bitmap.data[i] / (offset - 1);
+            const g = bitmap.data[i + 1] / (offset - 1);
+            const b = bitmap.data[i + 2] / (offset - 1);
+            if ((r + g + b) > MOTION_DETECT_PIXEL_COEF) difference += offset;
         }   
 
-        const coefficient = difference/bitmap.data.length;
+        const coefficient = Number((difference / (bitmap.data.length)).toFixed(offset));
 
-        console.log('coef : ' + coefficient);
-
-        return (coefficient > MOTION_DETECT_IMAGE_COEF);
-            //console.log('detected...');
-            //@ts-ignore
-            //this.dispatchEvent(Events.MOTION_DETECTED, { frame: new VideoFrame(this._viewport) });
-            //return this._timeout = setTimeout(this.onStartDetectionTimeoutComplete, MOTION_DETECT_DELAY);
-        
-        //this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);           
-             
+        if (coefficient > MOTION_DETECT_IMAGE_COEF) {
+            Utils.Logger.log('[MotionDetector.analyzeVideoFrame] coefficient : ' + coefficient + '. dispatching MOTION_DETECTED event.');
+            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
+        }
     };
 }
 

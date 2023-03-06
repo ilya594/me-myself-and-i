@@ -5,11 +5,10 @@ import {
     SNAP_WIDTH, 
     SNAP_HEIGHT, 
     SNAP_COUNT, 
-} from "../Constants";
+} from "../utils/Constants";
+import * as Utils from "../utils/Utils";
 
-import * as Utils from "../Utils";
-
-export default class Snaphots {
+class Snaphots {
 
     private _viewport:any;
     private _proxy:any;
@@ -22,19 +21,18 @@ export default class Snaphots {
     private get w() { return this._viewport.getBoundingClientRect().width; }
     private get h() { return this._viewport.getBoundingClientRect().height; }
 
-    constructor() {         
-        this.initializeDefaults();
-    }
+    public get playing() {
+        return !!this._tween?.isPlaying;
+    };
 
-    private initializeDefaults = () => {
+    public initialize = async () => {
         this._viewport = document.querySelector("video");
         this._viewport.onclick = () => this.onViewportClick();  
 
         this._snapsaver = document.querySelector("canvas");  
         this._snapsaver.onclick = () => this.onViewportClick(); 
         this._snapsaver.style.setProperty('transform', 'translate(' + 0 + 'px,' + 0 + 'px)' + 'scale(' + 1 + ',' + 1 + ')');         
-        this._snapsaver.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);     
-        
+        this._snapsaver.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);             
 
         this._snapshot = document.querySelectorAll("canvas")[1];
         this._snapshot.width = SNAP_WIDTH;
@@ -42,7 +40,7 @@ export default class Snaphots {
         this._snapshot.getContext('2d').globalAlpha = 0;
         this._snapshot.getContext('2d').beginPath();
         this._snapshot.getContext('2d').lineWidth = "0";
-        this._snapshot.getContext('2d').strokeStyle = "black";
+        this._snapshot.getContext('2d').strokeStyle = "black"; 
         this._snapshot.getContext('2d').rect(0, 0, SNAP_WIDTH, SNAP_HEIGHT);
         this._snapshot.getContext('2d').stroke();
         this._snapshot.onclick = () => this.viewSnapshotCollection();
@@ -63,44 +61,46 @@ export default class Snaphots {
     };
 
     private onViewportClick = () => {        
-        Utils.log('[Snapshots.onViewportClick]');
-        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, { timestamp: true, source: 'manual' }));
+
+        Utils.Logger.log('[Snapshots.onViewportClick]');
+
+        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport));
     };
 
-    private drawCanvasFromVideo(canvas:HTMLCanvasElement, video:any, options:any = { timestamp: true }):HTMLCanvasElement {
+    private drawCanvasFromVideo(canvas:HTMLCanvasElement, video:any):HTMLCanvasElement {
         const w:number = canvas.width = video.getBoundingClientRect().width;
         const h:number = canvas.height = video.getBoundingClientRect().height;
-        const context = canvas.getContext('2d');
+        const context = canvas.getContext('2d'); 
         context.clearRect(0, 0, w, h);
         context.drawImage(video, 0, 0, w, h);
-        if (options.timestamp) Utils.addTimeStamp(canvas);        
-        if (options.source) Utils.addSourceStamp(canvas, options.source);
+        Utils.addTimeStamp(canvas);        
+        Utils.addSourceStamp(canvas, 'manual');
         return canvas;
     };
 
     public createSnaphot = (source: HTMLCanvasElement) => { 
 
-        Utils.log('[Snapshots.createSnapshot]]');
+        Utils.Logger.log('[Snapshots.createSnapshot]');
 
-        if (this._tween?.isPlaying) this._tween.stop();
+        if (this.playing) this._tween.stop();
         
-        const w = this.w;
-        const h = this.h;
         const x:number = (this._count % SNAP_COUNT) * VIDEO_WIDTH;
         const y:number = Math.floor(this._count/SNAP_COUNT) * VIDEO_HEIGHT;
 
         this._buffer.getContext('2d').drawImage(source, x, y, VIDEO_WIDTH, VIDEO_HEIGHT);
 
-        this._snapsaver.width = w;
-        this._snapsaver.height = h;
+        this._snapsaver.width = this.w;
+        this._snapsaver.height = this.h;
         this._snapsaver.getContext('2d').globalAlpha = 0.4;  
-        this._snapsaver.getContext('2d').drawImage(source, 0, 0, w, h);          
+        this._snapsaver.getContext('2d').drawImage(source, 0, 0, this.w, this.h);          
 
-        this.startSaverTween(w, h);
+        this.startSaverTween(this.w, this.h);
     };
 
     private startSaverTween = (w:number, h:number) => {
-        Utils.log('[Snapshots.startSaverTween] ');
+
+        Utils.Logger.log('[Snapshots.startSaverTween] ');
+
         const ini = { scaleX: 1,            scaleY: 1,             x: 0,           y: 0 };
         const end = { scaleX: SNAP_WIDTH/w, scaleY: SNAP_HEIGHT/h, x: (w - SNAP_WIDTH)/2, y: -(h - SNAP_HEIGHT)/2 };   
         this._tween = new TWEEN.Tween(ini)
@@ -115,7 +115,8 @@ export default class Snaphots {
     }
 
     private onSaverTweenComplete = () => {
-        Utils.log('[Snapshots.onSaverTweenComplete] ');
+
+        Utils.Logger.log('[Snapshots.onSaverTweenComplete] ');
 
         this._snapshot.getContext('2d').globalAlpha = 1;
         this._snapshot.getContext('2d').clearRect(0, 0, SNAP_WIDTH + 1, SNAP_HEIGHT) + 1;
@@ -129,13 +130,13 @@ export default class Snaphots {
         this._snapsaver.style.setProperty('transform', 'translate(' + 0 + 'px,' + 0 + 'px)' + 'scale(' + 1 + ',' + 1 + ')');         
         this._snapsaver.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);            
 
-        if (++this._count === SNAP_COUNT * SNAP_COUNT) {
-            this.flushBuffer();
-        }  
+        if (++this._count === SNAP_COUNT * SNAP_COUNT) this.flushBuffer();  
     }
 
     private flushBuffer = () => {
-        Utils.log('[Snapshots.flushBuffer]');
+
+        Utils.Logger.log('[Snapshots.flushBuffer]');
+
         this.viewSnapshotCollection();
         this._buffer.getContext('2d').clearRect(0, 0, VIDEO_WIDTH * SNAP_COUNT, VIDEO_HEIGHT * SNAP_COUNT);
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
@@ -144,7 +145,9 @@ export default class Snaphots {
     };
 
     private viewSnapshotCollection = () => {
-        Utils.log('[Snapshots.viewSnapshotCollection]');
+
+        Utils.Logger.log('[Snapshots.viewSnapshotCollection]');
+
         const tab = window.open();
         tab.document.body.style.width = tab.document.body.style.height = '100%';
         tab.document.body.style.overflow = 'hidden';
@@ -157,4 +160,6 @@ export default class Snaphots {
 	    TWEEN.update(time);
     };
 }
+
+export default new Snaphots();
 

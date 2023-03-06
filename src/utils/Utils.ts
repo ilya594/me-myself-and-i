@@ -1,11 +1,10 @@
-import * as moment from "moment";
+import moment from "moment";
 import * as Events from "./Events";
-
 
 export function signCanvas(data:Events.DetectionData):HTMLCanvasElement {
     addTimeStamp(data.canvas);  //@ts-ignore
     addSourceStamp(data.canvas, Events.FACE_DETECTED + (data.person.identified ? (',' + Events.FACE_RECOGNIZED) : ''));  //@ts-ignore
-    addIdentifierStamp(data.canvas, '[' + data.person.name + '] ' + data.person.age + '.' + data.person.sex);
+    addIdentifierStamp(data.canvas, data.person.name + ', ~' + data.person.age + ' y/o, probably ' + data.person.sex);
     if (data.box) addFaceBox(data.canvas, data.box);
     return data.canvas;
 };
@@ -44,9 +43,30 @@ export function addIdentifierStamp(canvas:HTMLCanvasElement, identifier:string):
     return canvas;
 }
 
-export function log(str:string) {
-    document.querySelector("textarea").value += '<' + moment().format('HH:mm:ss.SSS') + '> ' + str + '\r\n';
+export class Logger {
+
+    private static str:any = [];
+    private static t:any = null;
+    //@ts-ignore
+    private static type = async () => { 
+        await new Promise(resolve => this.t = setTimeout(resolve, 20));
+        document.querySelector("textarea").value += this.str.shift();
+        return this.str.length ? await this.type() : false;
+    }
+
+    public static log = async (record:string) => {
+        if (this.str.length)  {
+            clearTimeout(this.t);
+            this.str = [this.str.join('')];
+            await this.type();
+        }
+        this.str = ('<' + moment().format('HH:mm:ss.SSS') + '> ' + record).split('');
+        this.str.push('\r\n');
+        await this.type();        
+    }
 }
+
+
 
 export class Pool {
     private _free:Array<any>;
@@ -77,4 +97,13 @@ export class Pool {
     public reset = ():void => {
       this._free.push(...this._busy.splice(0));
     }
+  }
+
+  export class Speaker {
+    public static playOnce = (source: string) => {
+        const audio = window.document.querySelector("audio") ||
+            window.document.createElement("audio");
+        audio.setAttribute("src", source);
+        audio.play();
+      }
   }

@@ -1,9 +1,9 @@
 import * as faceapi from "face-api.js";
-import * as facesJSON from '../descriptors.json';
-import * as Events from "../Events";
+import * as Faces from '../descriptors.js';
+import * as Events from "../utils/Events";
 import FaceDetector from "../detection/FaceDetector";
 import { FaceDetectionOptions, FaceMatcher } from "face-api.js";
-import * as Utils from "./../Utils";
+import * as Utils from "../utils/Utils";
 
 const UNKNOWN:string = 'unknown';
 const UNAVAIL:string = 'n/a';
@@ -17,17 +17,13 @@ class FaceRecognizer extends Events.EventHandler {
     private _detections:any;
     private _data:Events.DetectionData;
 
-    constructor() {
-        super();
-    }
-
     public initialize = async() => {
 
         await faceapi.loadAgeGenderModel("../models/");
         await faceapi.loadFaceRecognitionModel("../models/");
         await faceapi.nets.faceLandmark68Net.load("../models/");
-
-        facesJSON.all.forEach(face => this._faces.push(faceapi.LabeledFaceDescriptors.fromJSON(face)));
+   
+        Faces.all.forEach(face => this._faces.push(faceapi.LabeledFaceDescriptors.fromJSON(face)));
 
         this._matcher = new faceapi.FaceMatcher(this._faces);
 
@@ -40,7 +36,7 @@ class FaceRecognizer extends Events.EventHandler {
 
     private _onDetectionDataReceived = async (data:Events.DetectionData) => {
 
-        Utils.log('[FaceRecognizer._onDetectionDataReceived] is busy: [ ' + this._processing + ' ]'); 
+        Utils.Logger.log('[FaceRecognizer._onDetectionDataReceived] is busy: [ ' + this._processing + ' ]'); 
 
         if (this._processing) return false;   //@ts-ignore    
 
@@ -50,7 +46,7 @@ class FaceRecognizer extends Events.EventHandler {
 
         const result = await this._analyzeDetections();
 
-        Utils.log('[FaceRecognizer._onDetectionDataReceived] detections analyzed'); 
+        Utils.Logger.log('[FaceRecognizer._onDetectionDataReceived] detections analyzed'); 
 
         this.dispatchEvent(Events.FACE_RECOGNIZED, { 
             frame: this._data.frame.clone(), 

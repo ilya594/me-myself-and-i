@@ -1,59 +1,104 @@
 import { 
     MOTION_DETECT_IMAGE_COEF, 
     MOTION_DETECT_PIXEL_COEF,
+    MOTION_DETECT_DELAY,
     VIDEO_WIDTH,
     VIDEO_HEIGHT } from "./../utils/Constants";
 import * as Events from "../utils/Events";    
 import * as Utils from "../utils/Utils";
 
 var counter = 0;
-const HOUR = 30 * 60 * 60;
-const Each = (count: number): boolean => {
-    return !!(++counter % count === 0);
-}
+
+const Each = (count: number): boolean => !!(++counter % count === 0);
 
 class MotionDetector extends Events.EventHandler {
 
     private _frame:HTMLCanvasElement;
+    private _checks:HTMLCanvasElement;
     private _viewport:HTMLVideoElement;
-
+    private _coefficient:number = 0;
 
     private drawVideoToCanvas = (clear: boolean) => {
         if (clear) {
+            this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = 'difference';
             this._frame.width = VIDEO_WIDTH;
-            this._frame.height = VIDEO_HEIGHT;
-            this._frame.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            this._frame.height = VIDEO_HEIGHT;            
+            this._frame.getContext('2d',  { willReadFrequently: true }).clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
         }   
-        this._frame.getContext('2d').drawImage(this._viewport, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT); 
+        this._frame.getContext('2d',  { willReadFrequently: true }).drawImage(this._viewport, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT); 
     }
 
     public initialize = async () => {
 
         this._viewport = document.querySelector("video");     
 
-        this._frame?.remove();
-        this._frame = document.createElement("canvas");
-        this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = 'difference';
+        this._frame = document.createElement("canvas");        
 
-        this.drawVideoToCanvas(true);
 
-        this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
+        this._checks = document.createElement("canvas");
+        this._checks.width = 20;
+        this._checks.height = 20;
+        this._checks.getContext("2d", { willReadFrequently: true }).drawImage(this._viewport, 500, 400, 20, 20, 0, 0, 20, 20);
+
+        setTimeout(() => {
+            this._coefficient = this.analyzeVideoFrame(false).h;        
+            this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
+        }, MOTION_DETECT_DELAY)        
         
         return this;
     };
 
+    
     private onVideoEnterFrame = () => {
 
-        if (Each(4)) this.analyzeVideoFrame();
-
-        if (Each(4)) this.drawVideoToCanvas(true);
-
-        if (Each(HOUR)) return this.initialize();
-
+        if (Each(4)) { 
+            this.analyzeVideoFrame();
+            this.drawVideoToCanvas(true);
+        }       
+        
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
     };
 
-    private analyzeVideoFrame = (): void => {    
+    private analyzeVideoFrame = (dispatch = true) => {
+
+        this._checks.width = 20;
+        this._checks.height = 20;
+
+        const context = this._checks.getContext("2d");
+        context.clearRect(0, 0, 20, 20);
+        context.drawImage(this._viewport, 500, 400, 20, 20, 0, 0, 20, 20);        
+
+        const bitmap = context.getImageData(0, 0, 20, 20);
+
+        let offset: number = 4;
+
+        let r = 0;
+        let g = 0;
+        let b = 0;       
+        let j = 0;
+
+        for (let i = 0; i < bitmap.data.length - offset; i = i + offset) {
+            r += bitmap.data[i];
+            g += bitmap.data[i + 1];
+            b += bitmap.data[i + 2];
+            j++;
+        }  
+        let R = r/j;
+        let G = g/j;
+        let B = b/j;
+
+        let hsv = Utils.rbgToHsv(R,G,B);
+        let delta = Math.abs(hsv.h - this._coefficient);
+
+        if (delta > 30 && dispatch) {
+            Utils.Logger.log('[MotionDetector.analyzeVideoFrame] delta : ' + delta.toFixed(3) + '. dispatching MOTION_DETECTED event.');
+            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
+        }
+        return hsv;
+    }
+
+
+    /*private analyzeVideoFrame = (): void => {    
 
         const bitmap = this._frame.getContext('2d').getImageData(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
         
@@ -67,13 +112,15 @@ class MotionDetector extends Events.EventHandler {
             if ((r + g + b) > MOTION_DETECT_PIXEL_COEF) difference += offset;
         }   
 
-        const coefficient = Number((difference / (bitmap.data.length)).toFixed(offset));
+        const coefficient = difference / bitmap.data.length;
+        const delta = Math.abs(this._coefficient - coefficient);
 
-        if (coefficient > MOTION_DETECT_IMAGE_COEF) {
-            Utils.Logger.log('[MotionDetector.analyzeVideoFrame] coefficient : ' + coefficient + '. dispatching MOTION_DETECTED event.');
+        if (this._coefficient > 0 &&  delta > MOTION_DETECT_IMAGE_COEF) {
+            Utils.Logger.log('[MotionDetector.analyzeVideoFrame] delta : ' + delta.toFixed(3) + '. dispatching MOTION_DETECTED event.');
             this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
         }
-    };
+        this._coefficient = coefficient;
+    };*/
 }
 
 export default new MotionDetector();

@@ -1,4 +1,5 @@
 import * as TWEEN from '@tweenjs/tween.js';
+import MotionDetector from '../detection/MotionDetector';
 import { 
     VIDEO_WIDTH, 
     VIDEO_HEIGHT, 
@@ -7,6 +8,7 @@ import {
     SNAP_COUNT, 
 } from "../utils/Constants";
 import * as Utils from "../utils/Utils";
+import * as Events from "./../utils/Events";
 
 class Snaphots {
 
@@ -17,6 +19,9 @@ class Snaphots {
     private _snapshot:any;
     private _count = 0;
     private _tween:any;
+    private _watermark:any;
+    
+    private _tmpTimeout:any;
 
     private get w() { return this._viewport.getBoundingClientRect().width; }
     private get h() { return this._viewport.getBoundingClientRect().height; }
@@ -57,6 +62,35 @@ class Snaphots {
         this._buffer.getContext('2d').rect(0, 0, VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
         this._buffer.getContext('2d').stroke();
 
+        this._watermark = document.getElementById("watermark");
+
+        const runCatRun = () => {
+            this._watermark.style.setProperty('transform', 'translate(' + 0 + 'px')
+            let ini = { x : 0, alpha: 0.8 };
+            new TWEEN.Tween(ini)
+            .to({ x: 1000, alpha: 0 }, 6000)
+            //.easing(TWEEN.Easing.Exponential.In)
+            .onUpdate(() => {
+                this._watermark.style.setProperty('transform', 'translate(' + ini.x + 'px');
+                this._watermark.style.setProperty('opacity', ini.alpha);
+            })
+            .onComplete(() => runCatRun())
+            .start();
+        }
+
+        runCatRun();
+
+
+
+        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
+            if (this._tmpTimeout) return;
+            Utils.Speaker.playMotionDetectionSound();
+            this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, "MOTION_DETECTED"));
+            this._tmpTimeout = setTimeout(() => {
+                this._tmpTimeout = null;
+            }, 3000);
+        });
+
         requestAnimationFrame(this.tick);
     };
 
@@ -64,17 +98,17 @@ class Snaphots {
 
         Utils.Logger.log('[Snapshots.onViewportClick]');
 
-        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport));
+        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, "manual"));
     };
 
-    private drawCanvasFromVideo(canvas:HTMLCanvasElement, video:any):HTMLCanvasElement {
+    private drawCanvasFromVideo(canvas:HTMLCanvasElement, video:any, source:string):HTMLCanvasElement {
         const w:number = canvas.width = video.getBoundingClientRect().width;
         const h:number = canvas.height = video.getBoundingClientRect().height;
         const context = canvas.getContext('2d'); 
         context.clearRect(0, 0, w, h);
         context.drawImage(video, 0, 0, w, h);
         Utils.addTimeStamp(canvas);        
-        Utils.addSourceStamp(canvas, 'manual');
+        Utils.addSourceStamp(canvas, source);
         return canvas;
     };
 

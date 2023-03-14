@@ -21,6 +21,8 @@ class FaceRecognizer extends Events.EventHandler {
 
         await faceapi.loadAgeGenderModel("../models/");
         await faceapi.loadFaceRecognitionModel("../models/");
+        await faceapi.loadFaceDetectionModel("../models");
+        await faceapi.loadSsdMobilenetv1Model("../models");
         await faceapi.nets.faceLandmark68Net.load("../models/");
    
         Faces.all.forEach(face => this._faces.push(faceapi.LabeledFaceDescriptors.fromJSON(face)));

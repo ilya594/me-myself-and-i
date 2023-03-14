@@ -24,6 +24,9 @@ export function addTimeStamp(canvas:HTMLCanvasElement):HTMLCanvasElement {
     context.font = '20px Courier New';
     context.fillStyle = "#00ff30";
     context.fillText(moment().format('DD.MM.YYYY HH:mm:ss.SSS'), 30, 30);
+
+    const watermark = document.getElementById("police_watermark") as HTMLCanvasElement;
+    context.drawImage(watermark, 966, 0, 100, 100);
     return canvas;
 }
 
@@ -42,6 +45,32 @@ export function addIdentifierStamp(canvas:HTMLCanvasElement, identifier:string):
     context.fillText('[target] : ' + identifier, 25, 70);
     return canvas;
 }
+
+export function rbgToHsv(r:number, g:number, b:number) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    let maxc = Math.max(r, g, b)
+    let minc = Math.min(r, g, b)
+    let v = maxc;
+    if (minc === maxc) {
+        return {h: 0.0, s: 0.0, v: v};
+    } 
+
+    let s = (maxc-minc) / maxc
+    let rc = (maxc-r) / (maxc-minc)
+    let gc = (maxc-g) / (maxc-minc)
+    let bc = (maxc-b) / (maxc-minc)
+    let h;
+    if (r == maxc)
+        h = 0.0+bc-gc
+    else if (g == maxc)
+        h = 2.0+rc-bc
+    else h = 4.0+gc-rc;
+
+    h = (h/6.0) % 1.0
+    return {h: h * 360, s: s * 100, v: v * 100};
+};
 
 export class Logger {
 
@@ -99,11 +128,29 @@ export class Pool {
     }
   }
 
+
+
+
   export class Speaker {
+
+    static AUDIO_MOTION_DETECTION:HTMLAudioElement;
+
+    public static initialize = async () => {
+        Speaker.AUDIO_MOTION_DETECTION = document.getElementById("motion_detection") as HTMLAudioElement;
+    };    
+
+    public static playMotionDetectionSound = (audio = Speaker.AUDIO_MOTION_DETECTION) => {
+        audio.volume = 0.3;
+        audio.loop = true;
+        audio.play();
+        setTimeout(() => audio.pause(), 1500);
+    }
+
     public static playOnce = (source: string) => {
         const audio = window.document.querySelector("audio") ||
             window.document.createElement("audio");
         audio.setAttribute("src", source);
+        audio.currentTime = 0;
         audio.play();
       }
   }

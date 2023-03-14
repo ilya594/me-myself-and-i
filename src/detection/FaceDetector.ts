@@ -22,6 +22,8 @@ class FaceDetector extends Events.EventHandler {
     private _processing: boolean = false;
     private _timeout:any;
     private _interval:any;
+    private _modes = { LAZY: FACE_DETECT_INTERVAL_LAZY, ACTIVE: FACE_DETECT_INTERVAL_ACTIVE };
+    private _mode: number = this._modes.LAZY;
 
     constructor() {
         super();  
@@ -54,21 +56,32 @@ class FaceDetector extends Events.EventHandler {
         return true;
     };
 
-    private _enableActiveDetectionMode = () => {
+    private _enableActiveDetectionMode = () => {        
+        if (this._mode === this._modes.ACTIVE) return;
+
         Utils.Logger.log('[FaceDetector._enableActiveDetectionMode]');
-        this._restartDetectionInterval(FACE_DETECT_INTERVAL_ACTIVE);
+
+        Utils.Speaker.playMotionDetectionSound();    
+        
         this._timeout = setTimeout(this._enableLazyDetectionMode, FACE_DETECT_INTERVAL_WORKTIME);
+
+        this._restartDetectionInterval(FACE_DETECT_INTERVAL_ACTIVE);        
+        
     };
 
     private _enableLazyDetectionMode = () => {
+        if (this._mode === this._modes.LAZY) return;
+
         Utils.Logger.log('[FaceDetector._enableLazyDetectionMode]');
+       
         this._restartDetectionInterval(FACE_DETECT_INTERVAL_LAZY);
     };
 
-    private _restartDetectionInterval = (interval: number) => {
+    private _restartDetectionInterval = (mode: number) => {
         clearInterval(this._interval);
         clearTimeout(this._timeout);
-        this._interval = setInterval(this._processVideoFrame, interval);
+        this._mode = mode;
+        this._interval = setInterval(this._processVideoFrame, mode);
     };
 
 

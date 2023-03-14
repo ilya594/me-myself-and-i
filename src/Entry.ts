@@ -24,21 +24,23 @@ class Entry {
 
         this._viewport = document.querySelector("video");
         this._viewport.onloadedmetadata = this._viewport.play;        
-        this._viewport.srcObject = this._stream;
-
-        await Snaphots.initialize();
+        this._viewport.srcObject = this._stream;        
 
         await MotionDetector.initialize();
 
         await FaceDetector.initialize();          
 
-        await FaceRecognizer.initialize();       
+        await FaceRecognizer.initialize();    
+        
+        await Snaphots.initialize();
+
+        await Utils.Speaker.initialize();        
 
         FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, async (data: Events.DetectionData) => { //@ts-ignore            
 
             Utils.Logger.log('[Snapshots.FACE_RECOGNIZED] person: [' + data.person.name + '].');  
 
-            Utils.Speaker.playOnce('/audio/detected.mp3');
+            Utils.Speaker.playMotionDetectionSound();
 
             const canvas = Utils.signCanvas(data);
 
@@ -47,9 +49,9 @@ class Entry {
             canvas.toBlob(file => Filesaver.saveAs(file, moment().toString() + '.png'));
          });
 
-        Utils.Speaker.playOnce('/audio/initialization.mp3');
+        Utils.Speaker.playMotionDetectionSound();
 
-        Utils.Logger.log('[Entry.initialize] initilization completed.');  
+        Utils.Logger.log('[Entry.initialize] initialization completed.');  
     };
 }
 

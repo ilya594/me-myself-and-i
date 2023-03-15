@@ -25,8 +25,7 @@ export function addTimeStamp(canvas:HTMLCanvasElement):HTMLCanvasElement {
     context.fillStyle = "#00ff30";
     context.fillText(moment().format('DD.MM.YYYY HH:mm:ss.SSS'), 30, 30);
 
-    const watermark = document.getElementById("police_watermark") as HTMLCanvasElement;
-    context.drawImage(watermark, 966, 0, 100, 100);
+
     return canvas;
 }
 
@@ -76,6 +75,7 @@ export class Logger {
 
     private static str:any = [];
     private static t:any = null;
+
     //@ts-ignore
     private static type = async () => { 
         await new Promise(resolve => this.t = setTimeout(resolve, 20));
@@ -136,7 +136,7 @@ export class Pool {
     static AUDIO_MOTION_DETECTION:HTMLAudioElement;
 
     public static initialize = async () => {
-        Speaker.AUDIO_MOTION_DETECTION = document.getElementById("motion_detection") as HTMLAudioElement;
+        return Speaker.AUDIO_MOTION_DETECTION = document.getElementById("motion_detection") as HTMLAudioElement;
     };    
 
     public static playMotionDetectionSound = (audio = Speaker.AUDIO_MOTION_DETECTION) => {

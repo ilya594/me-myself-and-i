@@ -1,3 +1,4 @@
+//@ts-ignore
 import * as TWEEN from '@tweenjs/tween.js';
 import MotionDetector from '../detection/MotionDetector';
 import { 
@@ -63,22 +64,11 @@ class Snaphots {
         this._buffer.getContext('2d').stroke();
 
         this._watermark = document.getElementById("watermark");
+        this._watermark.style.setProperty('visibility', 'visible');
 
-        const runCatRun = () => {
-            this._watermark.style.setProperty('transform', 'translate(' + 0 + 'px')
-            let ini = { x : 0, alpha: 0.8 };
-            new TWEEN.Tween(ini)
-            .to({ x: 1000, alpha: 0 }, 6000)
-            //.easing(TWEEN.Easing.Exponential.In)
-            .onUpdate(() => {
-                this._watermark.style.setProperty('transform', 'translate(' + ini.x + 'px');
-                this._watermark.style.setProperty('opacity', ini.alpha);
-            })
-            .onComplete(() => runCatRun())
-            .start();
-        }
 
-        runCatRun();
+
+        this.runCatRun();
 
 
 
@@ -93,6 +83,20 @@ class Snaphots {
 
         requestAnimationFrame(this.tick);
     };
+
+    private runCatRun = () => {
+        this._watermark.style.setProperty('transform', 'translate(' + 0 + 'px')
+        let ini = { x : 0, alpha: 0.4 };
+        new TWEEN.Tween(ini)
+        .to({ x: 1000, alpha: 0.2 }, 3500)
+        //.easing(TWEEN.Easing.Exponential.In)
+        .onUpdate(() => {
+            this._watermark.style.setProperty('transform', 'translate(' + ini.x + 'px');
+            this._watermark.style.setProperty('opacity', ini.alpha);
+        })
+        .onComplete(() => this.runCatRun())
+        .start();
+    }
 
     private onViewportClick = () => {        
 

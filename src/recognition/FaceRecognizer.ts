@@ -19,17 +19,20 @@ class FaceRecognizer extends Events.EventHandler {
 
     public initialize = async() => {
 
+        Utils.Logger.log('[FaceRecognizer.initialize] with options: [SsdMobileNetv1]'); 
+
         await faceapi.loadAgeGenderModel("../models/");
         await faceapi.loadFaceRecognitionModel("../models/");
         await faceapi.loadFaceDetectionModel("../models");
         await faceapi.loadSsdMobilenetv1Model("../models");
         await faceapi.nets.faceLandmark68Net.load("../models/");
+        await faceapi.nets.faceExpressionNet.load("../models");
    
         Faces.all.forEach(face => this._faces.push(faceapi.LabeledFaceDescriptors.fromJSON(face)));
 
-        this._matcher = new faceapi.FaceMatcher(this._faces);
+        this._matcher = new faceapi.FaceMatcher(this._faces);        
 
-        this._options = new faceapi.TinyFaceDetectorOptions();
+        this._options = new faceapi.SsdMobilenetv1Options();
 
         FaceDetector.addEventListener(Events.FACE_DETECTED, (data:Events.DetectionData) => this._onDetectionDataReceived(data));
 
@@ -38,7 +41,7 @@ class FaceRecognizer extends Events.EventHandler {
 
     private _onDetectionDataReceived = async (data:Events.DetectionData) => {
 
-        Utils.Logger.log('[FaceRecognizer._onDetectionDataReceived] is busy: [ ' + this._processing + ' ]'); 
+        Utils.Logger.log('[FaceRecognizer._onDetectionDataReceived] is busy: [' + this._processing + ']'); 
 
         if (this._processing) return false;   //@ts-ignore    
 
@@ -65,9 +68,12 @@ class FaceRecognizer extends Events.EventHandler {
         this._detections = await faceapi.detectAllFaces(this._data.frame, this._options)
             .withFaceLandmarks()
             .withFaceDescriptors()
-            .withAgeAndGender();
+            .withAgeAndGender()
+            .withFaceExpressions();
         
         if (!this._detections?.length) return Distinguish();
+
+        debugger;
 
         const detection = this._detections.pop();
 

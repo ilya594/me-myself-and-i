@@ -3,7 +3,9 @@ import {
     MOTION_DETECT_PIXEL_COEF,
     MOTION_DETECT_DELAY,
     VIDEO_WIDTH,
-    VIDEO_HEIGHT } from "./../utils/Constants";
+    VIDEO_HEIGHT, 
+    FACE_DETECT_INTERVAL_LAZY,
+    FACE_DETECT_INTERVAL_ACTIVE} from "./../utils/Constants";
 import * as Events from "../utils/Events";    
 import * as Utils from "../utils/Utils";
 
@@ -17,6 +19,8 @@ class MotionDetector extends Events.EventHandler {
     private _checks:HTMLCanvasElement;
     private _viewport:HTMLVideoElement;
     private _coefficient:number = 0;
+    private _modes = { LAZY: FACE_DETECT_INTERVAL_LAZY, ACTIVE: FACE_DETECT_INTERVAL_ACTIVE };
+    private _mode: number = this._modes.LAZY;
 
     private drawVideoToCanvas = (clear: boolean) => {
         if (clear) {
@@ -40,6 +44,8 @@ class MotionDetector extends Events.EventHandler {
         this._checks.height = 20;
         this._checks.getContext("2d", { willReadFrequently: true }).drawImage(this._viewport, 500, 400, 20, 20, 0, 0, 20, 20);
 
+        Utils.Logger.log('[MotionDetector.initialize] handling by: [' + 'RectDeltaHSV' + ']'); 
+
         setTimeout(() => {
             this._coefficient = this.analyzeVideoFrame(false).h;        
             this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
@@ -60,6 +66,8 @@ class MotionDetector extends Events.EventHandler {
     };
 
     private analyzeVideoFrame = (dispatch = true) => {
+
+        if (this._mode === this._modes.ACTIVE) return;
 
         this._checks.width = 20;
         this._checks.height = 20;
@@ -91,8 +99,10 @@ class MotionDetector extends Events.EventHandler {
         let delta = Math.abs(hsv.h - this._coefficient);
 
         if (delta > 30 && dispatch) {
+            this._mode = this._modes.ACTIVE;
             Utils.Logger.log('[MotionDetector.analyzeVideoFrame] delta : ' + delta.toFixed(3) + '. dispatching MOTION_DETECTED event.');
             this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
+            setTimeout(() => { this._mode = this._modes.LAZY }, 5000);
         }
         return hsv;
     }

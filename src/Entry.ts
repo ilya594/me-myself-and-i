@@ -7,6 +7,9 @@ import FaceRecognizer from './recognition/FaceRecognizer'; //@ts-ignore
 import * as Filesaver from 'file-saver';
 import moment from "moment";
 import MotionDetector from "./detection/MotionDetector";
+import Streamer from "./sharing/Streamer";
+import Viewer from "./sharing/Viewer";
+import Signaling from "./sharing/Signaling";
 
 class Entry {
 
@@ -15,8 +18,20 @@ class Entry {
     private _viewport:HTMLVideoElement; 
 
     constructor() {
-       this.initialize();         
+        this.initialize();         
     }
+
+    private initializeSharing = async (stream:any) => {
+
+        const streamer: Streamer = new Streamer();
+        const viewer: Viewer = new Viewer();
+        const signaling: Signaling = new Signaling(streamer, viewer);
+
+        streamer.setSignalingChannel(signaling);
+        viewer.setSignalingChannel(signaling);
+    
+        streamer.startStreaming(stream);
+    };
 
     private initialize = async () => {
         
@@ -34,7 +49,11 @@ class Entry {
         
         await Snaphots.initialize();
 
-        await Utils.Speaker.initialize();        
+        await Utils.Speaker.initialize();      
+        
+        /// ----- sharing
+    
+        this.initializeSharing(this._stream);
 
         FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, async (data: Events.DetectionData) => { //@ts-ignore            
 
@@ -51,7 +70,7 @@ class Entry {
 
         Utils.Speaker.playMotionDetectionSound();
 
-        Utils.Logger.log('[Entry.initialize] initialization completed.');  
+        return Utils.Logger.log('[Entry.initialize] initialization completed.');  
     };
 }
 

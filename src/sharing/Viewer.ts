@@ -17,7 +17,7 @@ export default class Viewer {
 
     public processOffer = async (offer: RTCSessionDescriptionInit): Promise<RTCSessionDescriptionInit> => {
 
-        Utils.Logger.log('[Viewer.processOffer] received sdp : ' + '\r\n' + String(offer.sdp));
+        Utils.Logger.log('[Viewer.processOffer] received sdp : ' + '\r\n' + String(offer.sdp).trim());
 
         this.connection.setRemoteDescription(offer);
         let answer:RTCSessionDescriptionInit = await this.connection.createAnswer();

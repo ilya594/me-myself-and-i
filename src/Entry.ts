@@ -7,9 +7,8 @@ import FaceRecognizer from './recognition/FaceRecognizer'; //@ts-ignore
 import * as Filesaver from 'file-saver';
 import moment from "moment";
 import MotionDetector from "./detection/MotionDetector";
-import Streamer from "./sharing/Streamer";
-import Viewer from "./sharing/Viewer";
-import Signaling from "./sharing/Signaling";
+import Distributor from "./sharing/Distributor";
+
 
 class Entry {
 
@@ -20,18 +19,6 @@ class Entry {
     constructor() {
         this.initialize();         
     }
-
-    private initializeSharing = async (stream:any) => {
-
-        const streamer: Streamer = new Streamer();
-        const viewer: Viewer = new Viewer();
-        const signaling: Signaling = new Signaling(streamer, viewer);
-
-        streamer.setSignalingChannel(signaling);
-        viewer.setSignalingChannel(signaling);
-    
-        streamer.startStreaming(stream);
-    };
 
     private initialize = async () => {
         
@@ -49,11 +36,11 @@ class Entry {
         
         await Snaphots.initialize();
 
+        //await Distributor.initialize();
+
         await Utils.Speaker.initialize();      
         
-        /// ----- sharing
-    
-        this.initializeSharing(this._stream);
+        
 
         FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, async (data: Events.DetectionData) => { //@ts-ignore            
 
@@ -68,7 +55,7 @@ class Entry {
             canvas.toBlob(file => Filesaver.saveAs(file, moment().toString() + '.png'));
          });
 
-        Utils.Speaker.playMotionDetectionSound();
+        //Utils.Speaker.playMotionDetectionSound();
 
         return Utils.Logger.log('[Entry.initialize] initialization completed.');  
     };

@@ -5,7 +5,7 @@ export const SNAP_WIDTH = 222;
 export const SNAP_HEIGHT = 124;
 export const SNAP_COUNT = 5;
 
-export const FACE_DETECT_INTERVAL_ACTIVE = 100;
+export const FACE_DETECT_INTERVAL_ACTIVE = 300;
 export const FACE_DETECT_INTERVAL_LAZY = 400;
 export const FACE_DETECT_INTERVAL_WORKTIME = 30000;
 

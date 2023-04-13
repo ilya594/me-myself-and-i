@@ -47,7 +47,7 @@ class MotionDetector extends Events.EventHandler {
         Utils.Logger.log('[MotionDetector.initialize] handling by: [' + 'RectDeltaHSV' + ']'); 
 
         setTimeout(() => {
-            this._coefficient = this.analyzeVideoFrame(false).h;        
+            this._coefficient = this.analyzeVideoFrame(false);        
             this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
         }, MOTION_DETECT_DELAY)        
         
@@ -96,15 +96,16 @@ class MotionDetector extends Events.EventHandler {
         let B = b/j;
 
         let hsv = Utils.rbgToHsv(R,G,B);
+
         let delta = Math.abs(hsv.h - this._coefficient);
 
-        if (delta > 30 && dispatch) {
+        if (delta > MOTION_DETECT_PIXEL_COEF && dispatch) {
             this._mode = this._modes.ACTIVE;
             Utils.Logger.log('[MotionDetector.analyzeVideoFrame] delta : ' + delta.toFixed(3) + '. dispatching MOTION_DETECTED event.');
             this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
             setTimeout(() => { this._mode = this._modes.LAZY }, 5000);
         }
-        return hsv;
+        return hsv.h;
     }
 
 

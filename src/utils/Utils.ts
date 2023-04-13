@@ -76,6 +76,10 @@ export class Logger {
     private static str:any = [];
     private static t:any = null;
 
+    private static time = () => {
+        return '<' + moment().format('HH:mm:ss.SSS') + '>';
+    }
+
     //@ts-ignore
     private static type = async () => { 
         await new Promise(resolve => this.t = setTimeout(resolve, 20));
@@ -83,14 +87,14 @@ export class Logger {
         return this.str.length ? await this.type() : false;
     }
 
-    public static log = async (record:string) => {
+    public static log = async (rec:string) => {
+       //debugger;
         if (this.str.length)  {
             clearTimeout(this.t);
             this.str = [this.str.join('')];
             await this.type();
         }
-        this.str = ('<' + moment().format('HH:mm:ss.SSS') + '> ' + record).split('');
-        this.str.push('\r\n');
+        this.str = (this.time() + rec + '\r\n').split('');
         await this.type();        
     }
 }

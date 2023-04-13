@@ -65,11 +65,11 @@ class FaceRecognizer extends Events.EventHandler {
 
     private _analyzeDetections = async(): Promise<Person> => {         
         //@ts-ignore
-        this._detections = await faceapi.detectAllFaces(this._data.frame, this._options)
+        this._detections = await faceapi.detectAllFaces(this._data.frame/*, this._options*/)
             .withFaceLandmarks()
             .withFaceDescriptors()
             .withAgeAndGender()
-            .withFaceExpressions();
+            //.withFaceExpressions();
         
         if (!this._detections?.length) return Distinguish();
 

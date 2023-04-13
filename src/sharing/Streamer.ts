@@ -11,7 +11,7 @@ export default class Streamer {
     };
 
     public startStreaming = (stream: any) => {
-        this.stream = stream;
+        this.stream = stream || document.querySelector("")
         this.initializeConnection();
     };
 

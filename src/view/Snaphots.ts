@@ -9,7 +9,7 @@ import {
     SNAP_COUNT, 
 } from "../utils/Constants";
 import * as Utils from "../utils/Utils";
-import * as Events from "./../utils/Events";
+import * as Events from "../utils/Events";
 
 class Snaphots {
 
@@ -70,16 +70,6 @@ class Snaphots {
 
         this.runCatRun();
 
-
-
-        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
-            if (this._tmpTimeout) return;
-            Utils.Speaker.playMotionDetectionSound();
-            this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, "MOTION_DETECTED"));
-            this._tmpTimeout = setTimeout(() => {
-                this._tmpTimeout = null;
-            }, 3000);
-        });
 
         requestAnimationFrame(this.tick);
     };

@@ -15,9 +15,12 @@ const Each = (count: number): boolean => !!(++counter % count === 0);
 
 class MotionDetector extends Events.EventHandler {
 
-    private _frame:HTMLCanvasElement;
-    private _checks:HTMLCanvasElement;
-    private _viewport:HTMLVideoElement;
+    //TODO check the fucking bundle 
+
+
+    private _frame:HTMLCanvasElement | any;
+    private _checks:HTMLCanvasElement | any;
+    private _viewport:HTMLVideoElement | any;
     private _coefficient:number = 0;
     private _modes = { LAZY: FACE_DETECT_INTERVAL_LAZY, ACTIVE: FACE_DETECT_INTERVAL_ACTIVE };
     private _mode: number = this._modes.LAZY;
@@ -65,9 +68,9 @@ class MotionDetector extends Events.EventHandler {
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
     };
 
-    private analyzeVideoFrame = (dispatch = true) => {
+    private analyzeVideoFrame = (dispatch = true): number => {
 
-        if (this._mode === this._modes.ACTIVE) return;
+        if (this._mode === this._modes.ACTIVE) return 0;
 
         this._checks.width = 20;
         this._checks.height = 20;

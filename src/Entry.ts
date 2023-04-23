@@ -3,7 +3,8 @@ import * as Events from "./utils/Events";
 import Snaphots from "./view/Snaphots";
 import * as Utils from "./utils/Utils";
 import FaceDetector from "./detection/FaceDetector";
-import FaceRecognizer from './recognition/FaceRecognizer'; //@ts-ignore  
+import FaceRecognizer from './recognition/FaceRecognizer';
+import Cats from "./view/Cats";  //@ts-ignore  
 import * as Filesaver from 'file-saver';
 import moment from "moment";
 import MotionDetector from "./detection/MotionDetector";
@@ -14,7 +15,7 @@ class Entry {
 
     private _constraints = { video : { width: VIDEO_WIDTH, height: VIDEO_HEIGHT } };
     private _stream:MediaStream;   
-    private _viewport:HTMLVideoElement; 
+    private _viewport: HTMLVideoElement | any;
 
     constructor() {
         this.initialize();         
@@ -35,6 +36,8 @@ class Entry {
         await FaceRecognizer.initialize();    
         
         await Snaphots.initialize();
+
+        await Cats.initialize();
 
         //await Distributor.initialize();
 

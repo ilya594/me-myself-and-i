@@ -20,7 +20,6 @@ class Snaphots {
     private _snapshot:any;
     private _count = 0;
     private _tween:any;
-    private _watermark:any;
     
     private _tmpTimeout:any;
 
@@ -63,30 +62,8 @@ class Snaphots {
         this._buffer.getContext('2d').rect(0, 0, VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
         this._buffer.getContext('2d').stroke();
 
-        this._watermark = document.getElementById("watermark");
-        this._watermark.style.setProperty('visibility', 'visible');
-
-
-
-        this.runCatRun();
-
-
         requestAnimationFrame(this.tick);
     };
-
-    private runCatRun = () => {
-        this._watermark.style.setProperty('transform', 'translate(' + 0 + 'px')
-        let ini = { x : 0, alpha: 0.4 };
-        new TWEEN.Tween(ini)
-        .to({ x: 1000, alpha: 0.2 }, 3500)
-        //.easing(TWEEN.Easing.Exponential.In)
-        .onUpdate(() => {
-            this._watermark.style.setProperty('transform', 'translate(' + ini.x + 'px');
-            this._watermark.style.setProperty('opacity', ini.alpha);
-        })
-        .onComplete(() => this.runCatRun())
-        .start();
-    }
 
     private onViewportClick = () => {        
 
@@ -99,8 +76,8 @@ class Snaphots {
         const w:number = canvas.width = video.getBoundingClientRect().width;
         const h:number = canvas.height = video.getBoundingClientRect().height;
         const context = canvas.getContext('2d'); 
-        context.clearRect(0, 0, w, h);
-        context.drawImage(video, 0, 0, w, h);
+        context?.clearRect(0, 0, w, h);
+        context?.drawImage(video, 0, 0, w, h);
         Utils.addTimeStamp(canvas);        
         Utils.addSourceStamp(canvas, source);
         return canvas;
@@ -176,7 +153,7 @@ class Snaphots {
 
         Utils.Logger.log('[Snapshots.viewSnapshotCollection]');
 
-        const tab = window.open();
+        const tab: any = window.open();
         tab.document.body.style.width = tab.document.body.style.height = '100%';
         tab.document.body.style.overflow = 'hidden';
         tab.document.body.innerHTML = '<div width="100%" height="100%">' + 

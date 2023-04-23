@@ -14,7 +14,7 @@ import MotionDetector from "./MotionDetector";
 
 class FaceDetector extends Events.EventHandler {
 
-    private _viewport:HTMLVideoElement;
+    private _viewport:HTMLVideoElement | any;
     private _frame:Tensor4D;
     private _camera:any;
     private _options:TinyFaceDetectorOptions | FaceDetectionOptions;
@@ -118,7 +118,7 @@ class FaceDetector extends Events.EventHandler {
 
     private _dispose = () => {
         this._frame?.dispose();
-        this._frame = null;
+        //this._frame = null;
         this._detections = null;
         this._processing = false;
         return false;

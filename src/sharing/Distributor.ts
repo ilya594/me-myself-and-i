@@ -4,7 +4,7 @@ import Viewer from "./Viewer";
 
 class Distributor {
 
-    private stream = document.querySelector("video");
+    //private stream = document.querySelector("video");
 
 
     constructor() {
@@ -22,7 +22,7 @@ class Distributor {
         streamer.setSignalingChannel(signaling);
         viewer.setSignalingChannel(signaling);
     
-        streamer.startStreaming(this.stream);
+        //streamer.startStreaming(this.stream);
     };
 
 }

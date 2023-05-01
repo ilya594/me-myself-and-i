@@ -18,23 +18,27 @@ class Cats {
         this._cat_0.style.setProperty('visibility', 'visible');
         this._cat_1.style.setProperty('visibility', 'visible');
 
-        setTimeout(() => this.runCatRun(this._cat_0, Cats.getRandomInt()), 0);
-        setTimeout(() => this.runCatRun(this._cat_1, Cats.getRandomInt()), 0);    
+        setTimeout(() => this.runCatRun(this._cat_0, Cats.getRandomInt(), {a: 0, b: 1}), 0);
+        setTimeout(() => this.runCatRun(this._cat_1, Cats.getRandomInt(), {a: 1, b: 0}), 0);    
+
+        return true;
     };
 
 
-    private runCatRun = (cat:any, time:number) => {
+    private runCatRun = (cat:any, time:number, invert: {a:number, b:number}) => {
 
-        cat.style.setProperty('transform', 'translate(' + 0 + 'px')
-        let ini = { x : 0, alpha: 0.4 };
-        new TWEEN.Tween(ini)
-        .to({ x: 1000, alpha: 0.2 }, time)
-        //.easing(TWEEN.Easing.Exponential.In)
-        .onUpdate(() => {
-            cat.style.setProperty('transform', 'translate(' + ini.x + 'px');
-            cat.style.setProperty('opacity', ini.alpha);
+        cat.style.setProperty('transform', 'translate(' + 0 + 'px)');
+        cat.style.setProperty('filter', 'invert(' + invert.a + ')');
+
+        let initial = { x : 0, alpha: 0.4, amount: invert.a };
+        const final = { x: 850, alpha: 0.2, amount: invert.b };
+
+        new TWEEN.Tween(initial).to({ x: final.x, alpha: final.alpha, amount: final.amount }, time).onUpdate(() => {
+            cat.style.setProperty('transform', 'translate(' + initial.x + 'px)');
+            //cat.style.setProperty('opacity', initial.alpha);
+            //cat.style.setProperty('filter', 'invert(' + initial.amount + ')');
         })
-        .onComplete(() => this.runCatRun(cat, Cats.getRandomInt()))
+        .onComplete(() => this.runCatRun(cat, Cats.getRandomInt(), invert))
         .start();
     }
 

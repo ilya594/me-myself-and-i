@@ -65,11 +65,13 @@ class FaceRecognizer extends Events.EventHandler {
 
     private _analyzeDetections = async(): Promise<Person> => {         
         //@ts-ignore
-        this._detections = await faceapi.detectAllFaces(this._data.frame/*, this._options*/).withFaceLandmarks().withFaceExpressions().withAgeAndGender().withFaceDescriptors();
+        this._detections = await faceapi.detectAllFaces(this._data.frame/*, this._options*/).withFaceLandmarks(true).withFaceExpressions().withAgeAndGender().withFaceDescriptors();
 
         if (!this._detections?.length) return Distinguish();
 
         const detection = this._detections.pop();
+
+        debugger;
 
         const match = this._matcher.findBestMatch(detection.descriptor);
         

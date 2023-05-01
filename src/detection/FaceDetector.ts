@@ -22,8 +22,8 @@ class FaceDetector extends Events.EventHandler {
     private _processing: boolean = false;
     private _timeout:any;
     private _interval:any;
-    private _modes = { LAZY: FACE_DETECT_INTERVAL_LAZY, ACTIVE: FACE_DETECT_INTERVAL_ACTIVE };
-    private _mode: number = this._modes.LAZY;
+   // private _modes = { LAZY: FACE_DETECT_INTERVAL_LAZY, ACTIVE: FACE_DETECT_INTERVAL_ACTIVE };
+   // private _mode: number = this._modes.LAZY;
 
     constructor() {
         super();  
@@ -47,7 +47,7 @@ class FaceDetector extends Events.EventHandler {
 
         await faceapi.loadTinyFaceDetectorModel("../models/");
         await faceapi.nets.tinyFaceDetector.load("../models/");
-        await faceapi.loadSsdMobilenetv1Model("../models/");
+        //await faceapi.loadSsdMobilenetv1Model("../models/");
 
         this._options = new faceapi.TinyFaceDetectorOptions();
 
@@ -57,20 +57,20 @@ class FaceDetector extends Events.EventHandler {
     };
 
     private _enableActiveDetectionMode = () => {        
-        if (this._mode === this._modes.ACTIVE) return;
+       // this._mode = this._modes.ACTIVE;
 
         Utils.Logger.log('[FaceDetector._enableActiveDetectionMode]');
 
         Utils.Speaker.playMotionDetectionSound();    
         
-        this._timeout = setTimeout(this._enableLazyDetectionMode, FACE_DETECT_INTERVAL_WORKTIME);
+        this._timeout = setTimeout(() => this._enableLazyDetectionMode(), FACE_DETECT_INTERVAL_WORKTIME);
 
-        this._restartDetectionInterval(FACE_DETECT_INTERVAL_ACTIVE);        
+        //this._restartDetectionInterval(FACE_DETECT_INTERVAL_ACTIVE);        
         
     };
 
     private _enableLazyDetectionMode = () => {
-        if (this._mode === this._modes.LAZY) return;
+        
 
         Utils.Logger.log('[FaceDetector._enableLazyDetectionMode]');
        
@@ -80,7 +80,6 @@ class FaceDetector extends Events.EventHandler {
     private _restartDetectionInterval = (mode: number) => {
         clearInterval(this._interval);
         clearTimeout(this._timeout);
-        this._mode = mode;
         this._interval = setInterval(this._processVideoFrame, mode);
     };
 

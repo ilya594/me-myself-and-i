@@ -19,4 +19,5 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
   mode: 'development',
+  target: ['node12.18', 'node', 'es5']
 }

@@ -60,7 +60,7 @@ class Entry {
 
         //Utils.Speaker.playMotionDetectionSound();
 
-        return Utils.Logger.log('[Entry.initialize] initialization completed.');  
+        return Utils.Logger.log('\r\n' + 'Chlenix v 1.0 activated.' + '\r\n');  
     };
 }
 

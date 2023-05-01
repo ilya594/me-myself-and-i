@@ -45,6 +45,26 @@ export function addIdentifierStamp(canvas:HTMLCanvasElement, identifier:string):
     return canvas;
 }
 
+export function getRgb(bitmap: any) {
+    let offset: number = 4;
+
+    let r = 0;
+    let g = 0;
+    let b = 0;       
+    let j = 0;
+
+    for (let i = 0; i < bitmap.data.length - offset; i = i + offset) {
+        r += bitmap.data[i];
+        g += bitmap.data[i + 1];
+        b += bitmap.data[i + 2];
+        j++;
+    }  
+    let R = r/j;
+    let G = g/j;
+    let B = b/j;
+    return {r:R, g:G, b:B};
+};
+
 export function rbgToHsv(r:number, g:number, b:number) {
     r /= 255;
     g /= 255;
@@ -84,6 +104,7 @@ export class Logger {
     private static type = async () => { 
         await new Promise(resolve => this.t = setTimeout(resolve, 20));
         document.querySelector("textarea").value += this.str.shift();
+        document.querySelector("textarea").scrollTop = document.querySelector("textarea").scrollHeight;
         return this.str.length ? await this.type() : false;
     }
 

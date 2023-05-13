@@ -36,7 +36,7 @@ class FaceRecognizer extends Events.EventHandler {
 
         FaceDetector.addEventListener(Events.FACE_DETECTED, (data:Events.DetectionData) => this._onDetectionDataReceived(data));
 
-        return Promise.resolve();
+        return true;
     };
 
     private _onDetectionDataReceived = async (data:Events.DetectionData) => {
@@ -65,13 +65,11 @@ class FaceRecognizer extends Events.EventHandler {
 
     private _analyzeDetections = async(): Promise<Person> => {         
         //@ts-ignore
-        this._detections = await faceapi.detectAllFaces(this._data.frame/*, this._options*/).withFaceLandmarks(true).withFaceExpressions().withAgeAndGender().withFaceDescriptors();
+        this._detections = await faceapi.detectAllFaces(this._data.frame, this._options).withFaceLandmarks().withFaceExpressions().withAgeAndGender().withFaceDescriptors();
 
         if (!this._detections?.length) return Distinguish();
 
         const detection = this._detections.pop();
-
-        debugger;
 
         const match = this._matcher.findBestMatch(detection.descriptor);
         

@@ -65,7 +65,7 @@ class Snaphots {
         requestAnimationFrame(this.tick);
     };
 
-    private onViewportClick = () => {        
+    public onViewportClick = () => {         //TODO refactor
 
         Utils.Logger.log('[Snapshots.onViewportClick]');
 

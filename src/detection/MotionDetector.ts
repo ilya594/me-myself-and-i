@@ -8,6 +8,7 @@ import {
     FACE_DETECT_INTERVAL_ACTIVE} from "./../utils/Constants";
 import * as Events from "../utils/Events";    
 import * as Utils from "../utils/Utils";
+import Snaphots from "../view/Snaphots";
 
 var counter = 0;
 
@@ -21,7 +22,9 @@ class MotionDetector extends Events.EventHandler {
     private _frame:HTMLCanvasElement | any;
     private _checks:HTMLCanvasElement | any;
     private _checks_check:any;
-    private _checks_enabled:boolean = false;
+    private _checks_capture:any;
+    private _checks_check_enabled:boolean = false;
+    private _checks_capture_enabled:boolean = false;
     private _viewport:HTMLVideoElement | any;
     private _coefficient:number = 0;
     private _modes = { LAZY: FACE_DETECT_INTERVAL_LAZY, ACTIVE: FACE_DETECT_INTERVAL_ACTIVE };
@@ -40,6 +43,9 @@ class MotionDetector extends Events.EventHandler {
 
         this._checks_check = document.getElementById("motion-detector-checks");
         this._checks_check.addEventListener("change", (event: any) => this.onChecksValueChanged(event.target.checked));
+
+        this._checks_capture = document.getElementById("motion-detector-capture");
+        this._checks_capture.addEventListener("change", (event: any) => this.onCaptureValueChanged(event.target.checked));
 
 
         Utils.Logger.log('[MotionDetector.initialize] handling by: [' + 'RectDeltaHSV' + ']'); 
@@ -63,16 +69,23 @@ class MotionDetector extends Events.EventHandler {
     }
 
     private onChecksValueChanged = (value: boolean ) => {     
-        
-        this._checks_enabled = value;
 
-        if (this._checks_enabled) {
+        this._checks_check_enabled = value;
+
+        if (this._checks_check_enabled) {
             this.drawChecksData();
         } else {
             this.clearChecksData();
         }
 
-        Utils.Logger.log('[MotionDetector.createCheckpoints] visible : ' + value);
+        Utils.Logger.log('[MotionDetector.checkpoints] visible : [' + value + ']');
+    };
+
+    private onCaptureValueChanged = (value: boolean ) => {     
+        
+        this._checks_capture_enabled = value;
+
+        Utils.Logger.log('[MotionDetector.capturing] enabled : [' + value + ']');
     };
 
     private drawChecksData = () => {
@@ -130,13 +143,19 @@ class MotionDetector extends Events.EventHandler {
 
         let delta = this._hsvDelta = Math.abs(hsv.h - this._coefficient);   
         
-        if (this._checks_enabled) {
+        if (this._checks_check_enabled) {
             this.drawChecksData();
         }
 
         if (delta > MOTION_DETECT_PIXEL_COEF && dispatch) {
             this._mode = this._modes.ACTIVE;
             Utils.Logger.log('[MotionDetector.analyzeVideoFrame] delta : ' + delta.toFixed(3) + '. dispatching MOTION_DETECTED event.');
+
+            if (this._checks_capture_enabled) {
+                Snaphots.onViewportClick();
+            }
+
+
             this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
             setTimeout(() => { this._mode = this._modes.LAZY }, 5000);
         }

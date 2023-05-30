@@ -22,6 +22,7 @@ export default class Viewer {
         this.connection.setRemoteDescription(offer);
         let answer:RTCSessionDescriptionInit = await this.connection.createAnswer();
         this.connection.setLocalDescription(answer);
+        
         return answer;
     };
 

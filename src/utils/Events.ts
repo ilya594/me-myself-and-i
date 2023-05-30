@@ -29,7 +29,7 @@ export class EventHandler {
   export interface DetectionData {
     frame: Tensor4D | any;
     canvas: HTMLCanvasElement;
-    person?: typeof Person;
+    persons?: Array<typeof Person>;
     box?:any;
   }
 

@@ -47,7 +47,7 @@ class Entry {
 
         FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, async (data: Events.DetectionData) => { //@ts-ignore            
 
-            Utils.Logger.log('[Snapshots.FACE_RECOGNIZED] person: [' + data.person.name + '].');  
+            //Utils.Logger.log('[Snapshots.FACE_RECOGNIZED] person: [' + data.person.name + '].');  
 
             Utils.Speaker.playMotionDetectionSound();
 
@@ -60,7 +60,7 @@ class Entry {
 
         //Utils.Speaker.playMotionDetectionSound();
 
-        return Utils.Logger.log('\r\n' + 'Chlenix v 1.0 activated.');  
+        return Utils.Logger.log('\r\n' + 'Chlenix v 1.1 activated.');  
     };
 }
 

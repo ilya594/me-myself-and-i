@@ -53,7 +53,7 @@ class MotionDetector extends Events.EventHandler {
         setTimeout(() => {
             this._coefficient = this.analyzeVideoFrame(false);        
             this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
-        }, MOTION_DETECT_DELAY)        
+        }, MOTION_DETECT_DELAY);
 
         return true;
     };

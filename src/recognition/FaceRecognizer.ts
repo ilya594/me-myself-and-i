@@ -55,7 +55,7 @@ class FaceRecognizer extends Events.EventHandler {
 
         this.dispatchEvent(Events.FACE_RECOGNIZED, { 
             frame: this._data.frame.clone(), 
-            person: result, 
+            persons: result, 
             canvas: this._data.canvas, 
             box: this._data.box 
         });
@@ -63,17 +63,17 @@ class FaceRecognizer extends Events.EventHandler {
         this._dispose();
     };
 
-    private _analyzeDetections = async(): Promise<Person> => {         
+    private _analyzeDetections = async(): Promise<Array<Person>> => {         
         //@ts-ignore
         this._detections = await faceapi.detectAllFaces(this._data.frame, this._options).withFaceLandmarks().withFaceExpressions().withAgeAndGender().withFaceDescriptors();
 
-        if (!this._detections?.length) return Distinguish();
+        if (!this._detections?.length) return [];
 
-        const detection = this._detections.pop();
+        const detections = this._detections.slice();
 
-        const match = this._matcher.findBestMatch(detection.descriptor);
-        
-        return Distinguish(detection, match);
+        const match:any = null; //this._matcher.findBestMatch(detection.descriptor); //TODO!
+
+        return detections.map((detection:any) => Distinguish(detection, match));
     };
     
     private _dispose = () => {

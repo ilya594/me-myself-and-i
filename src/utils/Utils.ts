@@ -3,8 +3,8 @@ import * as Events from "./Events";
 
 export function signCanvas(data:Events.DetectionData):HTMLCanvasElement {
     addTimeStamp(data.canvas);  //@ts-ignore
-    addSourceStamp(data.canvas, Events.FACE_DETECTED + (data.person.identified ? (',' + Events.FACE_RECOGNIZED) : ''));  //@ts-ignore
-    addIdentifierStamp(data.canvas, data.person.name + ', ~' + data.person.age + ' y/o, probably ' + data.person.sex);
+    addSourceStamp(data.canvas, Events.FACE_DETECTED + (data.persons[0]?.identified ? (',' + Events.FACE_RECOGNIZED) : ''));  //@ts-ignore
+    addIdentifierStamp(data.canvas, data.persons[0]?.name + ', ~' + data.persons[0]?.age + ' y/o, probably ' + data.persons[0]?.sex);
     if (data.box) addFaceBox(data.canvas, data.box);
     return data.canvas;
 };

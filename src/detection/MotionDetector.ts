@@ -109,7 +109,7 @@ class MotionDetector extends Events.EventHandler {
 
     private clearChecksData = () => {
         let container  = document.querySelectorAll("canvas")[0];
-        let context = container.getContext('2d');
+        let context = container.getContext('2d', { willReadFrequently: true });
         context.clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);  
     }
     
@@ -130,7 +130,7 @@ class MotionDetector extends Events.EventHandler {
         this._checks.width = 20;
         this._checks.height = 20;
 
-        const context = this._checks.getContext("2d");
+        const context = this._checks.getContext("2d", { willReadFrequently: true });
         context.clearRect(0, 0, 20, 20);
         context.drawImage(this._viewport, 500, 400, 20, 20, 0, 0, 20, 20);    
 

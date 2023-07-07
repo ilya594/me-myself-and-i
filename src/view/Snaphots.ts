@@ -65,7 +65,14 @@ class Snaphots {
         requestAnimationFrame(this.tick);
     };
 
-    public onViewportClick = () => {         //TODO refactor
+    public create = (source: string = '') => {
+        
+        Utils.Logger.log('[Snapshots.onViewportClick]');
+
+        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, source));
+    }
+
+    private onViewportClick = () => {   
 
         Utils.Logger.log('[Snapshots.onViewportClick]');
 

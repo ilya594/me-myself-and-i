@@ -8,7 +8,7 @@ import Cats from "./view/Cats";  //@ts-ignore
 import * as Filesaver from 'file-saver';
 import moment from "moment";
 import MotionDetector from "./detection/MotionDetector";
-import Distributor from "./sharing/Distributor";
+import StreamingEntity from "./sharing/StreamingEntity";
 
 
 class Entry {
@@ -39,7 +39,7 @@ class Entry {
 
         await Cats.initialize();
 
-        //await Distributor.initialize();
+        await StreamingEntity.initialize();
 
         await Utils.Speaker.initialize();      
         

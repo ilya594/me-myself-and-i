@@ -152,7 +152,7 @@ class MotionDetector extends Events.EventHandler {
             Utils.Logger.log('[MotionDetector.analyzeVideoFrame] delta : ' + delta.toFixed(3) + '. dispatching MOTION_DETECTED event.');
 
             if (this._checks_capture_enabled) {
-                Snaphots.onViewportClick();
+                Snaphots.create(Events.MOTION_DETECTED);
             }
 
 

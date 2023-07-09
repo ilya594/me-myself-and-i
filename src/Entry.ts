@@ -33,7 +33,7 @@ class Entry {
 
         await MotionDetector.initialize();
 
-        await FaceDetector.initialize();          
+        //await FaceDetector.initialize();          
 
         await FaceRecognizer.initialize();    
         

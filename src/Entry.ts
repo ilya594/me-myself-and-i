@@ -23,11 +23,13 @@ class Entry {
 
     private initialize = async () => {
         
-        this._stream = await navigator.mediaDevices.getUserMedia(this._constraints); 
+       /*this._stream = await navigator.mediaDevices.getUserMedia(this._constraints); */
 
-        this._viewport = document.querySelector("video");
-        this._viewport.onloadedmetadata = this._viewport.play;        
-        this._viewport.srcObject = this._stream;        
+       this._stream = await StreamingEntity.initialize();
+
+       this._viewport = document.querySelector("video");
+       this._viewport.onloadedmetadata = this._viewport.play;        
+       this._viewport.srcObject = this._stream;        
 
         await MotionDetector.initialize();
 
@@ -39,7 +41,7 @@ class Entry {
 
         await Cats.initialize();
 
-        await StreamingEntity.initialize();
+        
 
         await Utils.Speaker.initialize();      
         

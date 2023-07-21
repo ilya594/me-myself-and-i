@@ -158,7 +158,7 @@ export class Pool {
 
   export class Speaker {
 
-    static AUDIO_MOTION_DETECTION:HTMLAudioElement;
+    static AUDIO_MOTION_DETECTION: HTMLAudioElement;
 
     public static initialize = async () => {
         return Speaker.AUDIO_MOTION_DETECTION = document.getElementById("motion_detection") as HTMLAudioElement;

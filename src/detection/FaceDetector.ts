@@ -47,7 +47,7 @@ class FaceDetector extends Events.EventHandler {
 
         await faceapi.loadTinyFaceDetectorModel("../models/");
         await faceapi.nets.tinyFaceDetector.load("../models/");
-        //await faceapi.loadSsdMobilenetv1Model("../models/");
+        await faceapi.loadSsdMobilenetv1Model("../models/");
 
         this._options = new faceapi.TinyFaceDetectorOptions();
 

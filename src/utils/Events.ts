@@ -1,4 +1,5 @@
 import { Tensor4D } from '@tensorflow/tfjs';
+
 import Person from './../recognition/FaceRecognizer';
 
 export class EventHandler {

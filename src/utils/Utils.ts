@@ -161,10 +161,14 @@ export class Pool {
     static AUDIO_MOTION_DETECTION: HTMLAudioElement;
 
     public static initialize = async () => {
+                //@ts-ignore
+         
         return Speaker.AUDIO_MOTION_DETECTION = document.getElementById("motion_detection") as HTMLAudioElement;
     };    
 
     public static playMotionDetectionSound = (audio = Speaker.AUDIO_MOTION_DETECTION) => {
+
+      //  debugger;
         audio.volume = 0.3;
         audio.loop = true;
         audio.play();
@@ -172,10 +176,40 @@ export class Pool {
     }
 
     public static playOnce = (source: string) => {
-        const audio = window.document.querySelector("audio") ||
-            window.document.createElement("audio");
-        audio.setAttribute("src", source);
-        audio.currentTime = 0;
-        audio.play();
+
+        //@ts-ignore
+        if (window.isSecureContex) {
+            debugger;
+        }
+
+        //@ts-ignore
+        navigator.mediaDevices?.selectAudioOutput && navigator.mediaDevices?.selectAudioOutput().then((device: any) => {
+
+            window.navigator.mediaDevices.enumerateDevices().then((devices) => {
+
+                devices.forEach((device) => {
+                    if (device.kind === 'audiooutput') {
+                        let audio: any = window.document.createElement("audio");
+                        console.log('-------------------audio output found.');
+                        audio.setSinkId(device.deviceId);
+                        audio.setAttribute("src", './audio/kyiv_metro_obolon.mp3');
+                        audio.volume = 0.5;
+                        audio.currentTime = 0;
+                        audio.play();
+                    }       
+                })
+            });
+
+
+            //debugger;
+            //console.log(`${device.kind}: ${device.label} id = ${device.deviceId}`);
+          }).catch((err:any ) => {
+            debugger;
+            //console.error(`${err.name}: ${err.message}`);
+          });
+      
+
+         
+
       }
   }

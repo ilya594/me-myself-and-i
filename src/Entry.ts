@@ -11,20 +11,18 @@ import MotionDetector from "./detection/MotionDetector";
 import Soundpad from "./view/Soundpad";
 //import StreamingEntity from "./sharing/StreamingEntity";
 
-
 class Entry {
 
     private _constraints = { video : { width: VIDEO_WIDTH, height: VIDEO_HEIGHT } };
     private _stream:MediaStream;   
     private _viewport: HTMLVideoElement | any;
 
-    constructor() {
-
-        this.initialize();         
-    }
+    constructor() { window.addEventListener("load", (event) => this.initialize()); }
 
     private initialize = async () => {
-        
+
+      
+
         this._stream = await navigator.mediaDevices.getUserMedia(this._constraints); 
 
         this._viewport = document.querySelector("video");
@@ -45,15 +43,13 @@ class Entry {
 
         await Soundpad.initialize();
 
-        await Utils.Speaker.initialize();      
+        //await Utils.Speaker.initialize();   
         
-        
+      //  Utils.Speaker.playOnce('./audio/kyiv_metro_obolon.mp3');
 
-        FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, async (data: Events.DetectionData) => { //@ts-ignore            
+        FaceRecognizer.addEventListener(Events.FACE_RECOGNIZED, async (data: Events.DetectionData) => {
 
-            //Utils.Logger.log('[Snapshots.FACE_RECOGNIZED] person: [' + data.person.name + '].');  
-
-            Utils.Speaker.playMotionDetectionSound();
+            //Utils.Speaker.playMotionDetectionSound();
 
             const canvas = Utils.signCanvas(data);
 
@@ -62,9 +58,7 @@ class Entry {
             canvas.toBlob(file => Filesaver.saveAs(file, moment().toString() + '.png'));
          });
 
-        //Utils.Speaker.playMotionDetectionSound();
-
-        return Utils.Logger.log('\r\n' + 'Chlenix v 1.1 activated.');  
+        return +1;
     };
 }
 

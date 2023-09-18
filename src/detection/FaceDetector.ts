@@ -45,9 +45,9 @@ class FaceDetector extends Events.EventHandler {
 
     private _initializeFaceDetection = async () => {
 
-        await faceapi.loadTinyFaceDetectorModel("../models/");
-        await faceapi.nets.tinyFaceDetector.load("../models/");
-        await faceapi.loadSsdMobilenetv1Model("../models/");
+        //await faceapi.loadTinyFaceDetectorModel("../models/");
+       // await faceapi.nets.tinyFaceDetector.load("../models/");
+    //    await faceapi.loadSsdMobilenetv1Model("../models/");
 
         this._options = new faceapi.TinyFaceDetectorOptions();
 
@@ -90,11 +90,11 @@ class FaceDetector extends Events.EventHandler {
 
         this._processing = true;
 
-        this._frame = await this._camera.capture();       
+        this._frame = null//await this._camera.capture();       
 
         if (!this._frame) return this._dispose(); //@ts-ignore
         
-        this._detections = await faceapi.detectAllFaces(this._frame, this._options); 
+        this._detections = /*await faceapi.detectAllFaces(this._frame, this._options); */ [];
 
         if (!this._detections?.length) return this._dispose();
 
@@ -116,10 +116,10 @@ class FaceDetector extends Events.EventHandler {
     };
 
     private _dispose = () => {
-        this._frame?.dispose();
+        //this._frame?.dispose();
         //this._frame = null;
-        this._detections = null;
-        this._processing = false;
+        //this._detections = null;
+        //this._processing = false;
         return false;
     };
 }

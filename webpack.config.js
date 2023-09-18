@@ -13,11 +13,20 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    fallback: {
+      fs: false,
+      crypto: false,
+    }
   },
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
   },
   mode: 'development',
-  target: ['node12.18', 'node', 'es5']
+  target: ['web'],
+
+  devServer: {
+    historyApiFallback: true,
+    port: 8080
+  }
 }

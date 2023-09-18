@@ -21,16 +21,16 @@ class FaceRecognizer extends Events.EventHandler {
 
         Utils.Logger.log('[FaceRecognizer.initialize] with options: [SsdMobileNetv1]'); 
 
-        await faceapi.loadAgeGenderModel("../models/");
-        await faceapi.loadFaceRecognitionModel("../models/");
-        await faceapi.loadFaceDetectionModel("../models");
-        await faceapi.loadSsdMobilenetv1Model("../models");
-        await faceapi.nets.faceLandmark68Net.load("../models/");
-        await faceapi.nets.faceExpressionNet.load("../models");
+     //   await faceapi.loadAgeGenderModel("../models/");
+      //  await faceapi.loadFaceRecognitionModel("../models/");
+      //  await faceapi.loadFaceDetectionModel("../models");
+     //   await faceapi.loadSsdMobilenetv1Model("../models");
+     //   await faceapi.nets.faceLandmark68Net.load("../models/");
+     //   await faceapi.nets.faceExpressionNet.load("../models");
    
-        Faces.all.forEach(face => this._faces.push(faceapi.LabeledFaceDescriptors.fromJSON(face)));
+        //Faces.all.forEach(face => this._faces.push(faceapi.LabeledFaceDescriptors.fromJSON(face)));
 
-        this._matcher = new faceapi.FaceMatcher(this._faces);        
+       // this._matcher = new faceapi.FaceMatcher(this._faces);        
 
         this._options = new faceapi.SsdMobilenetv1Options();
 

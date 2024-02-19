@@ -18,7 +18,7 @@ class Entry {
 
       var peer = new Peer(id, params);      
     
-      peer.on('open', () => {
+      peer.on('open', (data) => {
     
         const connection = peer.connect('streamer');
         

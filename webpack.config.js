@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 
 module.exports = {
   entry: './src/Entry.ts',
@@ -20,13 +21,18 @@ module.exports = {
   },
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'public'),
   },
   mode: 'development',
   target: ['web'],
 
   devServer: {
     historyApiFallback: true,
-    port: 8080
+    port: 8008,
+    https: {
+      key: fs.readFileSync('./cert/key.pem'),
+      cert: fs.readFileSync('./cert/cert.pem'),
+      ca: fs.readFileSync('./cert/csr.pem')
+    }
   }
 }

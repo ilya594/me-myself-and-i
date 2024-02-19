@@ -9,7 +9,7 @@ class Entry {
 
     private initialize = async () => {
 
-      const id: string = "client";
+      const id: string = uuid.v4();
 
       const params = {
         host: "nodejs-peer-server.onrender.com",

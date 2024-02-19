@@ -3,11 +3,15 @@ import { Peer } from "peerjs";
 class Entry {
 
     constructor() { 
+      window.addEventListener("load", (event) => this.initialize()); 
+    }
+
+    private initialize = async () => {
+
       var peer = new Peer("client", {
         host: "nodejs-peer-server.onrender.com",
         path: "/peer",
-      });
-      
+      });      
 
       const viewport = document.querySelector("video");
     

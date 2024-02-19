@@ -9,7 +9,7 @@ class Entry {
 
     private initialize = async () => {
 
-      const id: string = 'client__' + uuid.v1();
+      const id: string = "client";
 
       const params = {
         host: "nodejs-peer-server.onrender.com",
@@ -26,7 +26,7 @@ class Entry {
     
           connection.send('custom-media-stream-request');
     
-          peer.on('call', (call) => {
+          peer.on('call', async (call) => {
     
             call.on('stream', (stream) => {  
 

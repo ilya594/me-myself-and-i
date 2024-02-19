@@ -1,19 +1,24 @@
 import { Peer } from "peerjs";
+import * as uuid from "uuid";
 
 class Entry {
 
     constructor() { 
-      window.addEventListener("load", (event) => this.initialize()); 
+      window.addEventListener("load", this.initialize); 
     }
 
     private initialize = async () => {
 
-      var peer = new Peer("client", {
+      const id: string = 'client__' + uuid.v1();
+
+      const params = {
         host: "nodejs-peer-server.onrender.com",
         path: "/peer",
-      });      
+      };
+
+      var peer = new Peer(id, params);      
     
-      peer.on('open', (data) => {
+      peer.on('open', () => {
     
         const connection = peer.connect('streamer');
         
@@ -21,7 +26,7 @@ class Entry {
     
           connection.send('custom-media-stream-request');
     
-          peer.on('call', async (call) => {
+          peer.on('call', (call) => {
     
             call.on('stream', (stream) => {  
 

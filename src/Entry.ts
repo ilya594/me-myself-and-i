@@ -5,11 +5,9 @@ class Entry {
     constructor() { 
       var peer = new Peer("client", {
         host: "nodejs-peer-server.onrender.com",
-        //port: 80,
         path: "/peer",
       });
       
-      const options = {};	
 
       const viewport = document.querySelector("video");
     
@@ -23,15 +21,13 @@ class Entry {
     
           peer.on('call', async (call) => {
     
-            const stream = await navigator.mediaDevices.getDisplayMedia(options);
-    
             call.on('stream', (stream) => {    
               
                   viewport.onloadedmetadata = viewport.play;        
                   viewport.srcObject = stream;
             });
     
-            call.answer(stream);
+            call.answer(null);
           });
         })
       });

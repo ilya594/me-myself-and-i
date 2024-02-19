@@ -10,6 +10,8 @@ class Entry {
       });
       
       const options = {};	
+
+      const viewport = document.querySelector("video");
     
       peer.on('open', (data) => {
     
@@ -23,9 +25,8 @@ class Entry {
     
             const stream = await navigator.mediaDevices.getDisplayMedia(options);
     
-            call.on('stream', (stream) => {
-    
-              const viewport = document.querySelector("video") || document.appendChild(document.createElement('video'));
+            call.on('stream', (stream) => {    
+              
                   viewport.onloadedmetadata = viewport.play;        
                   viewport.srcObject = stream;
             });

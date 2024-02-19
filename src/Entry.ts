@@ -12,8 +12,6 @@ class Entry {
         host: "nodejs-peer-server.onrender.com",
         path: "/peer",
       });      
-
-      const viewport = document.querySelector("video");
     
       peer.on('open', (data) => {
     
@@ -25,10 +23,12 @@ class Entry {
     
           peer.on('call', async (call) => {
     
-            call.on('stream', (stream) => {    
-              
-                  viewport.onloadedmetadata = viewport.play;        
-                  viewport.srcObject = stream;
+            call.on('stream', (stream) => {  
+
+              const viewport = document.querySelector("video");
+              viewport.onloadedmetadata = viewport.play;        
+              viewport.srcObject = stream;
+
             });
     
             call.answer(null);

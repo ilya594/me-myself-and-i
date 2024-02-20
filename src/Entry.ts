@@ -9,6 +9,21 @@ class Entry {
 
     private initialize = async () => {
 
+      const entryPage = document.getElementById("entry-page");
+
+      const viewPage = document.getElementById("view-page");
+
+      entryPage.onclick = () => {
+
+        entryPage.style.display = 'none';
+        viewPage.style.display = 'flex';
+        
+        this.initializeViewport();
+      }
+    }
+
+    private initializeViewport = async () => {
+
       const id: string = uuid.v4();
 
       const params = {
@@ -29,6 +44,9 @@ class Entry {
           peer.on('call', async (call) => {
     
             call.on('stream', (stream) => {  
+
+              const loader = document.getElementById("loader");
+              loader.style.display = 'none';
 
               const viewport = document.querySelector("video");
               viewport.onloadedmetadata = viewport.play;        

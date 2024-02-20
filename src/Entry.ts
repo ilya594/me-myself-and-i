@@ -21,7 +21,7 @@ class Entry {
 
     private initializeViewport = async (login: string) => {
 
-      const id: string = login + "-" + (new Date().toTimeString()).substring(0, 8);
+      const id: string = String(login.concat("-").concat(Math.random().toFixed(5)));
 
       const params = {
         host: "nodejs-peer-server.onrender.com",

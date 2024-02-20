@@ -9,22 +9,19 @@ class Entry {
 
     private initialize = async () => {
 
-      const entryPage = document.getElementById("entry-page");
-
-      const viewPage = document.getElementById("view-page");
-
-      entryPage.onclick = () => {
-
-        entryPage.style.display = 'none';
-        viewPage.style.display = 'flex';
-        
-        this.initializeViewport();
+      document.querySelector("textarea").onkeydown = (event) => {
+        if ((event.target as any).textLength > 4) {
+          document.getElementById("entry-page").style.display = 'none';
+          document.getElementById("view-page").style.display = 'flex';   
+          //@ts-ignore     
+          this.initializeViewport(event.target.value); 
+        }
       }
     }
 
-    private initializeViewport = async () => {
+    private initializeViewport = async (login: string) => {
 
-      const id: string = uuid.v4();
+      const id: string = login + "-" + (new Date().toTimeString()).substring(0, 8);
 
       const params = {
         host: "nodejs-peer-server.onrender.com",

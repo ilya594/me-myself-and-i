@@ -2,18 +2,63 @@
 <html lang="en">
 <head>
   <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700;800;900&display=swap');
 
-.loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-  left: 7%;
-  position: relative;
+    
+.center {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #27282c;
 }
+.wave {
+  width: 5px;
+  height: 100px;
+  background: linear-gradient(45deg, rgb(161, 161, 161), #161616);
+  margin: 10px;
+  animation: wave 1s linear infinite;
+  border-radius: 20px;
+}
+.wave:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.wave:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.wave:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.wave:nth-child(5) {
+  animation-delay: 0.4s;
+}
+.wave:nth-child(6) {
+  animation-delay: 0.5s;
+}
+.wave:nth-child(7) {
+  animation-delay: 0.6s;
+}
+.wave:nth-child(8) {
+  animation-delay: 0.7s;
+}
+.wave:nth-child(9) {
+  animation-delay: 0.8s;
+}
+.wave:nth-child(10) {
+  animation-delay: 0.9s;
+}
+
+@keyframes wave {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
 
 .container {
   display: none; 
@@ -29,42 +74,51 @@
 	width: 20%;
 	height: 5%;
 	background-color: #363636;
-	border: none;
 	color: #c5c4c4;
 	margin: 0px;
-	font-size: 3.1rem;
+	font-size: 320%;
   box-sizing: border-box;
   border: 2px solid #ccc;
   border-radius: 4px;
   text-align: center;
   caret-color: #929292;
-  overflow: hidden;
+  overflow: hidden;  
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.video {
+  width: 95%; 
+  object-fit: cover;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
 }
+
+
   </style>
   <meta charset="utf-8">
   <title>html-peer-viewer</title>
   <meta name="description" content="HTML5">
   <meta name="author" content="Author">
-  <script src="index.js"></script>
-  <script>
+  <script src="index.js"></script>  <script>
 
   </script>
 </head>
 
-<body style="height: 100%; overflow: hidden;  background: #27282c;">
+<body style="height: 100%; width: 100%; overflow: hidden; background: #27282c;">
 
   <div id="entry-page" class="container" style="display: flex;">
-    <textarea maxlength="5" autofocus class="textarea"></textarea>
+    <input type="password" maxlength="6" autofocus class="textarea"></input>
   </div>
 
   <div id="view-page" class="container" style="display: none;">
-    <div id="loader" class="loader"></div>
-    <video></video>
+    <div id="loader" class="center">
+      <div class="wave"></div><div class="wave"></div>
+      <div class="wave"></div><div class="wave"></div>
+      <div class="wave"></div><div class="wave"></div>
+      <div class="wave"></div><div class="wave"></div>
+      <div class="wave"></div><div class="wave"></div>
+    </div>
+    <video autoplay class="video" style="display: none;"></video>
   </div>
 
 </body>

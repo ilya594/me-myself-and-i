@@ -9,8 +9,9 @@ class Entry {
 
     private initialize = async () => {
 
-      document.querySelector("textarea").onkeydown = (event) => {
-        if ((event.target as any).textLength > 4) {
+      document.querySelector("input").onkeyup = (event) => {
+        //@ts-ignore  
+        if (event.target.value.length > 5) {
           document.getElementById("entry-page").style.display = 'none';
           document.getElementById("view-page").style.display = 'flex';   
           //@ts-ignore     
@@ -19,16 +20,17 @@ class Entry {
       }
     }
 
-    private initializeViewport = async (login: string) => {
+    private initializeViewport = async (login: string) => { 
 
-      const id: string = login + uuid.v4();
+      const generateId = (input: string, pattern = /^[\u0400-\u04FF]+$/): string => 
+        (pattern.test(input) ? "client" : input) + "-" + uuid.v4();      
 
       const params = {
         host: "nodejs-peer-server.onrender.com",
         path: "/peer",
       };
 
-      var peer = new Peer(id, params);      
+      var peer = new Peer(generateId(login), params);      
     
       peer.on('open', (data) => {
     
@@ -42,12 +44,11 @@ class Entry {
     
             call.on('stream', (stream) => {  
 
-              const loader = document.getElementById("loader");
-              loader.style.display = 'none';
+              document.getElementById("loader").style.display = 'none';
 
               const viewport = document.querySelector("video");
-              viewport.onloadedmetadata = viewport.play;        
               viewport.srcObject = stream;
+              viewport.style.display = 'flex';
 
             });
     

@@ -8,6 +8,8 @@ class Entry {
     }
 
     private initialize = async () => {
+      //@ts-ignore-line
+      screen.lockOrientation?.("landscape") || screen.lock?.("landscape");
 
       document.querySelector("input").onkeyup = (event) => {
         //@ts-ignore  

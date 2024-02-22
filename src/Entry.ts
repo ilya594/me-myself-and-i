@@ -30,6 +30,7 @@ class Entry {
       const params = {
         host: "nodejs-peer-server.onrender.com",
         path: "/peer",
+        secure: true,
       };
 
       var peer = new Peer(generateId(login), params);      

@@ -11,21 +11,14 @@ class Entry {
       //@ts-ignore-line
       screen.lockOrientation?.("landscape") || screen.lock?.("landscape");
 
-      document.querySelector("input").onkeyup = (event) => {
-        //@ts-ignore  
-        if (event.target.value.length > 5) {
-          document.getElementById("entry-page").style.display = 'none';
-          document.getElementById("view-page").style.display = 'flex';   
-          //@ts-ignore     
-          this.initializeViewport(event.target.value); 
-        }
+      document.querySelector("img").onclick = (event) => {
+        document.getElementById("entry-page").style.display = 'none';
+        document.getElementById("view-page").style.display = 'flex'; 
+        this.initializeViewport(); 
       }
     }
 
-    private initializeViewport = async (login: string) => { 
-
-      const generateId = (input: string, pattern = /^[\u0400-\u04FF]+$/): string => 
-        (pattern.test(input) ? "client" : input) + "-" + uuid.v4();      
+    private initializeViewport = async () => {   
 
       const params = {
         host: "nodejs-peer-server.onrender.com",
@@ -33,7 +26,7 @@ class Entry {
         secure: true,
       };
 
-      var peer = new Peer(generateId(login), params);      
+      var peer = new Peer(uuid.v4(), params);      
     
       peer.on('open', (data) => {
     

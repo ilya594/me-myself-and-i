@@ -1,6 +1,8 @@
 import { Peer } from "peerjs";
 import * as uuid from "uuid";
 
+const id = (device: string = !!screen.orientation ? "mobile-" : "static-"): string => device + uuid.v4();
+
 class Entry {
 
     constructor() { 
@@ -26,7 +28,7 @@ class Entry {
         secure: true,
       };
 
-      var peer = new Peer(uuid.v4(), params);      
+      var peer = new Peer(id(), params);      
     
       peer.on('open', (data) => {
     

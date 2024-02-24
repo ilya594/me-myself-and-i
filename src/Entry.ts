@@ -1,7 +1,7 @@
 import { Peer } from "peerjs";
 import * as uuid from "uuid";
 
-const id = (device: string = !!screen.orientation ? "mobile-" : "static-"): string => device + uuid.v4();
+const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): string => device + uuid.v4();
 
 class Entry {
 

@@ -5,22 +5,28 @@ const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): stri
 
 class Entry {
 
+    private peer: Peer;
+
+    private connection: any;
+
     constructor() { 
-      window.addEventListener("load", this.initialize); 
+      window.onload = (event) => this.initializeView();
+      window.onunload = (event) => this.destroy();
     }
 
-    private initialize = async () => {
+    private initializeView = async () => {
       //@ts-ignore-line
       screen.lockOrientation?.("landscape") || screen.lock?.("landscape");
 
       document.querySelector("img").onclick = (event) => {
         document.getElementById("entry-page").style.display = 'none';
         document.getElementById("view-page").style.display = 'flex'; 
-        this.initializeViewport(); 
+
+        this.initializeConnection(); 
       }
     }
 
-    private initializeViewport = async () => {   
+    private initializeConnection = async () => {   
 
       const params = {
         host: "nodejs-peer-server.onrender.com",
@@ -28,17 +34,17 @@ class Entry {
         secure: true,
       };
 
-      var peer = new Peer(id(), params);      
+      this.peer = new Peer(id(), params);      
     
-      peer.on('open', (data) => {
+      this.peer.on('open', (data) => {
     
-        const connection = peer.connect('streamer');
+        this.connection = this.peer.connect('streamer');
         
-        connection.on('open', () => {
+        this.connection.on('open', () => {
     
-          connection.send('custom-media-stream-request');
+          this.connection.send('custom-media-stream-request');
     
-          peer.on('call', async (call) => {
+          this.peer.on('call', async (call) => {
     
             call.on('stream', (stream) => {  
 
@@ -56,6 +62,13 @@ class Entry {
         })
       });
     }
+
+    private destroy = () => {
+      this.connection?.close?.();
+      this.peer?.disconnect?.();
+      this.peer?.destroy?.();
+
+    };
 }
 
 new Entry();

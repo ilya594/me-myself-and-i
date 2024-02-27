@@ -1,4 +1,4 @@
-import { Peer } from "peerjs";
+import { MediaConnection, Peer } from "peerjs";
 import * as uuid from "uuid";
 
 const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): string => device + uuid.v4();
@@ -44,7 +44,9 @@ class Entry {
     
           this.connection.send('custom-media-stream-request');
     
-          this.peer.on('call', async (call) => {
+          this.peer.on('call', async (call: MediaConnection) => {
+
+
     
             call.on('stream', (stream) => {  
 

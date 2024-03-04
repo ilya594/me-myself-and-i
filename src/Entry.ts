@@ -1,5 +1,6 @@
 import { MediaConnection, Peer } from "peerjs";
 import * as uuid from "uuid";
+import MotionDetector from "./MotionDetector";
 
 const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): string => device + uuid.v4();
 
@@ -28,6 +29,8 @@ class Entry {
 
     private initializeConnection = async () => {   
 
+      await MotionDetector.initialize();
+
       const params = {
         host: "nodejs-peer-server.onrender.com",
         path: "/peer",
@@ -45,8 +48,6 @@ class Entry {
           this.connection.send('custom-media-stream-request');
     
           this.peer.on('call', async (call: MediaConnection) => {
-
-
     
             call.on('stream', (stream) => {  
 

@@ -53,10 +53,12 @@ class Entry {
 
               document.getElementById("loader").style.display = 'none';
 
-              const viewport = document.querySelector("video");
+              const viewport = document.querySelector("video");              
               viewport.onloadedmetadata = viewport.play;        
               viewport.srcObject = stream;
               viewport.style.display = 'flex';
+              
+              document.body.requestFullscreen();
 
             });
     

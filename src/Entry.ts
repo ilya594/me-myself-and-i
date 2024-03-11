@@ -1,6 +1,6 @@
 import { MediaConnection, Peer } from "peerjs";
 import * as uuid from "uuid";
-import MotionDetector from "./MotionDetector";
+//import MotionDetector from "./MotionDetector";
 
 const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): string => device + uuid.v4();
 

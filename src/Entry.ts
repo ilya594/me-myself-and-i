@@ -29,7 +29,7 @@ class Entry {
 
     private initializeConnection = async () => {   
 
-      await MotionDetector.initialize();
+     // await MotionDetector.initialize();
 
       const params = {
         host: "nodejs-peer-server.onrender.com",

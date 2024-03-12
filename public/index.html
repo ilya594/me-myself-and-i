@@ -92,6 +92,11 @@
   <script src="index.js"></script>  <script>
 
   </script>
+  <script>
+    function drawGun(image) {
+      image.style.opacity = image.style.opacity > 0.06 ? 0.06 : 0.66;
+    }
+  </script>
 </head>
 
 <body style="height: 100%; width: 100%; overflow: hidden; background: #27282c;">
@@ -109,7 +114,7 @@
       <div class="wave"></div><div class="wave"></div>
     </div>
     <video autoplay class="video" style="display: none;"></video>
-    <img style="position: absolute;  top: 66%; left: 66%; opacity: 0.66;" src="images/pngkit_gun-in-hand-png_665486.png"/>
+    <img style="position: absolute;  top: 66%; left: 66%; opacity: 0.66;" src="images/pngkit_gun-in-hand-png_665486.png" onclick="drawGun(this)"/>
     <label id="tracelabel" style="position: absolute; top: 5%; left: 5%; font-size: 62px; color: rgb(3, 255, 79);"></label>
   </div>
 

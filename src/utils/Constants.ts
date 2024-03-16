@@ -1,8 +1,8 @@
 export const VIDEO_WIDTH = 1280  / 1.2;
 export const VIDEO_HEIGHT = 720  / 1.2;
 
-export const SNAP_WIDTH = 222;
-export const SNAP_HEIGHT = 124;
+export const SNAP_WIDTH = 444;
+export const SNAP_HEIGHT = 248;
 export const SNAP_COUNT = 5;
 
 export const FACE_DETECT_INTERVAL_ACTIVE = 100;

@@ -5,9 +5,9 @@ import {
     VIDEO_WIDTH,
     VIDEO_HEIGHT, 
     FACE_DETECT_INTERVAL_LAZY,
-    FACE_DETECT_INTERVAL_ACTIVE} from "./utils/Constants";
-import * as Events from "./utils/Events";    
-import * as Utils from "./utils/Utils";
+    FACE_DETECT_INTERVAL_ACTIVE} from "../utils/Constants";
+import * as Events from "../utils/Events";    
+import * as Utils from "../utils/Utils";
 
 
 export class MotionDetector extends Events.EventHandler {

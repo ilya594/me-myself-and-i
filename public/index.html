@@ -87,13 +87,7 @@
   <title>html-peer-viewer</title>
   <meta name="description" content="HTML5">
   <meta name="author" content="Author">
-  <script src="index.js"></script>  <script>
-
-  </script>
-  <script>
-    function drawGun(image) {
-      image.style.opacity = image.style.opacity > 0.06 ? 0.06 : 0.66;
-    }
+  <script src="index.js">
   </script>
 </head>
 
@@ -104,7 +98,6 @@
   </div>
 
   <div id="view-page" class="container" style="position: relative; display: none; filter:grayscale(100)">
-
     <div id="loader" class="center">
       <div class="wave"></div><div class="wave"></div>
       <div class="wave"></div><div class="wave"></div>
@@ -112,9 +105,8 @@
       <div class="wave"></div><div class="wave"></div>
       <div class="wave"></div><div class="wave"></div>
     </div>
-    <img style="position: absolute;  top: 66%; left: 66%; opacity: 0.33;" src="images/pngkit_gun-in-hand-png_665486.png"/>
-    <video autoplay class="video" style="display: none;"></video>
 
+    <video autoplay class="video" style="display: none;"></video>
   </div>
 
 </body>

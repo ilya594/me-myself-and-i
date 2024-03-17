@@ -46,9 +46,9 @@ export function rbgToHsv(r:number, g:number, b:number) {
 
 export function addTimeStamp(canvas: HTMLCanvasElement, date = new Date()): HTMLCanvasElement {
     const context = canvas.getContext('2d');
-    context.font = '40px Courier New';
+    context.font = '42px Courier New';
     context.fillStyle = "#00ff30";
-    const dateStr =  '[time]  : ' + date.toISOString().split('T')[0] +
+    const dateStr =  '[time]    : ' + date.toISOString().split('T')[0] +
         ' ' + date.toTimeString().split(' ')[0] + 
         '.' + date.getMilliseconds();
     context.fillText(dateStr , 30, 30);
@@ -57,8 +57,8 @@ export function addTimeStamp(canvas: HTMLCanvasElement, date = new Date()): HTML
 
 export function addSourceStamp(canvas: HTMLCanvasElement, source: string): HTMLCanvasElement {
     const context = canvas.getContext('2d');
-    context.font = '40px Courier New';
+    context.font = '42px Courier New';
     context.fillStyle = "#00ff30";
-    context.fillText('[хтоце] : ' + source + ' ' + navigator?.appVersion, 30, 70);
+    context.fillText('[trigger] : ' + source + ' ' + navigator?.appVersion, 30, 70);
     return canvas;
 }

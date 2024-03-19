@@ -77,8 +77,8 @@ class Snaphots {
     };
 
     private drawCanvasFromVideo(canvas: HTMLCanvasElement, video: any, source: string): HTMLCanvasElement {
-        const w:number = canvas.width = video.getBoundingClientRect().width;
-        const h:number = canvas.height = video.getBoundingClientRect().height;
+        const w: number = canvas.width = video.getBoundingClientRect().width;
+        const h: number = canvas.height = video.getBoundingClientRect().height;
         const context = canvas.getContext('2d'); 
         context?.clearRect(0, 0, w, h);
         context?.drawImage(video, 0, 0, w, h);

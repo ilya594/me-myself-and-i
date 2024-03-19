@@ -9,12 +9,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgb(44, 44, 44);
+  background: #27282c;
 }
 .wave {
   width: 5px;
   height: 100px;
-  background: linear-gradient(45deg, rgb(161, 161, 161), rgb(44, 44, 44));
+  background: linear-gradient(45deg, rgb(161, 161, 161), #161616);
   margin: 10px;
   animation: wave 1s linear infinite;
   border-radius: 20px;
@@ -74,10 +74,11 @@
 }
 
 .video {
-  width: 1280px; 
-  height: 720px;
+  height: 100%;
+  width: 100%; 
+  object-fit: cover;
   justify-content: center; 
-  align-items: center;
+  align-items:center;
 }
 
 
@@ -90,13 +91,13 @@
   </script>
 </head>
 
-<body style="height: 100%; width: 100%; overflow: hidden; background: rgb(44, 44, 44);">
+<body style="height: 100%; width: 100%; overflow: hidden; background: #27282c;">
 
   <div id="entry-page" class="container" style="display: flex;">
     <img src="./images/eye.gif" style="width: 100%; height: 100%; opacity: 57%; transform: matrix3d(1,1,0,1,0,1,0);"/>
   </div>
 
-  <div id="view-page" class="container" style="position: relative; display: none; filter: grayscale(100)">
+  <div id="view-page" class="container" style="position: relative; display: none; filter:grayscale(100)">
     <div id="loader" class="center">
       <div class="wave"></div><div class="wave"></div>
       <div class="wave"></div><div class="wave"></div>

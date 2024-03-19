@@ -66,7 +66,7 @@ class Entry {
 
 
               
-              //viewport.requestFullscreen();
+             // document.body.requestFullscreen();
 
             });
     

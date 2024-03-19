@@ -87,7 +87,7 @@ class Snaphots {
         return canvas;
     };
 
-    public createSnaphot = (source: HTMLCanvasElement) => { 
+    private createSnaphot = (source: HTMLCanvasElement) => { 
 
         if (this.playing) this._tween.stop();
         

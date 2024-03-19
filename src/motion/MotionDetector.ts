@@ -12,16 +12,20 @@ import * as Utils from "../utils/Utils";
 
 export class MotionDetector extends Events.EventHandler {
 
-    private _frame:HTMLCanvasElement | any;
-    private _checks:HTMLCanvasElement | any;
-    private _viewport:HTMLVideoElement | any;
-    private _coefficient:number = 0;
+    private _frame: HTMLCanvasElement | any;
+    private _checks: HTMLCanvasElement | any;
+    private _viewport: HTMLVideoElement | any;
+    private _container: any;
+    private _coefficient: number = 0;
     private _modes = { LAZY: FACE_DETECT_INTERVAL_LAZY, ACTIVE: FACE_DETECT_INTERVAL_ACTIVE };
     private _mode: number = this._modes.LAZY;
     private _label: any;
+    private _delay: any;
 
 
     public initialize = async () => {
+
+        this._container = document.getElementById("view-page");
 
         this._viewport = document.querySelector("video");     
 
@@ -29,14 +33,29 @@ export class MotionDetector extends Events.EventHandler {
 
         this._checks = document.createElement("canvas");
 
-        this._label = document.getElementById("tracelabel");
+        this._label = document.createElement("label"); this._container.appendChild(this._label);       
+        this._label.style.setProperty('position', 'absolute');
+        this._label.style.setProperty('top', '3%');
+        this._label.style.setProperty('left', '3%');
+        this._label.style.setProperty('font-size', '34px');
+        this._label.style.setProperty('font-family', 'Courier New');
+        this._label.style.setProperty('color', '#00ff30');
 
-        setTimeout(() => {
-            this._coefficient = this.analyzeVideoFrame(false);        
-            this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
-        }, MOTION_DETECT_DELAY);
+    
+        this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
 
         return true;
+    };
+
+    private onVideoEnterFrame = () => {
+
+        clearTimeout(this._delay);
+
+        this.analyzeVideoFrame();
+        
+        this.drawVideoToCanvas(true);     
+        
+        this._delay = setTimeout(() => this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame), 500);
     };
 
     private drawVideoToCanvas = (clear: boolean) => {
@@ -49,13 +68,7 @@ export class MotionDetector extends Events.EventHandler {
         this._frame.getContext('2d',  { willReadFrequently: true }).drawImage(this._viewport, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT); 
     }
     
-    private onVideoEnterFrame = () => {
 
-        this.analyzeVideoFrame();
-        this.drawVideoToCanvas(true);     
-        
-        this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
-    };
 
     private analyzeVideoFrame = (dispatch = true): number => {
 
@@ -77,9 +90,13 @@ export class MotionDetector extends Events.EventHandler {
 
         let delta = Math.abs(hsv.h - this._coefficient);   
 
-        this._label.textContent = 'hsv delta: ' + delta.toFixed(2);
+        this._label.textContent = '[motion detector]: delta [ ' + delta.toFixed(2) + ' ]';
+        
+       // console.trace(delta.toFixed(2))
              
         if (delta > MOTION_DETECT_PIXEL_COEF && dispatch) {
+
+            console.warn('probable motion detected');
 
             this._mode = this._modes.ACTIVE;
 

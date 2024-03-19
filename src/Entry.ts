@@ -1,7 +1,8 @@
 import { MediaConnection, Peer } from "peerjs";
 import * as uuid from "uuid";
 import Snaphots from "./record/Snaphots";
-//import MotionDetector from "./MotionDetector";
+import MotionDetector from "./motion/MotionDetector";
+import * as Events from "./utils/Events";  
 
 const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): string => device + uuid.v4();
 
@@ -30,9 +31,11 @@ class Entry {
 
     private initializeConnection = async () => {   
 
-     // await MotionDetector.initialize();
+     await MotionDetector.initialize();
 
      await Snaphots.initialize();
+
+     MotionDetector.addEventListener(Events .MOTION_DETECTION_STARTED, () => Snaphots.create());
 
       const params = {
         host: "nodejs-peer-server.onrender.com",
@@ -60,6 +63,8 @@ class Entry {
               viewport.onloadedmetadata = viewport.play;        
               viewport.srcObject = stream;
               viewport.style.display = 'flex';
+
+
               
              // document.body.requestFullscreen();
 

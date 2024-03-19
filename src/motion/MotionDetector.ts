@@ -19,6 +19,9 @@ export class MotionDetector extends Events.EventHandler {
     private _label: any;
     private _delay: any;
 
+    private _values: Array<number> = [];
+    private _average: number = undefined;
+
     private get w() { return this._viewport.getBoundingClientRect().width; }
     private get h() { return this._viewport.getBoundingClientRect().height; }
 
@@ -76,6 +79,8 @@ export class MotionDetector extends Events.EventHandler {
 
         const delta = Math.abs(hsv.h);   
 
+        this.saveDeltaValue(delta);
+
         this.trace(delta);            
              
         /*if (delta > MOTION_DETECT_PIXEL_COEF && dispatch) {
@@ -89,8 +94,25 @@ export class MotionDetector extends Events.EventHandler {
         return hsv.h;
     }
 
+    private saveDeltaValue = (value: number) => {
+
+        const size: number = 500;
+
+        this._values.push(value);
+
+        this._average = this._values.reduce((prev, curr) => prev + curr) / this._values.length;
+
+        if (this._values.length >= size) {
+
+            this._values.length = 0;
+        }        
+    }
+
     private trace = (delta: number) => {
-        this._label.textContent = '[m_detect]: ' + ' Δ: [' + delta.toFixed(2) + ']';
+        this._label.textContent = '[m_det] ' +
+        'm=[' + this._average.toFixed(1) + '] ' + 
+        'Δ=[' + delta.toFixed(1) + ']'
+
     }
 }
 

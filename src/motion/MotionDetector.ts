@@ -90,9 +90,10 @@ export class MotionDetector extends Events.EventHandler {
 
         let delta = Math.abs(hsv.h - this._coefficient);   
 
-        this._label.textContent = '[m_detect]: ' +  
-            'lim:{ ' + MOTION_DETECT_PIXEL_COEF.toFixed(2) + ' }'  +
+        this._label.textContent = '[m_detect]: ' +
             ' Δ: { ' + delta.toFixed(2) + ' }';
+            'lim:{ ' + MOTION_DETECT_PIXEL_COEF.toFixed(2) + ' }';
+            
         
        // console.trace(delta.toFixed(2))
              

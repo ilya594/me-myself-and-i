@@ -15,9 +15,22 @@ export class MotionDetector extends Events.EventHandler {
     private _viewport: HTMLVideoElement | any;
     private _container: any;
     private _modes = { LAZY: FACE_DETECT_INTERVAL_LAZY, ACTIVE: FACE_DETECT_INTERVAL_ACTIVE };
-    private _mode: number = this._modes.LAZY;
     private _label: any;
-    private _delay: any;
+
+
+    private _timeout: any = {
+        id: undefined,
+        delay: 222,
+        modes: {
+            lazy: 2222,
+            active: 222,
+        }
+    }
+
+    private _bitmaps: any = {
+        previous: null,
+        current: null,
+    }
 
     private _values: Array<number> = [];
     private _average: number = undefined;
@@ -48,30 +61,41 @@ export class MotionDetector extends Events.EventHandler {
         return true;
     };
 
-    private onVideoEnterFrame = () => {
+    private onVideoEnterFrame = (event: any) => {
+        
+        clearTimeout(this._timeout.id);
 
-        clearTimeout(this._delay);
+        this._timeout.delay = this._timeout.modes.active;
+
+        this.drawVideoToCanvas(); 
 
         this.analyzeVideoFrame();
+
+
         
-        this.drawVideoToCanvas(true);     
-        
-        this._delay = setTimeout(() => this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame), 222);
+        this._timeout.id = setTimeout(() => this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame), this._timeout.delay);
     };
 
-    private drawVideoToCanvas = (clear: boolean) => {
-        if (clear) {
-            this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = 'difference';
-            this._frame.width = this.w;
-            this._frame.height = this.h;            
-            this._frame.getContext('2d').clearRect(0, 0, this.w, this.h);
-        }   
-        this._frame.getContext('2d').drawImage(this._viewport, 0, 0, this.w, this.h); 
-    }  
+    private drawVideoToCanvas = () => {
+        if (this._bitmaps.previous) {
+            this.clearCanvas();
+            this._frame.getContext('2d').putImageData(this._bitmaps.previous, 0, 0);
+        }
+        this._frame.getContext('2d').drawImage(this._viewport, 0, 0, this.w, this.h);
+       
+    }
+
+    private clearCanvas = () => {
+        this._frame.width = this.w;
+        this._frame.height = this.h;  
+        this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = 'difference';
+        this._frame.getContext('2d').clearRect(0, 0, this.w, this.h); 
+    }
 
     private analyzeVideoFrame = (dispatch = true): number => {
 
-        const bitmap = this._frame.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, this.w, this.h);
+        const bitmap = this._bitmaps.previous = 
+            this._frame.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, this.w, this.h);
 
         const rgb = Utils.getRgb(bitmap);
 
@@ -79,22 +103,18 @@ export class MotionDetector extends Events.EventHandler {
 
         const delta = Math.abs(hsv.h);   
 
-        this.saveDeltaValue(delta);
-
-        this.trace(delta);            
+        this.saveDeltaValue(delta);        
              
-        /*if (delta > MOTION_DETECT_PIXEL_COEF && dispatch) {
-
-            this._mode = this._modes.ACTIVE;
+        if (Math.abs(this._average - delta) > MOTION_DETECT_PIXEL_COEF && dispatch) {
 
             this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
 
-            setTimeout(() => { this._mode = this._modes.LAZY }, 5000);
-        }*/
+            this._timeout.delay = this._timeout.modes.lazy;
+        }
         return hsv.h;
     }
 
-    private saveDeltaValue = (value: number) => {
+    private saveDeltaValue = (value: number) => {      
 
         const size: number = 500;
 
@@ -104,8 +124,10 @@ export class MotionDetector extends Events.EventHandler {
 
         if (this._values.length >= size) {
 
-            this._values.length = 0;
+            this._values = this._values.slice(Math.round(size/2));
         }        
+
+        this.trace(value); 
     }
 
     private trace = (delta: number) => {

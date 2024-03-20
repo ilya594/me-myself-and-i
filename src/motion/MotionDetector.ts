@@ -14,23 +14,9 @@ export class MotionDetector extends Events.EventHandler {
     private _frame: HTMLCanvasElement | any;
     private _viewport: HTMLVideoElement | any;
     private _container: any;
-    private _modes = { LAZY: FACE_DETECT_INTERVAL_LAZY, ACTIVE: FACE_DETECT_INTERVAL_ACTIVE };
+
     private _label: any;
 
-
-    private _timeout: any = {
-        id: undefined,
-        delay: 222,
-        modes: {
-            lazy: 2222,
-            active: 222,
-        }
-    }
-
-    private _bitmaps: any = {
-        previous: null,
-        current: null,
-    }
 
     private _values: Array<number> = [];
     private _average: number = undefined;
@@ -55,47 +41,41 @@ export class MotionDetector extends Events.EventHandler {
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');
         this._label.style.setProperty('color', '#00ff30');
-    
+   
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
 
         return true;
     };
 
-    private onVideoEnterFrame = (event: any) => {
-        
-        clearTimeout(this._timeout.id);
+    private onVideoEnterFrame = (...args: any) => {
 
-        this._timeout.delay = this._timeout.modes.active;
+        let duration: number = args[1].presentedFrames;
+        
+
 
         this.drawVideoToCanvas(); 
 
-        this.analyzeVideoFrame();
+       //if (duration % 10 === 0) {
+            this.analyzeVideoFrame();
+       // }
 
-
-        
-        this._timeout.id = setTimeout(() => this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame), this._timeout.delay);
+        this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame)
     };
 
     private drawVideoToCanvas = () => {
-        if (this._bitmaps.previous) {
-            this.clearCanvas();
-            this._frame.getContext('2d').putImageData(this._bitmaps.previous, 0, 0);
-        }
-        this._frame.getContext('2d').drawImage(this._viewport, 0, 0, this.w, this.h);
-       
+        this._frame.getContext('2d', { willReadFrequently: true }).drawImage(this._viewport, 0, 0, this.w, this.h);       
     }
 
-    private clearCanvas = () => {
+    private clearVideoCanvas = () => {
         this._frame.width = this.w;
         this._frame.height = this.h;  
-        this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = 'difference';
-        this._frame.getContext('2d').clearRect(0, 0, this.w, this.h); 
+        this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = 'exclusion';
+        this._frame.getContext('2d', { willReadFrequently: true }).clearRect(0, 0, this.w, this.h); 
     }
 
-    private analyzeVideoFrame = (dispatch = true): number => {
+    private analyzeVideoFrame = (): number => {
 
-        const bitmap = this._bitmaps.previous = 
-            this._frame.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, this.w, this.h);
+        const bitmap = this._frame.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, this.w, this.h);
 
         const rgb = Utils.getRgb(bitmap);
 
@@ -105,12 +85,15 @@ export class MotionDetector extends Events.EventHandler {
 
         this.saveDeltaValue(delta);        
              
-        if (Math.abs(this._average - delta) > MOTION_DETECT_PIXEL_COEF && dispatch) {
+        if (Math.abs(this._average - delta) > MOTION_DETECT_PIXEL_COEF) {
 
             this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
 
-            this._timeout.delay = this._timeout.modes.lazy;
+
         }
+
+        this.clearVideoCanvas();
+
         return hsv.h;
     }
 

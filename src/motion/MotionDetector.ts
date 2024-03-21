@@ -19,6 +19,7 @@ export class MotionDetector extends Events.EventHandler {
 
 
     private _values: Array<number> = [];
+    private _deltas: Array<number> = [];
     private _average: number = undefined;
 
     private get w() { return this._viewport.getBoundingClientRect().width; }
@@ -47,17 +48,11 @@ export class MotionDetector extends Events.EventHandler {
         return true;
     };
 
-    private onVideoEnterFrame = (...args: any) => {
-
-        let duration: number = args[1].presentedFrames;
-        
-
+    private onVideoEnterFrame = (...args: any) => {  
 
         this.drawVideoToCanvas(); 
 
-       //if (duration % 10 === 0) {
-            this.analyzeVideoFrame();
-       // }
+        this.analyzeVideoFrame();
 
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame)
     };
@@ -83,41 +78,46 @@ export class MotionDetector extends Events.EventHandler {
 
         const delta = Math.abs(hsv.h);   
 
-        this.saveDeltaValue(delta);        
-             
-        if (Math.abs(this._average - delta) > MOTION_DETECT_PIXEL_COEF) {
-
-            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
-
-
-        }
+        this.analyzeDeltaValues(delta); 
 
         this.clearVideoCanvas();
 
         return hsv.h;
     }
 
-    private saveDeltaValue = (value: number) => {      
-
-        const size: number = 500;
+    private analyzeDeltaValues = (value: number, size: number = 555) => {      
 
         this._values.push(value);
 
         this._average = this._values.reduce((prev, curr) => prev + curr) / this._values.length;
 
         if (this._values.length >= size) {
+            this._values = this._values.slice(Math.round(size / 2), -11);
+        }
 
-            this._values = this._values.slice(Math.round(size/2));
-        }        
+        if (Math.abs(this._average - value) > MOTION_DETECT_PIXEL_COEF) {
+            this._deltas.push(value);
+        } else {
+            if (this._deltas.length >= 11) {
+                this._deltas.length = 0;
+            }            
+        }
+
+        if (this._deltas.length >= 11) {
+            const average = this._deltas.reduce((prev, curr) => prev + curr) / this._deltas.length;
+            if (Math.abs(this._average - average)) {
+                this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
+            }
+            this._deltas.length = 0;
+        }
 
         this.trace(value); 
     }
 
     private trace = (delta: number) => {
         this._label.textContent = '[m_det] ' +
-        'm=[' + this._average.toFixed(1) + '] ' + 
-        'Δ=[' + delta.toFixed(1) + ']'
-
+        'Δ=[' + delta.toFixed(1) + '] ' + 
+        'm=[' + this._average.toFixed(1) + '] ';
     }
 }
 

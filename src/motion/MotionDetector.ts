@@ -71,7 +71,6 @@ export class MotionDetector extends Events.EventHandler {
 
     private clearVideoCanvas = () => {
         this._ctx.reset();
-        this._ctx.globalCompositeOperation = "difference";
     }
 
     private analyzeVideoFrame = (): any => {
@@ -85,7 +84,7 @@ export class MotionDetector extends Events.EventHandler {
         this.analyzeDeltaValues(hsv); 
 
         this.drawDeltaGraphics(this._values.h, "white", true);
-        this.drawDeltaGraphics(this._values.s, "green", false);
+        this.drawDeltaGraphics(this._values.s, "#C8C9C7", false);
 
         this.clearVideoCanvas();
 

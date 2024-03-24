@@ -31,7 +31,8 @@ export class MotionDetector extends Events.EventHandler {
 
         this._viewport = document.querySelector("video");     
 
-        this._frame = document.createElement("canvas");        
+        this._frame = document.createElement("canvas");      
+        this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = "difference";  
 
         this._label = document.createElement("label"); this._container.appendChild(this._label);       
         this._label.style.setProperty('position', 'absolute');
@@ -69,14 +70,11 @@ export class MotionDetector extends Events.EventHandler {
     }
 
     private clearVideoCanvas = () => {
-        /*this._frame.width = this._w;
-        this._frame.height = this._h;  
-        this._ctx.globalCompositeOperation = 'difference';
-        this._ctx.clearRect(0, 0, this._w, this._h); */
         this._ctx.reset();
+        this._ctx.globalCompositeOperation = "difference";
     }
 
-    private analyzeVideoFrame = (): number => {
+    private analyzeVideoFrame = (): any => {
 
         const image: ImageData = this._ctx.getImageData(0, 0, this._w, this._h);
 
@@ -84,43 +82,40 @@ export class MotionDetector extends Events.EventHandler {
 
         const hsv: {h: number, s: number, v: number} = Utils.rbgToHsv(rgb);
 
-        
-        const delta_h = Math.abs(hsv.h);
-        const delta_s = Math.abs(hsv.s);
-        const delta_v = Math.abs(hsv.v);
+        this.analyzeDeltaValues(hsv); 
 
-
-        this.analyzeDeltaValues(delta_h); 
-
-        this.drawDeltaGraphics();
+        this.drawDeltaGraphics(this._values.h, "white", true);
+        this.drawDeltaGraphics(this._values.s, "green", false);
 
         this.clearVideoCanvas();
 
         this.trace_t(hsv);
 
-        return hsv.h;
+        return hsv;
     }
 
-    private analyzeDeltaValues = (value: number) => {     
-
+    private analyzeDeltaValues = (value: any) => {
         this._values.add(value);    
     }
 
-    private drawDeltaGraphics = () => {
+    private drawDeltaGraphics = (values: any, color: string, clear: boolean = false) => {
 
        const ctx = this._graphic.getContext('2d', { willReadFrequently: true });
 
-       ctx.clearRect(0, 0, this._w, this._h);
+       if (clear) {
+        ctx.clearRect(0, 0, this._w, this._h);
+       }
+
        ctx.lineWidth = 1;
-       ctx.strokeStyle = "white";
+       ctx.strokeStyle = color;
 
        ctx.beginPath();
 
        const adjust = this._graphic.getBoundingClientRect().height / 5;
 
-        for (let i = 1; i < this._values.cached.length; i++) {
-            ctx.moveTo(i - 1, this._values.cached[i - 1] + adjust);
-            ctx.lineTo(i, this._values.cached[i] + adjust);
+        for (let i = 1; i < values.cached.length; i++) {
+            ctx.moveTo(i - 1, values.cached[i - 1] + adjust);
+            ctx.lineTo(i, values.cached[i] + adjust);
             ctx.stroke();
         }
        ctx.closePath();        
@@ -135,6 +130,33 @@ export class MotionDetector extends Events.EventHandler {
 }
 
 class DeltaValues {
+
+    private _h: DeltaValue = new DeltaValue();
+    private _s: DeltaValue = new DeltaValue();
+    private _v: DeltaValue = new DeltaValue();
+
+    public get h() {
+        return this._h;
+    }
+
+    public get s() {
+        return this._s;
+    }
+
+    public get v() {
+        return this._v;
+    }
+
+    constructor() {}
+
+    public add = (value: { h: number, s: number, v: number }) => {
+        this._h.add(value.h);
+        this._s.add(value.s);
+        this._v.add(value.v);
+    }
+}
+
+class DeltaValue {
 
     private _values: any = {
         deltas: [] = [],
@@ -160,7 +182,7 @@ class DeltaValues {
         return this._values.cached.length;
     }
 
-    public add = (value: number): void => {
+    public add = (value: any): void => {
         this._values.cached.push(value);
         this.updateCached();
         this.updateAverage();

@@ -121,10 +121,10 @@ export class MotionDetector extends Events.EventHandler {
     }
 
     private trace_t = ({h, s, v}: any) => {
-        this._label.textContent = '' +
-        'h[' + h.toFixed(1) + ']' + 
-        's[' + s.toFixed(1) + ']' + 
-        'v[' + v.toFixed(1) + ']';
+        this._label.textContent = 'Δ ' +
+        '[' + h.toFixed(1) + '] ' + 
+        '[' + s.toFixed(1) + '] ' + 
+        '[' + v.toFixed(1) + ']';
     }
 
     private trace = (delta: number) => {

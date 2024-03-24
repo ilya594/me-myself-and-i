@@ -18,7 +18,7 @@ export function getRgb(bitmap: any) {
     return {r:R, g:G, b:B};
 };
 
-export function rbgToHsv(r:number, g:number, b:number) {
+export function rbgToHsv({r, g, b}: any) {
     r /= 255;
     g /= 255;
     b /= 255;

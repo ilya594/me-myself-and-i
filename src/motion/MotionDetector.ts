@@ -70,15 +70,21 @@ export class MotionDetector extends Events.EventHandler {
 
     private analyzeVideoFrame = (): number => {
 
-        const bitmap = this._frame.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, this.w, this.h);
+        const image: ImageData = this._frame.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, this.w, this.h);
 
-        const rgb = Utils.getRgb(bitmap);
+        const rgb: {r:number, g: number, b: number}  = Utils.getRgb(image);
 
-        const hsv = Utils.rbgToHsv(rgb.r, rgb.g, rgb.b);
+        const hsv: {h: number, s: number, v: number} = Utils.rbgToHsv(rgb);
 
-        const delta = Math.abs(hsv.s);   
+        this.trace_t(hsv);
 
-        this.analyzeDeltaValues(delta); 
+        
+        const delta_h = Math.abs(hsv.h);
+        const delta_s = Math.abs(hsv.s);
+        const delta_v = Math.abs(hsv.v);
+
+
+        this.analyzeDeltaValues(delta_h); 
 
         this.clearVideoCanvas();
 
@@ -111,7 +117,14 @@ export class MotionDetector extends Events.EventHandler {
             this._deltas.length = 0;
         }
 
-        this.trace(value); 
+        //this.trace(value); 
+    }
+
+    private trace_t = ({h, s, v}: any) => {
+        this._label.textContent = '' +
+        'h[' + h.toFixed(1) + ']' + 
+        's[' + s.toFixed(1) + ']' + 
+        'v[' + v.toFixed(1) + ']';
     }
 
     private trace = (delta: number) => {

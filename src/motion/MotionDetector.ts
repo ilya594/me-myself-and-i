@@ -101,7 +101,7 @@ export class MotionDetector extends Events.EventHandler {
 
        const ctx = this._graphic.getContext('2d', { willReadFrequently: true });
 
-       const adjust = this._graphic.getBoundingClientRect().height / 4;
+       const adjust = this._graphic.getBoundingClientRect().height / 3;
 
        clear && ctx.clearRect(0, 0, this._w, this._h);
 

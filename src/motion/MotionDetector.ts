@@ -22,7 +22,7 @@ export class MotionDetector extends Events.EventHandler {
 
     private get _w() { return this._viewport.getBoundingClientRect().width; }
     private get _h() { return this._viewport.getBoundingClientRect().height; }
-    private get _ctx() { return this._frame.getContext('2d', { willReadFrequently: true })}
+    private get _ctx(): CanvasRenderingContext2D | any { return this._frame.getContext('2d', { willReadFrequently: true })}
 
 
     public initialize = async () => {
@@ -47,7 +47,7 @@ export class MotionDetector extends Events.EventHandler {
         this._graphic.style.setProperty('bottom', '0%');
         this._graphic.style.setProperty('left', '0%');
         this._graphic.style.setProperty('width', '100%');
-        this._graphic.style.setProperty('height', '30%');
+        this._graphic.style.setProperty('height', '20%');
    
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
 
@@ -68,10 +68,11 @@ export class MotionDetector extends Events.EventHandler {
     }
 
     private clearVideoCanvas = () => {
-        this._frame.width = this._w;
+        /*this._frame.width = this._w;
         this._frame.height = this._h;  
         this._ctx.globalCompositeOperation = 'difference';
-        this._ctx.clearRect(0, 0, this._w, this._h); 
+        this._ctx.clearRect(0, 0, this._w, this._h); */
+        this._ctx.reset();
     }
 
     private analyzeVideoFrame = (): number => {
@@ -115,8 +116,8 @@ export class MotionDetector extends Events.EventHandler {
        ctx.beginPath();
 
         for (let i = 1; i < this._values.cached.length; i++) {
-            ctx.moveTo(i - 1, this._values.cached[i - 1] - this._values.average / 3);
-            ctx.lineTo(i, this._values.cached[i] - this._values.average / 3);
+            ctx.moveTo(i - 1, this._values.cached[i - 1] - this._values.average / 2);
+            ctx.lineTo(i, this._values.cached[i] - this._values.average / 2);
             ctx.stroke();
         }
        ctx.closePath();        

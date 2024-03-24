@@ -85,7 +85,7 @@ export class MotionDetector extends Events.EventHandler {
         return hsv.h;
     }
 
-    private analyzeDeltaValues = (value: number, size: number = 555) => {      
+    private analyzeDeltaValues = (value: number, size: number = 55) => {      
 
         this._values.push(value);
 

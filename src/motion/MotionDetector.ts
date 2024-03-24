@@ -46,8 +46,9 @@ export class MotionDetector extends Events.EventHandler {
         this._graphic.style.setProperty('position', 'absolute');
         this._graphic.style.setProperty('bottom', '0%');
         this._graphic.style.setProperty('left', '0%');
+        this._graphic.style.setProperty('height', '30%');
         this._graphic.style.setProperty('width', '100%');
-        this._graphic.style.setProperty('height', '20%');
+
    
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
 
@@ -115,9 +116,11 @@ export class MotionDetector extends Events.EventHandler {
 
        ctx.beginPath();
 
+       const adjust = this._graphic.getBoundingClientRect().height / 5;
+
         for (let i = 1; i < this._values.cached.length; i++) {
-            ctx.moveTo(i - 1, this._values.cached[i - 1] - this._values.average / 2);
-            ctx.lineTo(i, this._values.cached[i] - this._values.average / 2);
+            ctx.moveTo(i - 1, this._values.cached[i - 1] + adjust);
+            ctx.lineTo(i, this._values.cached[i] + adjust);
             ctx.stroke();
         }
        ctx.closePath();        

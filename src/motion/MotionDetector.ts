@@ -18,7 +18,7 @@ export class MotionDetector extends Events.EventHandler {
     private _label: any;
     private _graphic: any;
 
-    private _values: DeltaValues;
+    private _values: DeltaValues = new DeltaValues();
 
     private get _w() { return this._viewport.getBoundingClientRect().width; }
     private get _h() { return this._viewport.getBoundingClientRect().height; }
@@ -26,8 +26,6 @@ export class MotionDetector extends Events.EventHandler {
 
 
     public initialize = async () => {
-
-        this._values = new DeltaValues();
 
         this._container = document.getElementById("view-page");
 
@@ -110,27 +108,18 @@ export class MotionDetector extends Events.EventHandler {
 
        const ctx = this._graphic.getContext('2d', { willReadFrequently: true });
 
-       const values = this._values.cached;
-
        ctx.clearRect(0, 0, this._w, this._h);
-
        ctx.lineWidth = 1;
        ctx.strokeStyle = "white";
 
        ctx.beginPath();
 
-        for (let i = 1; i < values.length; i++) {
-
-            ctx.moveTo(i - 1, values[i - 1] - 50);
-            ctx.lineTo(i, values[i] - 50);
+        for (let i = 1; i < this._values.cached.length; i++) {
+            ctx.moveTo(i - 1, this._values.cached[i - 1] - this._values.average / 3);
+            ctx.lineTo(i, this._values.cached[i] - this._values.average / 3);
             ctx.stroke();
         }
-
-       ctx.closePath();
-
-
-
-        
+       ctx.closePath();        
     }
 
     private trace_t = ({h, s, v}: any) => {
@@ -149,7 +138,7 @@ class DeltaValues {
         average: Number,
     }
 
-    public size: number = 300;//document.querySelector("video").getBoundingClientRect().width;
+    public size: number = 300;//document.querySelector("video").getBoundingClientRect().width; //TODO get rid of this magic const!
 
     constructor() {
 
@@ -170,10 +159,10 @@ class DeltaValues {
     public add = (value: number): void => {
         this._values.cached.push(value);
         this.updateCached();
-        this.calculateAverage();
+        this.updateAverage();
     }
 
-    private calculateAverage = (): void => {
+    private updateAverage = (): void => {
         this._values.average = this._values.cached.length ? this._values.cached.reduce(
             (previous: number, current: number) => previous + current) / this._values.cached.length : 0;
     }

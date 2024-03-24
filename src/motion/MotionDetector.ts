@@ -16,17 +16,18 @@ export class MotionDetector extends Events.EventHandler {
     private _container: any;
 
     private _label: any;
+    private _graphic: any;
 
+    private _values: DeltaValues;
 
-    private _values: Array<number> = [];
-    private _deltas: Array<number> = [];
-    private _average: number = undefined;
-
-    private get w() { return this._viewport.getBoundingClientRect().width; }
-    private get h() { return this._viewport.getBoundingClientRect().height; }
+    private get _w() { return this._viewport.getBoundingClientRect().width; }
+    private get _h() { return this._viewport.getBoundingClientRect().height; }
+    private get _ctx() { return this._frame.getContext('2d', { willReadFrequently: true })}
 
 
     public initialize = async () => {
+
+        this._values = new DeltaValues();
 
         this._container = document.getElementById("view-page");
 
@@ -42,6 +43,13 @@ export class MotionDetector extends Events.EventHandler {
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');
         this._label.style.setProperty('color', '#00ff30');
+
+        this._graphic = document.createElement("canvas"); this._container.appendChild(this._graphic);
+        this._graphic.style.setProperty('position', 'absolute');
+        this._graphic.style.setProperty('bottom', '0%');
+        this._graphic.style.setProperty('left', '0%');
+        this._graphic.style.setProperty('width', '100%');
+        this._graphic.style.setProperty('height', '30%');
    
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
 
@@ -58,25 +66,23 @@ export class MotionDetector extends Events.EventHandler {
     };
 
     private drawVideoToCanvas = () => {
-        this._frame.getContext('2d', { willReadFrequently: true }).drawImage(this._viewport, 0, 0, this.w, this.h);       
+        this._ctx.drawImage(this._viewport, 0, 0, this._w, this._h);       
     }
 
     private clearVideoCanvas = () => {
-        this._frame.width = this.w;
-        this._frame.height = this.h;  
-        this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = 'exclusion';
-        this._frame.getContext('2d', { willReadFrequently: true }).clearRect(0, 0, this.w, this.h); 
+        this._frame.width = this._w;
+        this._frame.height = this._h;  
+        this._ctx.globalCompositeOperation = 'difference';
+        this._ctx.clearRect(0, 0, this._w, this._h); 
     }
 
     private analyzeVideoFrame = (): number => {
 
-        const image: ImageData = this._frame.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, this.w, this.h);
+        const image: ImageData = this._ctx.getImageData(0, 0, this._w, this._h);
 
-        const rgb: {r:number, g: number, b: number}  = Utils.getRgb(image);
+        const rgb: {r: number, g: number, b: number}  = Utils.getRgb(image);
 
         const hsv: {h: number, s: number, v: number} = Utils.rbgToHsv(rgb);
-
-        this.trace_t(hsv);
 
         
         const delta_h = Math.abs(hsv.h);
@@ -86,38 +92,45 @@ export class MotionDetector extends Events.EventHandler {
 
         this.analyzeDeltaValues(delta_h); 
 
+        this.drawDeltaGraphics();
+
         this.clearVideoCanvas();
+
+        this.trace_t(hsv);
 
         return hsv.h;
     }
 
-    private analyzeDeltaValues = (value: number, size: number = 55) => {      
+    private analyzeDeltaValues = (value: number) => {     
 
-        this._values.push(value);
+        this._values.add(value);    
+    }
 
-        this._average = this._values.reduce((prev, curr) => prev + curr) / this._values.length;
+    private drawDeltaGraphics = () => {
 
-        if (this._values.length >= size) {
-            this._values = this._values.slice(Math.round(size / 2), -11);
+       const ctx = this._graphic.getContext('2d', { willReadFrequently: true });
+
+       const values = this._values.cached;
+
+       ctx.clearRect(0, 0, this._w, this._h);
+
+       ctx.lineWidth = 1;
+       ctx.strokeStyle = "white";
+
+       ctx.beginPath();
+
+        for (let i = 1; i < values.length; i++) {
+
+            ctx.moveTo(i - 1, values[i - 1] - 50);
+            ctx.lineTo(i, values[i] - 50);
+            ctx.stroke();
         }
 
-        if (Math.abs(this._average - value) > MOTION_DETECT_PIXEL_COEF) {
-            this._deltas.push(value);
-        } else {
-            if (this._deltas.length >= 11) {
-                this._deltas.length = 0;
-            }            
-        }
+       ctx.closePath();
 
-        if (this._deltas.length >= 11) {
-            const average = this._deltas.reduce((prev, curr) => prev + curr) / this._deltas.length;
-            if (Math.abs(this._average - average)) {
-                this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
-            }
-            this._deltas.length = 0;
-        }
 
-        //this.trace(value); 
+
+        
     }
 
     private trace_t = ({h, s, v}: any) => {
@@ -126,11 +139,49 @@ export class MotionDetector extends Events.EventHandler {
         '[' + s.toFixed(1) + '] ' + 
         '[' + v.toFixed(1) + ']';
     }
+}
 
-    private trace = (delta: number) => {
-        this._label.textContent = '[m_det] ' +
-        'Δ=[' + delta.toFixed(1) + '] ' + 
-        'm=[' + this._average.toFixed(1) + '] ';
+class DeltaValues {
+
+    private _values: any = {
+        deltas: [] = [],
+        cached: [] = [],
+        average: Number,
+    }
+
+    public size: number = 300;//document.querySelector("video").getBoundingClientRect().width;
+
+    constructor() {
+
+    }
+
+    public get average(): number {
+        return this._values.average;
+    }
+
+    public get cached(): any {
+        return this._values.cached;
+    }
+
+    public get length(): number {
+        return this._values.cached.length;
+    }
+
+    public add = (value: number): void => {
+        this._values.cached.push(value);
+        this.updateCached();
+        this.calculateAverage();
+    }
+
+    private calculateAverage = (): void => {
+        this._values.average = this._values.cached.length ? this._values.cached.reduce(
+            (previous: number, current: number) => previous + current) / this._values.cached.length : 0;
+    }
+
+    private updateCached = (): void => {
+        if (this._values.cached.length >= this.size) {
+            this._values.cached = this._values.cached.slice(1);
+        }
     }
 }
 

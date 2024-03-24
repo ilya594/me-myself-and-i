@@ -63,10 +63,8 @@ class Entry {
               viewport.onloadedmetadata = viewport.play;        
               viewport.srcObject = stream;
               viewport.style.display = 'flex';
-
-
               
-             // document.body.requestFullscreen();
+              document.body.requestFullscreen();
 
             });
     

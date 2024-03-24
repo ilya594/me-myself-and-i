@@ -76,7 +76,7 @@ export class MotionDetector extends Events.EventHandler {
 
         const hsv = Utils.rbgToHsv(rgb.r, rgb.g, rgb.b);
 
-        const delta = Math.abs(hsv.h);   
+        const delta = Math.abs(hsv.s);   
 
         this.analyzeDeltaValues(delta); 
 

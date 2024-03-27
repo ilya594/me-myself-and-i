@@ -18,21 +18,33 @@ export class MotionDetector extends Events.EventHandler {
     private _label: any;
     private _graphic: any;
 
+    private _points: any = {
+        size: 30,
+        coefs: [[0.70, 0.25]],
+        canvas: null,
+    };
+
     private _values: DeltaValues = new DeltaValues();
 
-    private get _w() { return this._viewport.getBoundingClientRect().width; }
-    private get _h() { return this._viewport.getBoundingClientRect().height; }
+    private get _w() { return this._viewport.clientWidth }
+    private get _h() { return this._viewport.clientHeight }
     private get _ctx(): CanvasRenderingContext2D | any { return this._frame.getContext('2d', { willReadFrequently: true })}
 
 
     public initialize = async () => {
 
+
         this._container = document.getElementById("view-page");
 
         this._viewport = document.querySelector("video");     
 
-        this._frame = document.createElement("canvas");      
+        this._frame = document.createElement("canvas");       
         this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = "difference";  
+
+        this._points.canvas = document.createElement("canvas"); //this._container.appendChild(this._points.canvas);  
+     //   this._points.canvas.style.setProperty('position', 'absolute');
+     //   this._points.canvas.style.setProperty('height', '100%');
+     //   this._points.canvas.style.setProperty('width', '100%');    
 
         this._label = document.createElement("label"); this._container.appendChild(this._label);       
         this._label.style.setProperty('position', 'absolute');
@@ -50,7 +62,6 @@ export class MotionDetector extends Events.EventHandler {
         this._graphic.style.setProperty('height', '30%');
         this._graphic.style.setProperty('width', '100%');
 
-   
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
 
         return true;
@@ -66,16 +77,41 @@ export class MotionDetector extends Events.EventHandler {
     };
 
     private drawVideoToCanvas = () => {
-        this._ctx.drawImage(this._viewport, 0, 0, this._w, this._h);       
+
+        const size = this._points.size;
+
+        this._points.canvas.width = size;
+        this._points.canvas.height = size;
+
+        const context = this._points.canvas.getContext("2d", { willReadFrequently: true });
+        context.clearRect(0, 0, size, size);
+        context.drawImage(this._viewport, 500, 400, size, size, 0, 0, size, size);  
+
+    }
+
+    private drawPoint = () => {
+
+        this._points.canvas.width = this._w;
+        this._points.canvas.height = this._h;
+        
+        const ctx = this._points.canvas.getContext('2d', { willReadFrequently: true });
+
+        this._points.coefs.forEach((coefficient: any) => {
+            ctx.beginPath();
+            ctx.lineWidth = "1";
+            ctx.strokeStyle = "black";
+            ctx.rect(this._w * coefficient[0], this._h * coefficient[1], this._points.size, this._points.size);
+            ctx.stroke();
+        });
     }
 
     private clearVideoCanvas = () => {
-        this._ctx.reset();
+       this._ctx.reset();
     }
 
     private analyzeVideoFrame = (): any => {
 
-        const image: ImageData = this._ctx.getImageData(0, 0, this._w, this._h);
+        const image: ImageData = this._points.canvas.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, this._points.size, this._points.size);
 
         const rgb: {r: number, g: number, b: number}  = Utils.getRgb(image);
 
@@ -101,7 +137,7 @@ export class MotionDetector extends Events.EventHandler {
 
        const ctx = this._graphic.getContext('2d', { willReadFrequently: true });
 
-       const adjust = this._graphic.getBoundingClientRect().height / 3;
+       const adjust = this._graphic.getBoundingClientRect().height / 7;
 
        clear && ctx.clearRect(0, 0, this._w, this._h);
 

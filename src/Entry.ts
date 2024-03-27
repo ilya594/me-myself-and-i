@@ -64,7 +64,7 @@ class Entry {
               viewport.srcObject = stream;
               viewport.style.display = 'flex';
               
-              document.body.requestFullscreen();
+            //  document.body.requestFullscreen();
 
             });
     

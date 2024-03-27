@@ -29,10 +29,10 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     port: 8008,
-    https: {
+    /*https: {
       key: fs.readFileSync('./cert/key.pem'),
       cert: fs.readFileSync('./cert/cert.pem'),
       ca: fs.readFileSync('./cert/csr.pem')
-    }
+    }*/
   }
 }

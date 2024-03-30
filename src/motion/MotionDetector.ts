@@ -89,8 +89,8 @@ export class MotionDetector extends Events.EventHandler {
 
         this.analyzeDeltaValues(hsv); 
 
-        this.drawDeltaGraphics(this._values.h, "white", true, - this._graphic.getBoundingClientRect().height / 5);
-        this.drawDeltaGraphics(this._values.s, "#C8C9C7", false, this._graphic.getBoundingClientRect().height / 5);
+        this.drawDeltaGraphics(this._values.h, "#00ff00", true, - this._graphic.getBoundingClientRect().height / 3);
+       // this.drawDeltaGraphics(this._values.s, "#C8C9C7", false, this._graphic.getBoundingClientRect().height / 5);
 
         this.trace_t(hsv);
 

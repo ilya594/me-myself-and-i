@@ -55,7 +55,7 @@ export class MotionDetector extends Events.EventHandler {
         this._graphic.style.setProperty('position', 'absolute');
         this._graphic.style.setProperty('bottom', '0%');
         this._graphic.style.setProperty('left', '0%');
-        this._graphic.style.setProperty('height', '30%');
+        this._graphic.style.setProperty('height', '40%');
         this._graphic.style.setProperty('width', '100%');
 
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
@@ -89,7 +89,7 @@ export class MotionDetector extends Events.EventHandler {
 
         this.analyzeDeltaValues(hsv); 
 
-        this.drawDeltaGraphics(this._values.h, "#00ff00", true, - this._graphic.getBoundingClientRect().height / 3);
+        this.drawDeltaGraphics(this._values.h, "#27282c", true, - this._graphic.getBoundingClientRect().height / 5);
        // this.drawDeltaGraphics(this._values.s, "#C8C9C7", false, this._graphic.getBoundingClientRect().height / 5);
 
         this.trace_t(hsv);

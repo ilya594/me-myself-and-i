@@ -1,17 +1,8 @@
-import { 
-    MOTION_DETECT_IMAGE_COEF, 
-    MOTION_DETECT_PIXEL_COEF,
-    MOTION_DETECT_DELAY,
-    //VIDEO_WIDTH,
-    //VIDEO_HEIGHT, 
-    FACE_DETECT_INTERVAL_LAZY,
-    FACE_DETECT_INTERVAL_ACTIVE} from "../utils/Constants";
 import * as Events from "../utils/Events";    
 import * as Utils from "../utils/Utils";
 
 export class MotionDetector extends Events.EventHandler {
-
-    private _frame: HTMLCanvasElement | any;
+  
     private _viewport: HTMLVideoElement | any;
     private _container: any;
 
@@ -19,32 +10,37 @@ export class MotionDetector extends Events.EventHandler {
     private _graphic: any;
 
     private _points: any = {
-        size: 30,
-        coefs: [[0.70, 0.25]],
+        size: 100,
+        coefs: [0.70, 0.25],
         canvas: null,
     };
 
     private _values: DeltaValues = new DeltaValues();
 
-    private get _w() { return this._viewport.clientWidth }
-    private get _h() { return this._viewport.clientHeight }
-    private get _ctx(): CanvasRenderingContext2D | any { return this._frame.getContext('2d', { willReadFrequently: true })}
-
+    private get _width() { return this._viewport.videoWidth }
+    private get _height() { return this._viewport.videoHeight }
 
     public initialize = async () => {
 
+        this._viewport = document.querySelector("video");   
+
+        this._viewport.addEventListener("resize", (event: Event) => {
+            const video: HTMLVideoElement = event.target as HTMLVideoElement;
+            if (video.videoWidth === 1280 && video.videoHeight === 720) {
+                this.startDetector();
+            }
+        })
+    };
+
+    private startDetector = () => {
 
         this._container = document.getElementById("view-page");
 
-        this._viewport = document.querySelector("video");     
-
-        this._frame = document.createElement("canvas");       
-        this._frame.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = "difference";  
-
-        this._points.canvas = document.createElement("canvas"); //this._container.appendChild(this._points.canvas);  
-     //   this._points.canvas.style.setProperty('position', 'absolute');
-     //   this._points.canvas.style.setProperty('height', '100%');
-     //   this._points.canvas.style.setProperty('width', '100%');    
+        this._points.canvas = document.createElement("canvas");// this._container.appendChild(this._points.canvas); 
+        
+        this._points.canvas.width = this._points.size;
+        this._points.canvas.height = this._points.size;
+        this._points.canvas.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = "difference";  
 
         this._label = document.createElement("label"); this._container.appendChild(this._label);       
         this._label.style.setProperty('position', 'absolute');
@@ -63,50 +59,24 @@ export class MotionDetector extends Events.EventHandler {
         this._graphic.style.setProperty('width', '100%');
 
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
-
-        return true;
-    };
+    }
 
     private onVideoEnterFrame = (...args: any) => {  
 
-        this.drawVideoToCanvas(); 
+        this.drawCheckpoints();
 
         this.analyzeVideoFrame();
 
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame)
     };
 
-    private drawVideoToCanvas = () => {
+    private drawCheckpoints = () => {
 
         const size = this._points.size;
 
-        this._points.canvas.width = size;
-        this._points.canvas.height = size;
-
         const context = this._points.canvas.getContext("2d", { willReadFrequently: true });
         context.clearRect(0, 0, size, size);
-        context.drawImage(this._viewport, 500, 400, size, size, 0, 0, size, size);  
-
-    }
-
-    private drawPoint = () => {
-
-        this._points.canvas.width = this._w;
-        this._points.canvas.height = this._h;
-        
-        const ctx = this._points.canvas.getContext('2d', { willReadFrequently: true });
-
-        this._points.coefs.forEach((coefficient: any) => {
-            ctx.beginPath();
-            ctx.lineWidth = "1";
-            ctx.strokeStyle = "black";
-            ctx.rect(this._w * coefficient[0], this._h * coefficient[1], this._points.size, this._points.size);
-            ctx.stroke();
-        });
-    }
-
-    private clearVideoCanvas = () => {
-       this._ctx.reset();
+        context.drawImage(this._viewport, this._width * this._points.coefs[0], this._height * this._points.coefs[1], size, size, 0, 0, size, size);  
     }
 
     private analyzeVideoFrame = (): any => {
@@ -119,10 +89,8 @@ export class MotionDetector extends Events.EventHandler {
 
         this.analyzeDeltaValues(hsv); 
 
-        this.drawDeltaGraphics(this._values.h, "white", true);
-        this.drawDeltaGraphics(this._values.s, "#C8C9C7", false);
-
-        this.clearVideoCanvas();
+        this.drawDeltaGraphics(this._values.h, "white", true, - this._graphic.getBoundingClientRect().height / 5);
+        this.drawDeltaGraphics(this._values.s, "#C8C9C7", false, this._graphic.getBoundingClientRect().height / 5);
 
         this.trace_t(hsv);
 
@@ -133,13 +101,11 @@ export class MotionDetector extends Events.EventHandler {
         this._values.add(value);    
     }
 
-    private drawDeltaGraphics = (values: any, color: string, clear: boolean = false) => {
+    private drawDeltaGraphics = (values: any, color: string, clear: boolean = false, adjust: number = 0) => {
 
        const ctx = this._graphic.getContext('2d', { willReadFrequently: true });
 
-       const adjust = this._graphic.getBoundingClientRect().height / 7;
-
-       clear && ctx.clearRect(0, 0, this._w, this._h);
+       clear && ctx.clearRect(0, 0, this._width, this._height);
 
        ctx.lineWidth = 1;
        ctx.strokeStyle = color;

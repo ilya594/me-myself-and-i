@@ -66,8 +66,6 @@ export class MotionDetector extends Events.EventHandler {
         this.drawCheckpoints();
 
         this.analyzeVideoFrame();
-
-        this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame)
     };
 
     private drawCheckpoints = () => {
@@ -89,20 +87,39 @@ export class MotionDetector extends Events.EventHandler {
 
         this.analyzeDeltaValues(hsv); 
 
-        this.drawDeltaGraphics(this._values.h, "#00ff00", true, - this._graphic.getBoundingClientRect().height / 4);
-       // this.drawDeltaGraphics(this._values.s, "#C8C9C7", false, this._graphic.getBoundingClientRect().height / 5);
-
-        this.trace_t(hsv);
+        this.trace(hsv);
 
         return hsv;
     }
 
-    private analyzeDeltaValues = (value: any) => {
+    private analyzeDeltaValues = (value: any, limit: number = 30) => {
+
+        const current: number = value.h;
+        const previous: number = this._values.h.last;
+        const average: number = this._values.h.average;
+
+        let timeout: number = 0;
+
+        if (Math.abs(current - average) > limit && Math.abs(previous - average) > limit) {
+            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
+            timeout = 777;
+        }
+
         this._values.add(value);
 
-        if (Math.abs(value.h - this._values.h.average) > 30) {
-            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
-        }
+        setTimeout(() => { 
+            this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame)
+        }, timeout);
+    }
+
+    private trace = ({h, s, v}: any) => {
+        
+        this.drawDeltaGraphics(this._values.h, "#00ff00", true, - this._graphic.getBoundingClientRect().height / 4);
+
+        this._label.textContent = 'Δ ' +
+        '[' + h.toFixed(1) + '] ' + 
+        '[' + s.toFixed(1) + '] ' + 
+        '[' + v.toFixed(1) + ']';    
     }
 
     private drawDeltaGraphics = (values: any, color: string, clear: boolean = false, adjust: number = 0) => {
@@ -122,13 +139,6 @@ export class MotionDetector extends Events.EventHandler {
             ctx.stroke();
         }
        ctx.closePath();        
-    }
-
-    private trace_t = ({h, s, v}: any) => {
-        this._label.textContent = 'Δ ' +
-        '[' + h.toFixed(1) + '] ' + 
-        '[' + s.toFixed(1) + '] ' + 
-        '[' + v.toFixed(1) + ']';
     }
 }
 
@@ -162,16 +172,14 @@ class DeltaValues {
 class DeltaValue {
 
     private _values: any = {
-        deltas: [] = [],
+     //   deltas: [] = [],
         cached: [] = [],
         average: Number,
     }
 
     public size: number = 300;//document.querySelector("video").getBoundingClientRect().width; //TODO get rid of this magic const!
 
-    constructor() {
-
-    }
+    constructor() {}
 
     public get average(): number {
         return this._values.average;
@@ -183,6 +191,11 @@ class DeltaValue {
 
     public get length(): number {
         return this._values.cached.length;
+    }
+
+    public get last(): number {
+        return this.cached.length ? 
+            this.cached[this.cached.length - 1] : undefined;
     }
 
     public add = (value: any): void => {

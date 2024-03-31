@@ -29,7 +29,9 @@ export class MotionDetector extends Events.EventHandler {
             if (video.videoWidth === 1280 && video.videoHeight === 720) {
                 this.startDetector();
             }
-        })
+        });
+        
+        return true;
     };
 
     private startDetector = () => {

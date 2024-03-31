@@ -3,6 +3,7 @@ import * as uuid from "uuid";
 import Snaphots from "./record/Snaphots";
 import MotionDetector from "./motion/MotionDetector";
 import * as Events from "./utils/Events";  
+import DigitsDetector from "./digits/DigitsDetector";
 
 const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): string => device + uuid.v4();
 
@@ -31,9 +32,11 @@ class Entry {
 
     private initializeConnection = async () => {   
 
+     await Snaphots.initialize();
+
      await MotionDetector.initialize();
 
-     await Snaphots.initialize();
+     await DigitsDetector.initialize();
 
      MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
 

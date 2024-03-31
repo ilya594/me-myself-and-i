@@ -24,14 +24,12 @@ export class MotionDetector extends Events.EventHandler {
 
         this._viewport = document.querySelector("video");   
 
-        this._viewport.addEventListener("resize", (event: Event) => {
-            const video: HTMLVideoElement = event.target as HTMLVideoElement;
-            if (video.videoWidth === 1280 && video.videoHeight === 720) {
+        this._viewport.onresize = () => {
+            if (this._width === 1280 && this._height === 720) {
+                this._viewport.onresize = null;
                 this.startDetector();
             }
-        });
-        
-        return true;
+        };
     };
 
     private startDetector = () => {

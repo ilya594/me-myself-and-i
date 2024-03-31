@@ -98,7 +98,11 @@ export class MotionDetector extends Events.EventHandler {
     }
 
     private analyzeDeltaValues = (value: any) => {
-        this._values.add(value);    
+        this._values.add(value);
+
+        if (Math.abs(value.h - this._values.h.average) > 30) {
+            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
+        }
     }
 
     private drawDeltaGraphics = (values: any, color: string, clear: boolean = false, adjust: number = 0) => {

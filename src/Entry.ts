@@ -35,7 +35,7 @@ class Entry {
 
      await Snaphots.initialize();
 
-     MotionDetector.addEventListener(Events .MOTION_DETECTION_STARTED, () => Snaphots.create());
+     MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
 
       const params = {
         host: "nodejs-peer-server.onrender.com",

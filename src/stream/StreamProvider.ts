@@ -15,7 +15,16 @@ export class StreamProvider extends Events.EventHandler {
         window.onunload = (_) => this.destroy();
     }
 
-    public initialize = async () => {
+    public initialize = async (local: boolean = false) => {
+
+        if (local) {
+            this.initializeLocalStream();
+        } else {
+            this.initializePeerStream();
+        }
+    }
+
+    private initializePeerStream = async () => {
 
         const params = {
             host: "nodejs-peer-server.onrender.com",
@@ -45,6 +54,15 @@ export class StreamProvider extends Events.EventHandler {
               });
             })
           });
+    }
+
+    private initializeLocalStream = async () => {
+
+        const options: MediaStreamConstraints = { video: { width: 1280, height: 720 }, audio: true };
+
+        const stream: MediaStream = await navigator.mediaDevices.getUserMedia(options);
+
+        this.dispatchEvent(Events.STREAM_RECEIVED, stream);
     }
 
     private destroy = () => {

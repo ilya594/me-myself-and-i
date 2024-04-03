@@ -23,6 +23,8 @@ export class EventHandler {
     }
   }
 
+  export const USER_PROCEEDED = 'user_proceeded';
+
   export const STREAM_RECEIVED = 'stream_received';
   export const STREAM_BALANCED = 'stream_balanced';
 

@@ -29,7 +29,6 @@ export class DigitsDetector extends Events.EventHandler {
     private _model: any = null;
 
     private _label: any;
-    private _ladel: any;
 
     constructor() {
         super();
@@ -50,27 +49,6 @@ export class DigitsDetector extends Events.EventHandler {
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');
         this._label.style.setProperty('color', '#00ff30');
-
-        this._ladel = document.createElement("label"); this._container.appendChild(this._ladel);       
-        this._ladel.style.setProperty('position', 'absolute');
-        this._ladel.style.setProperty('top', '13%');
-        this._ladel.style.setProperty('left', '3%');
-        this._ladel.style.setProperty('font-size', '34px');
-        this._ladel.style.setProperty('font-family', 'Courier New');
-        this._ladel.style.setProperty('font-weight', 'bold');
-        this._ladel.style.setProperty('color', '#00ff30');
-
-
-       // let viewport = document.querySelector("video");  
-
-        //let frame = this.fillCanvas(viewport, canvas);
-
-      //  let tensor = tf.browser.fromPixels(this._canvas).mean(2).expandDims().toFloat().div(255.0);       
-
-      //  let prediction = await model.predict(tensor).data();
-
-
-
     }
 
     public startDetection = async () => {
@@ -105,8 +83,6 @@ export class DigitsDetector extends Events.EventHandler {
 
         context.reset();
 
-      // context.filter = "invert(100)";
-
         context.drawImage(this._viewport, 
             0, 
             this._height / 3, 
@@ -122,28 +98,14 @@ export class DigitsDetector extends Events.EventHandler {
     }
 
     private calculateTensor = () => {
-        return tf.browser.fromPixels(this._views.view)        
-		    .resizeNearestNeighbor([28, 28])
-		    .mean(2)
-		    .expandDims(2)
-		    .expandDims()
+
+        let tensor = tf.browser.fromPixels(this._views.view, 1)        
+		   // .mean()
+		    .expandDims(0)
 		    .toFloat()
             .div(255.0);
-          //  .mean()
-         //   .
-        /*
-        .resizeNearestNeighbor([28, 28])
-        .mean(2)
-        .expandDims(2)
-        .expandDims()
-        .toFloat()
-        .div(255.0);*/
 
-       // let img = tf.browser.fromPixels(imageData, 1);
-       // img = img;
-       // img = tf.cast(img, 'float32');
-
-   //    return tensor;
+        return tensor;
     }
 
     private getPrediction = async (tensor: any) => {
@@ -157,22 +119,20 @@ export class DigitsDetector extends Events.EventHandler {
         this._views.view.width = 28; 
         this._views.view.height = 28;
 
-        //this._views.view.style.setProperty('transform', 'scale(' + 10 + ',' + 10 + ')')
+        this._views.view.style.setProperty('transform', 'scale(' + 10 + ',' + 10 + ')');
+        this._views.view.style.setProperty('position', 'absolute');
+        this._views.view.style.setProperty('right', '10px');
+        this._views.view.style.setProperty('bottom', '10px');
     }
     
     private trace = (prediction: any) => {    
 
-        this._label.textContent = 
-            ' ' + prediction[0].toFixed(2) + 
-            ' ' + prediction[1].toFixed(2) + 
-            ' ' + prediction[2].toFixed(2) + 
-            ' ' + prediction[3].toFixed(2) + 
-            ' ' + prediction[4].toFixed(2) + 
-            ' ' + prediction[5].toFixed(2) +
-            ' ' + prediction[6].toFixed(2) + 
-            ' ' + prediction[7].toFixed(2) + 
-            ' ' + prediction[8].toFixed(2) +
-            ' ' + prediction[9].toFixed(2) ; 
+        this._label.textContent = '';
+
+        prediction.forEach((value: number) => {
+            this._label.textContent += value.toFixed(2) + (value > 0.9 ? '^' : ' ');
+        });
+
 
     }
     private drawBorder = () => {

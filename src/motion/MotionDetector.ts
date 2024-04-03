@@ -13,6 +13,9 @@ export class MotionDetector extends Events.EventHandler {
         size: 100,
         coefs: [0.70, 0.25],
         canvas: null,
+        context: function() {
+            return this.canvas.getContext('2d', { willReadFrequently: true });
+        }
     };
 
     private _values: DeltaValues = new DeltaValues();
@@ -28,11 +31,12 @@ export class MotionDetector extends Events.EventHandler {
             if (this._width === 1280 && this._height === 720) {
                 this._viewport.onresize = null;
                 this.startDetector();
+                this.dispatchEvent(Events.STREAM_BALANCED, null);
             }
         };
     };
 
-    private startDetector = () => {
+    private startDetector = async () => {
 
         this._container = document.getElementById("view-page");
 
@@ -40,7 +44,7 @@ export class MotionDetector extends Events.EventHandler {
         
         this._points.canvas.width = this._points.size;
         this._points.canvas.height = this._points.size;
-        this._points.canvas.getContext('2d', { willReadFrequently: true }).globalCompositeOperation = "difference";  
+        this._points.context().globalCompositeOperation = "difference";  
 
         this._label = document.createElement("label"); this._container.appendChild(this._label);       
         this._label.style.setProperty('position', 'absolute');
@@ -72,14 +76,20 @@ export class MotionDetector extends Events.EventHandler {
 
         const size = this._points.size;
 
-        const context = this._points.canvas.getContext("2d", { willReadFrequently: true });
+        const context = this._points.context();
+
         context.clearRect(0, 0, size, size);
-        context.drawImage(this._viewport, this._width * this._points.coefs[0], this._height * this._points.coefs[1], size, size, 0, 0, size, size);  
+
+        context.drawImage(this._viewport, 
+            this._width * this._points.coefs[0], 
+            this._height * this._points.coefs[1], 
+            size, size, 0, 0, size, size
+            );  
     }
 
     private analyzeVideoFrame = (): any => {
 
-        const image: ImageData = this._points.canvas.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, this._points.size, this._points.size);
+        const image: ImageData = this._points.context().getImageData(0, 0, this._points.size, this._points.size);
 
         const rgb: {r: number, g: number, b: number}  = Utils.getRgb(image);
 
@@ -172,7 +182,6 @@ class DeltaValues {
 class DeltaValue {
 
     private _values: any = {
-     //   deltas: [] = [],
         cached: [] = [],
         average: Number,
     }

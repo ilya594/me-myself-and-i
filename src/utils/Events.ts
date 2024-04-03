@@ -23,6 +23,9 @@ export class EventHandler {
     }
   }
 
+  export const STREAM_RECEIVED = 'stream_received';
+  export const STREAM_BALANCED = 'stream_balanced';
+
   export const FACE_DETECTED = 'face_detected';
   export const FACE_RECOGNIZED = 'face_recognized';
   export const MOTION_DETECTED ='motion_detected';

@@ -1,21 +1,13 @@
-import { MediaConnection, Peer } from "peerjs";
-import * as uuid from "uuid";
 import Snaphots from "./record/Snaphots";
 import MotionDetector from "./motion/MotionDetector";
 import * as Events from "./utils/Events";  
 import DigitsDetector from "./digits/DigitsDetector";
-
-const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): string => device + uuid.v4();
+import StreamProvider from "./stream/StreamProvider";
 
 class Entry {
 
-    private peer: Peer;
-
-    private connection: any;
-
     constructor() { 
-      window.onload = (event) => this.initializeView();
-      window.onunload = (event) => this.destroy();
+      window.onload = (_) => this.initializeView();
     }
 
     private initializeView = async () => {
@@ -30,59 +22,32 @@ class Entry {
       }
     }
 
-    private initializeConnection = async () => {   
-
-     await Snaphots.initialize();
-
-     await MotionDetector.initialize();
-
-     await DigitsDetector.initialize();
-
-     MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
-
-      const params = {
-        host: "nodejs-peer-server.onrender.com",
-        path: "/peer",
-        secure: true,
-      };
-
-      this.peer = new Peer(id(), params);      
+    private displayStream = (stream: any) => {
+      document.getElementById("loader").style.display = 'none';
     
-      this.peer.on('open', (data) => {
-    
-        this.connection = this.peer.connect('streamer');
-        
-        this.connection.on('open', () => {
-    
-          this.connection.send('custom-media-stream-request');
-    
-          this.peer.on('call', async (call: MediaConnection) => {
-    
-            call.on('stream', (stream) => {  
-
-              document.getElementById("loader").style.display = 'none';
-
-              const viewport = document.querySelector("video");              
-              viewport.onloadedmetadata = viewport.play;        
-              viewport.srcObject = stream;
-              viewport.style.display = 'flex';
-              
-            //  document.body.requestFullscreen();
-
-            });
-    
-            call.answer(null);
-          });
-        })
-      });
+      const viewport = document.querySelector("video");              
+      viewport.onloadedmetadata = viewport.play;        
+      viewport.srcObject = stream;
+      viewport.style.display = 'flex';
+      
+    //  document.body.requestFullscreen();
     }
 
-    private destroy = () => {
-      this.connection?.close?.();
-      this.peer?.disconnect?.();
-      this.peer?.destroy?.();
+    private initializeConnection = async () => {   
 
-    };
+      await StreamProvider.initialize();
+        StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => this.displayStream(stream))
+
+      await Snaphots.initialize();
+
+      //await DigitsDetector.initialize();
+
+      await MotionDetector.initialize();
+        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
+      //  MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
+    }
+
+
 }
 
 new Entry();

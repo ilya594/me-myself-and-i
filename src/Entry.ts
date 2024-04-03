@@ -43,16 +43,22 @@ class Entry {
 
       await Snaphots.initialize();
 
-      //await DigitsDetector.initialize();
+      await DigitsDetector.initialize();
 
       await MotionDetector.initialize();
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
-      //  MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
+            MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
     }
 
     private initializeComponents_digits = async () => {
+
+      await DigitsDetector.initialize();
+
       await StreamProvider.initialize(true);
-            StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => View.displayStream(stream));
+            StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => {              
+              View.displayStream(stream);
+              DigitsDetector.startDetection();
+            });
     }
 
 }

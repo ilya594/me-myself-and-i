@@ -29,6 +29,7 @@ export class DigitsDetector extends Events.EventHandler {
     private _model: any = null;
 
     private _label: any;
+    private _ladel: any;
 
     constructor() {
         super();
@@ -49,6 +50,15 @@ export class DigitsDetector extends Events.EventHandler {
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');
         this._label.style.setProperty('color', '#00ff30');
+
+        this._ladel = document.createElement("label"); this._container.appendChild(this._ladel);       
+        this._ladel.style.setProperty('position', 'absolute');
+        this._ladel.style.setProperty('top', '13%');
+        this._ladel.style.setProperty('left', '3%');
+        this._ladel.style.setProperty('font-size', '34px');
+        this._ladel.style.setProperty('font-family', 'Courier New');
+        this._ladel.style.setProperty('font-weight', 'bold');
+        this._ladel.style.setProperty('color', '#00ff30');
 
 
        // let viewport = document.querySelector("video");  
@@ -75,19 +85,11 @@ export class DigitsDetector extends Events.EventHandler {
 
             let tensor = this.calculateTensor();
 
-            let prediction = await this.getPrediction(tensor);
+            let prediction = await this.getPrediction(tensor);        
 
-            for (let i = 0; i < prediction.length; i++) {
-                if (prediction[i] > 0.9) {
-                    debugger;
-                }
-            }
+            this.trace(prediction);
 
-
-
-            this.trace(2, prediction[2]);
-
-        }, 300);
+        }, 100);
     }
 
     private updateZoom = () => {
@@ -106,8 +108,8 @@ export class DigitsDetector extends Events.EventHandler {
       // context.filter = "invert(100)";
 
         context.drawImage(this._viewport, 
-            800, 
-            20, 
+            0, 
+            this._height / 3, 
             this._zoom.x, 
             this._zoom.y,
             0,
@@ -120,11 +122,15 @@ export class DigitsDetector extends Events.EventHandler {
     }
 
     private calculateTensor = () => {
-        let tensor = tf.browser.fromPixels(this._views.view)
-        .reshape([null, 28, 28]);
-
-        tensor = tf.cast(tensor, 'float32');
-
+        return tf.browser.fromPixels(this._views.view)        
+		    .resizeNearestNeighbor([28, 28])
+		    .mean(2)
+		    .expandDims(2)
+		    .expandDims()
+		    .toFloat()
+            .div(255.0);
+          //  .mean()
+         //   .
         /*
         .resizeNearestNeighbor([28, 28])
         .mean(2)
@@ -137,7 +143,7 @@ export class DigitsDetector extends Events.EventHandler {
        // img = img;
        // img = tf.cast(img, 'float32');
 
-       return tensor;
+   //    return tensor;
     }
 
     private getPrediction = async (tensor: any) => {
@@ -154,15 +160,20 @@ export class DigitsDetector extends Events.EventHandler {
         //this._views.view.style.setProperty('transform', 'scale(' + 10 + ',' + 10 + ')')
     }
     
-    private trace = (digit: number, probability: number) => {
+    private trace = (prediction: any) => {    
 
-        if (probability > 0.93) {
-            debugger;
-        }
-        
-        
+        this._label.textContent = 
+            ' ' + prediction[0].toFixed(2) + 
+            ' ' + prediction[1].toFixed(2) + 
+            ' ' + prediction[2].toFixed(2) + 
+            ' ' + prediction[3].toFixed(2) + 
+            ' ' + prediction[4].toFixed(2) + 
+            ' ' + prediction[5].toFixed(2) +
+            ' ' + prediction[6].toFixed(2) + 
+            ' ' + prediction[7].toFixed(2) + 
+            ' ' + prediction[8].toFixed(2) +
+            ' ' + prediction[9].toFixed(2) ; 
 
-        this._label.textContent = 'D [' +  digit + '] НАВЕРКУ [' + (probability * 100).toFixed(0) + '%]';
     }
     private drawBorder = () => {
         let context = this._views.view.getContext('2d', { willReadFrequently: true });

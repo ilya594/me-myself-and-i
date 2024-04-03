@@ -4,7 +4,7 @@ import * as Utils from "../utils/Utils";
 import * as tf from '@tensorflow/tfjs';
 
 
-const url = "http://localhost:8008/model_0/model.json"
+const url = "/model_0/model.json"
 
 export class DigitsDetector extends Events.EventHandler {
 

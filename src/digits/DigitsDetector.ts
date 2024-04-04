@@ -86,7 +86,7 @@ export class DigitsDetector extends Events.EventHandler {
 
         context.drawImage(this._viewport, 
             0, 
-            this._height / 3, 
+            0, 
             this._zoom.x, 
             this._zoom.y,
             0,

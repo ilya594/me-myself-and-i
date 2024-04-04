@@ -14,6 +14,7 @@ export class DigitsDetector extends Events.EventHandler {
 
     private _views: any = {
         view: null,
+        tensor: null,
     };
 
 
@@ -61,7 +62,7 @@ export class DigitsDetector extends Events.EventHandler {
 
             this.redrawCanvas();
 
-            let tensor = this.calculateTensor();
+            let tensor = await this.calculateTensor();
 
             let prediction = await this.getPrediction(tensor);        
 
@@ -97,13 +98,27 @@ export class DigitsDetector extends Events.EventHandler {
 
     }
 
-    private calculateTensor = () => {
+    private calculateTensor = async () => {
 
-        let tensor = tf.browser.fromPixels(this._views.view, 1)        
-		   // .mean()
-		    .expandDims(0)
-		    .toFloat()
-            .div(255.0);
+        let tensor: any = tf.browser.fromPixels(this._views.view)
+        .resizeNearestNeighbor([28, 28])
+        .mean(2)
+        .toFloat()
+        //.reverse(2)
+        .expandDims()
+        .div(255.0);
+        
+      // debugger;
+
+        let image = await tf.browser.toPixels(tensor, this._views.tensor);
+
+      //  let context = this._views.tensor.getContext('2d', { willReadFrequently: true });
+
+     //   context.reset();
+
+        tf.browser.draw(image, this._views.tensor);
+
+    //    context.drawImage(image, 28, 28);
 
         return tensor;
     }
@@ -121,8 +136,17 @@ export class DigitsDetector extends Events.EventHandler {
 
         this._views.view.style.setProperty('transform', 'scale(' + 10 + ',' + 10 + ')');
         this._views.view.style.setProperty('position', 'absolute');
-        this._views.view.style.setProperty('right', '10px');
-        this._views.view.style.setProperty('bottom', '10px');
+        this._views.view.style.setProperty('right', '0%');
+        this._views.view.style.setProperty('bottom', '0%');
+
+        this._views.tensor = document.createElement("canvas"); this._container.appendChild(this._views.tensor);
+        this._views.tensor.width = 28; 
+        this._views.tensor.height = 28;
+
+        this._views.tensor.style.setProperty('transform', 'scale(' + 10 + ',' + 10 + ')');
+        this._views.tensor.style.setProperty('position', 'absolute');
+        this._views.tensor.style.setProperty('right', '0%');
+        this._views.tensor.style.setProperty('top', '0%');
     }
     
     private trace = (prediction: any) => {    

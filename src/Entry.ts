@@ -46,7 +46,7 @@ class Entry {
 
       await MotionDetector.initialize();
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
-          //  MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
+       //     MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
     }
 
     private initializeComponents_digits = async () => {

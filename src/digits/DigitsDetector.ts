@@ -1,5 +1,5 @@
 import * as Events from "../utils/Events";    
-import * as Utils from "../utils/Utils";
+//import * as Utils from "../utils/Utils";
 
 import * as tf from '@tensorflow/tfjs';
 
@@ -68,7 +68,7 @@ export class DigitsDetector extends Events.EventHandler {
 
             this.trace(prediction);
 
-        }, 100);
+        }, 50);
     }
 
     private updateZoom = () => {
@@ -93,34 +93,17 @@ export class DigitsDetector extends Events.EventHandler {
             0,
             28, 
             28, 
-        );      
-   
-
+        ); 
     }
 
     private calculateTensor = async () => {
 
-        let tensor: any = tf.browser.fromPixels(this._views.view)
-        .resizeNearestNeighbor([28, 28])
-        .mean(2)
-        .toFloat()
-        //.reverse(2)
-        .expandDims()
-        .div(255.0);
-        
-      // debugger;
+        return tf.browser.fromPixels(this._views.view, 1)
+            .toFloat()
+            .expandDims(0)
+            .resizeBilinear([28, 28])
+            .div(255.0);
 
-        let image = await tf.browser.toPixels(tensor, this._views.tensor);
-
-      //  let context = this._views.tensor.getContext('2d', { willReadFrequently: true });
-
-     //   context.reset();
-
-        tf.browser.draw(image, this._views.tensor);
-
-    //    context.drawImage(image, 28, 28);
-
-        return tensor;
     }
 
     private getPrediction = async (tensor: any) => {

@@ -22,6 +22,8 @@ export class StreamProvider extends Events.EventHandler {
         } else {
             this.initializePeerStream();
         }
+
+        return this;
     }
 
     private initializePeerStream = async () => {

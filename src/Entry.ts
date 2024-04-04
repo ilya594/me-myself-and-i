@@ -38,8 +38,7 @@ class Entry {
 
     private initializeComponents = async () => {   
 
-      await StreamProvider.initialize();
-            StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => View.displayStream(stream));
+      (await StreamProvider.initialize()).addEventListener(Events.STREAM_RECEIVED, (stream: any) => View.displayStream(stream));
 
       await Snaphots.initialize();
 
@@ -47,18 +46,17 @@ class Entry {
 
       await MotionDetector.initialize();
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
-            MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
+          //  MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
     }
 
     private initializeComponents_digits = async () => {
 
       await DigitsDetector.initialize();
 
-      await StreamProvider.initialize(true);
-            StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => {              
-              View.displayStream(stream);
-              DigitsDetector.startDetection();
-            });
+      (await StreamProvider.initialize(true)).addEventListener(Events.STREAM_RECEIVED, (stream: any) => {              
+          View.displayStream(stream);
+          DigitsDetector.startDetection();
+      });
     }
 
 }

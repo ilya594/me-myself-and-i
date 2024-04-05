@@ -92,15 +92,24 @@ export class DigitsDetectorLocal extends Events.EventHandler {
                 this._label.textContent = 'хз непонятно';
             }
         }
-        
+
+        let found;
+
         for (let i = 0; i < prediction.length; i++) {
+
             if (prediction[i] > 0.5) {
-                this._label.textContent = 'це походу ' + i;
+                found = 'це походу ' + i;
             }
 
             if (prediction[i] > 0.7) {
-                this._label.textContent = 'бля буду це ' + i;
+                found = 'бля буду це ' + i;
             }
+        }
+
+        if (found) {
+            this._label.textContent = found;
+        } else {
+            this._label.textContent = 'хз непонятно';
         }
     }
 

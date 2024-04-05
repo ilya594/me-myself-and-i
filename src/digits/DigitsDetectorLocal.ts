@@ -70,9 +70,17 @@ export class DigitsDetectorLocal extends Events.EventHandler {
     
     private trace = (prediction: any) => {    
 
-        this._label.textContent = '';
+        this._label.textContent = 'хуй просциш шо це';
 
-        prediction.forEach((value: number) => this._label.textContent += value.toFixed(2) + (value > 0.9 ? '^' : ' '));
+        for (let i = 0; i < prediction.length; i++) {
+            if (prediction[i] > 0.6) {
+                this._label.textContent = 'це походу ' + i;
+            }
+
+            if (prediction[i] > 0.8) {
+                this._label.textContent = 'бля буду це ' + i;
+            }
+        }
     }
 }
 

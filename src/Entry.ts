@@ -58,7 +58,7 @@ class Entry {
 
       (await StreamProvider.initialize(true)).addEventListener(Events.STREAM_RECEIVED, (stream: any) => {              
           View.displayStream(stream);
-          setTimeout(() => DigitsDetectorLocal.startDetection(), 10000);
+          setTimeout(() => DigitsDetectorLocal.startDetection(), 1000);
       });
     }
 

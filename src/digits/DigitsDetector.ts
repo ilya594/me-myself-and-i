@@ -31,8 +31,6 @@ export class DigitsDetector extends Events.EventHandler {
 
     private _label: any;
 
-    private _image: any;
-
     constructor() {
         super();
     }
@@ -52,9 +50,6 @@ export class DigitsDetector extends Events.EventHandler {
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');
         this._label.style.setProperty('color', '#00ff30');
-
-        this._viewport = document.querySelector("video");   
-
     }
 
     public startDetection = async () => {
@@ -63,28 +58,24 @@ export class DigitsDetector extends Events.EventHandler {
 
         this._interval = setInterval(async () => {
 
-           // this.updateZoom();
+            this.updateZoom();
 
-        //    this.redrawCanvas();
+            this.redrawCanvas();
             
             let tensor = this.calculateTensor();
 
-            let prediction = await this.getPrediction(tensor);     
-            
-       //     tensor.dispose();
+            let prediction = await this.getPrediction(tensor);  
 
             this.trace(prediction);
 
-
-
-        }, 20);
+        }, 100);
     }
 
     private updateZoom = () => {
-      //  if (this._zoom.x <= this._width && this._zoom.y <= this._height) {
-            this._zoom.x += 2;
-            this._zoom.y += 2;
-       // }
+        if (this._zoom.x <= this._width && this._zoom.y <= this._height) {
+            this._zoom.x += 1;
+            this._zoom.y += 1;
+        }
     }
 
     private redrawCanvas = () => {
@@ -96,23 +87,16 @@ export class DigitsDetector extends Events.EventHandler {
         context.drawImage(this._viewport, 
             0, 
             0, 
-            this._width,
-            this._height
-            //this._zoom.x, 
-           // this._zoom.y,
-          //  0,
-          //  0,
-
-        ); 
-
-        let url = this._views.view.toDataURL();
-      //  this._image.width = 28; 
-     //   this._image.height = 28;
-        this._image.src = url;
+            this._zoom.x, 
+            this._zoom.y,
+            0,
+            0,
+            this._width, 
+            this._height, 
+        );      
     }
 
     private calculateTensor = () => {
-
 
         return tf.browser.fromPixels(this._viewport, 1)
             .toFloat()
@@ -133,19 +117,12 @@ export class DigitsDetector extends Events.EventHandler {
         this._views.view.width = this._width; 
         this._views.view.height = this._height;
 
-     //   this._views.view.style.setProperty('transform', 'scale(' + 10 + ',' + 10 + ')');
-      //  this._views.view.style.setProperty('width', '28px');
-      //  this._views.view.style.setProperty('height', '28px');
-     //   this._views.view.style.setProperty('right', '10%');
-
-        this._image = document.createElement("img"); this._container.appendChild(this._image);
-        this._image.width = this._width; 
-        this._image.height = this._height;
-
-   //    // this._image.style.setProperty('transform', 'scale(' + 10 + ',' + 10 + ')');
-    //    this._image.style.setProperty('position', 'absolute');
-    //    this._image.style.setProperty('bottom', '10%');
-    //    this._image.style.setProperty('right', '30%');
+        this._views.view.style.setProperty('transform', 'scale(' + 20 + ',' + 20 + ')');
+        this._views.view.style.setProperty('position', 'absolute');
+        this._views.view.style.setProperty('right', '0%');
+        this._views.view.style.setProperty('bottom', '0%');
+        this._views.view.style.setProperty('width', '28px');
+        this._views.view.style.setProperty('height', '28px');
     }
     
     private trace = (prediction: any) => {    
@@ -155,16 +132,6 @@ export class DigitsDetector extends Events.EventHandler {
         prediction.forEach((value: number) => {
             this._label.textContent += value.toFixed(2) + (value > 0.9 ? '^' : ' ');
         });
-
-
-    }
-    private drawBorder = () => {
-        let context = this._views.view.getContext('2d', { willReadFrequently: true });
-        context.beginPath();
-        context.lineWidth = 2;
-        context.strokeStyle = "white"; 
-        context.rect(0, 0, this._width / 4, this._height / 2);
-        context.stroke();
     }
 }
 

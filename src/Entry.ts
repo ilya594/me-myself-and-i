@@ -28,6 +28,10 @@ class Entry {
           this.initializeComponents_digits();
           break;
         }
+        case ('local'): {
+          this.initializeComponents_local();
+          break;
+        }
         default: {
           this.initializeComponents();
           break;
@@ -46,7 +50,7 @@ class Entry {
 
       await MotionDetector.initialize();
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
-       //     MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
+            MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
     }
 
     private initializeComponents_digits = async () => {
@@ -55,8 +59,15 @@ class Entry {
 
       (await StreamProvider.initialize(true)).addEventListener(Events.STREAM_RECEIVED, (stream: any) => {              
           View.displayStream(stream);
-          DigitsDetector.startDetection();
+          setTimeout(() => DigitsDetector.startDetection(), 1000);
       });
+    }
+
+    private initializeComponents_local = async () => {
+
+      await DigitsDetector.initialize();
+            DigitsDetector.startDetection();
+
     }
 
 }

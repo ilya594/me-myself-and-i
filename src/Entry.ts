@@ -4,13 +4,12 @@ import * as Events from "./utils/Events";
 import DigitsDetector from "./digits/DigitsDetector";
 import StreamProvider from "./stream/StreamProvider";
 import View from "./view/View";
+import DigitsDetectorLocal from "./digits/DigitsDetectorLocal";
 
 class Entry {
 
-    constructor() { 
-      
+    constructor() {       
       this.initializeView();
-
     }
 
     private initializeView = async () => {
@@ -55,18 +54,18 @@ class Entry {
 
     private initializeComponents_digits = async () => {
 
-      await DigitsDetector.initialize();
+      await DigitsDetectorLocal.initialize();
 
       (await StreamProvider.initialize(true)).addEventListener(Events.STREAM_RECEIVED, (stream: any) => {              
           View.displayStream(stream);
-          setTimeout(() => DigitsDetector.startDetection(), 1000);
+          setTimeout(() => DigitsDetectorLocal.startDetection(), 10000);
       });
     }
 
     private initializeComponents_local = async () => {
 
-      await DigitsDetector.initialize();
-            DigitsDetector.startDetection();
+      await DigitsDetectorLocal.initialize();
+            DigitsDetectorLocal.startDetection();
 
     }
 

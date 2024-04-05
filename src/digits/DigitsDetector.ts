@@ -66,16 +66,18 @@ export class DigitsDetector extends Events.EventHandler {
 
             let prediction = await this.getPrediction(tensor);  
 
+            tensor.dispose();
+
             this.trace(prediction);
 
         }, 100);
     }
 
     private updateZoom = () => {
-        if (this._zoom.x <= this._width && this._zoom.y <= this._height) {
-            this._zoom.x += 1;
-            this._zoom.y += 1;
-        }
+      //  if (this._zoom.x <= this._width && this._zoom.y <= this._height) {
+            this._zoom.x += 2;
+            this._zoom.y += 2;
+      //  }
     }
 
     private redrawCanvas = () => {
@@ -99,10 +101,16 @@ export class DigitsDetector extends Events.EventHandler {
     private calculateTensor = () => {
 
         return tf.browser.fromPixels(this._viewport, 1)
+            .resizeBilinear([28, 28])
+            .expandDims(0)
+            .toFloat()
+            .div(255.0);
+
+        /*
             .toFloat()
             .expandDims(0)
             .resizeNearestNeighbor([28, 28])
-            .div(255.0);
+            .div(255.0);*/
 
     }
 
@@ -114,15 +122,15 @@ export class DigitsDetector extends Events.EventHandler {
     private createCanvas = () => {
 
         this._views.view = document.createElement("canvas"); this._container.appendChild(this._views.view);
-        this._views.view.width = this._width; 
-        this._views.view.height = this._height;
+      //  this._views.view.width = this._width; 
+      //  this._views.view.height = this._height;
 
-        this._views.view.style.setProperty('transform', 'scale(' + 20 + ',' + 20 + ')');
+       // this._views.view.style.setProperty('transform', 'scale(' + 20 + ',' + 20 + ')');
         this._views.view.style.setProperty('position', 'absolute');
-        this._views.view.style.setProperty('right', '0%');
-        this._views.view.style.setProperty('bottom', '0%');
-        this._views.view.style.setProperty('width', '28px');
-        this._views.view.style.setProperty('height', '28px');
+        this._views.view.style.setProperty('right', '30%');
+        this._views.view.style.setProperty('top', '0%');
+     //   this._views.view.style.setProperty('width', '28px');
+     //   this._views.view.style.setProperty('height', '28px');
     }
     
     private trace = (prediction: any) => {    

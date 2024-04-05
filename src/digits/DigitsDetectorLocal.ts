@@ -36,6 +36,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');
         this._label.style.setProperty('color', '#ff0000');
+        this._label.textContent = 'хз непонятно';
 
         this._label1 = document.createElement("label"); this._container.appendChild(this._label1);       
         this._label1.style.setProperty('position', 'absolute');
@@ -54,6 +55,8 @@ export class DigitsDetectorLocal extends Events.EventHandler {
             let tensor = this.calculateTensor();
 
             let prediction = await this.getPrediction(tensor);  
+
+            tensor?.dispose();
 
             this.trace(prediction);
 
@@ -82,8 +85,14 @@ export class DigitsDetectorLocal extends Events.EventHandler {
     
     private trace = (prediction: any) => {    
 
-        this._label.textContent = 'хуй просциш шо це';
+        if (String(this._label.textContent).includes('хз')) {
+            this._label.textContent += '.';
 
+            if (String(this._label.textContent).length > 15) {
+                this._label.textContent = 'хз непонятно';
+            }
+        }
+        
         for (let i = 0; i < prediction.length; i++) {
             if (prediction[i] > 0.5) {
                 this._label.textContent = 'це походу ' + i;

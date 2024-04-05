@@ -15,6 +15,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
     private _model: any = null;
 
     private _label: any;
+    private _label1: any;
 
     constructor() {
         super();
@@ -31,10 +32,19 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         this._label.style.setProperty('position', 'absolute');
         this._label.style.setProperty('top', '9%');
         this._label.style.setProperty('left', '3%');
-        this._label.style.setProperty('font-size', '34px');
+        this._label.style.setProperty('font-size', '44px');
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');
-        this._label.style.setProperty('color', '#00ff30');
+        this._label.style.setProperty('color', '#ff0000');
+
+        this._label1 = document.createElement("label"); this._container.appendChild(this._label1);       
+        this._label1.style.setProperty('position', 'absolute');
+        this._label1.style.setProperty('top', '3%');
+        this._label1.style.setProperty('left', '3%');
+        this._label1.style.setProperty('font-size', '34px');
+        this._label1.style.setProperty('font-family', 'Courier New');
+        this._label1.style.setProperty('font-weight', 'bold');
+        this._label1.style.setProperty('color', '#00ff30');
     }
 
     public startDetection = async () => {
@@ -47,7 +57,9 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
             this.trace(prediction);
 
-        }, 300);
+            this.trace_t(prediction);
+
+        }, 500);
     }
 
     private calculateTensor = () => {
@@ -73,14 +85,23 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         this._label.textContent = 'хуй просциш шо це';
 
         for (let i = 0; i < prediction.length; i++) {
-            if (prediction[i] > 0.6) {
+            if (prediction[i] > 0.5) {
                 this._label.textContent = 'це походу ' + i;
             }
 
-            if (prediction[i] > 0.8) {
+            if (prediction[i] > 0.7) {
                 this._label.textContent = 'бля буду це ' + i;
             }
         }
+    }
+
+    private trace_t = (prediction: any) => {    
+
+        this._label1.textContent = '';
+
+        prediction.forEach((value: number) => {
+            this._label1.textContent += value.toFixed(2) + (value > 0.9 ? '^' : ' ');
+        });
     }
 }
 

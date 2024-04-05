@@ -56,13 +56,13 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
             let prediction = await this.getPrediction(tensor);  
 
-            tensor?.dispose();
+          //  tensor?.dispose();
 
             this.trace(prediction);
 
             this.trace_t(prediction);
 
-        }, 500);
+        }, 200);
     }
 
     private calculateTensor = () => {
@@ -93,7 +93,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
             }
         }
 
-        let found;
+        let found = '';
 
         for (let i = 0; i < prediction.length; i++) {
 
@@ -106,7 +106,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
             }
         }
 
-        if (found) {
+        if (found.length) {
             this._label.textContent = found;
         } else {
             this._label.textContent = 'хз непонятно';

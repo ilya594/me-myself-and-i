@@ -129,7 +129,7 @@ export class MotionDetector extends Events.EventHandler {
         this._label.textContent = 'Δ ' +
         '[' + h.toFixed(1) + '] ' + 
         '[' + s.toFixed(1) + '] ' + 
-        '[' + v.toFixed(1) + ']';    
+        '[' + v.toFixed(1) + ']' + ' ¿ delbiki detected: ' + (Math.random() > 0.999 ? '1' : '0');    
     }
 
     private drawDeltaGraphics = (values: any, color: string, clear: boolean = false, adjust: number = 0) => {

@@ -119,8 +119,10 @@ export class DigitsDetectorLocal extends Events.EventHandler {
     private trace_t = (prediction: any) => {    
 
         prediction.forEach((value: number, index: number) => {
-            const color = Utils.rgbToHex({ r: value * 255.0, g: (1 - value) * 255.0, b: 255.0})
+            const color = Utils.rgbToHex({ r: value * 255.0, g: (1 - value) * 255.0, b: 55.0});
+            const size = String(34 + (value  * 5.0)) + 'px';
             this._logger[index].style.setProperty('color', color);
+            this._logger[index].style.setProperty('font-size', size);
             this._logger[index].textContent = value.toFixed(2);
         });
     }

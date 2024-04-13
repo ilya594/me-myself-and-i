@@ -1,8 +1,6 @@
 import * as Events from "../utils/Events";    
 import * as Utils from "../utils/Utils";
-
 import * as tf from '@tensorflow/tfjs';
-
 
 const url = './model_0/model.json';
 
@@ -59,11 +57,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
             let prediction = await this.getPrediction(tensor);  
 
-          //  tensor?.dispose();
-
-          // this.trace(prediction);
-
-            this.trace_t(prediction);
+            this.log(prediction);
 
         }, 200);
     }
@@ -76,50 +70,14 @@ export class DigitsDetectorLocal extends Events.EventHandler {
             .toFloat()
             .div(255.0);
 
-        /*
-            .toFloat()
-            .expandDims(0)
-            .resizeNearestNeighbor([28, 28])
-            .div(255.0);*/
-
     }
 
     private getPrediction = async (tensor: any) => await this._model.predict(tensor).data();
-    
-   /* private trace = (prediction: any) => {    
 
-        if (String(this._label.textContent).includes('хз')) {
-            this._label.textContent += '.';
-
-            if (String(this._label.textContent).length > 15) {
-                this._label.textContent = 'хз непонятно';
-            }
-        }
-
-        let found = '';
-
-        for (let i = 0; i < prediction.length; i++) {
-
-            if (prediction[i] > 0.5) {
-                found = 'це походу ' + i;
-            }
-
-            if (prediction[i] > 0.7) {
-                found = 'бля буду це ' + i;
-            }
-        }
-
-        if (found.length) {
-            this._label.textContent = found;
-        } else {
-            this._label.textContent = 'хз непонятно';
-        }
-    }*/
-
-    private trace_t = (prediction: any) => {    
+    private log = (prediction: any) => {    
 
         prediction.forEach((value: number, index: number) => {
-            const color = Utils.rgbToHex({ r: value * 255.0, g: (1 - value) * 255.0, b: 55.0});
+            const color = Utils.rgbToHex({ r: value * 255.0, g: (1 - value) * 255.0, b: 55.0 * value});
             const size = String(34 + (value  * 5.0)) + 'px';
             this._logger[index].style.setProperty('color', color);
             this._logger[index].style.setProperty('font-size', size);

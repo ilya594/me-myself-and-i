@@ -33,7 +33,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
             let label = document.createElement("label"); this._container.appendChild(label);       
             label.style.setProperty('position', 'absolute');
             label.style.setProperty('top', '3%');
-            label.style.setProperty('left', (String(i * 4 + 3) + '%'));
+            label.style.setProperty('left', (String(i * 7 + 3) + '%'));
             label.style.setProperty('font-size', '34px');
             label.style.setProperty('font-family', 'Courier New'); 
             label.style.setProperty('font-weight', 'bold');

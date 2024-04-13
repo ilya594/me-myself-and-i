@@ -1,5 +1,5 @@
 import * as Events from "../utils/Events";    
-//import * as Utils from "../utils/Utils";
+import * as Utils from "../utils/Utils";
 
 import * as tf from '@tensorflow/tfjs';
 
@@ -14,8 +14,9 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
     private _model: any = null;
 
-    private _label: any;
-    private _label1: any;
+    private _logger : any = [];
+
+    private _label : any;
 
     constructor() {
         super();
@@ -24,10 +25,22 @@ export class DigitsDetectorLocal extends Events.EventHandler {
     public initialize = async () => {
 
         this._container = document.getElementById("view-page");
-        this._viewport = document.querySelector("video");   
+        this._viewport = document.querySelector("video");      
 
         this._model = await tf.loadLayersModel(url);
-        
+
+        for (let i = 0; i < 10; i++) {
+            let label = document.createElement("label"); this._container.appendChild(label);       
+            label.style.setProperty('position', 'absolute');
+            label.style.setProperty('top', '3%');
+            label.style.setProperty('left', (String(i * 4 + 3) + '%'));
+            label.style.setProperty('font-size', '34px');
+            label.style.setProperty('font-family', 'Courier New'); 
+            label.style.setProperty('font-weight', 'bold');
+            label.style.setProperty('color', '#ffffff');
+            this._logger.push(label);
+        }     
+
         this._label = document.createElement("label"); this._container.appendChild(this._label);       
         this._label.style.setProperty('position', 'absolute');
         this._label.style.setProperty('top', '9%');
@@ -36,16 +49,6 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');
         this._label.style.setProperty('color', '#ff0000');
-        this._label.textContent = 'хз непонятно';
-
-        this._label1 = document.createElement("label"); this._container.appendChild(this._label1);       
-        this._label1.style.setProperty('position', 'absolute');
-        this._label1.style.setProperty('top', '3%');
-        this._label1.style.setProperty('left', '3%');
-        this._label1.style.setProperty('font-size', '34px');
-        this._label1.style.setProperty('font-family', 'Courier New');
-        this._label1.style.setProperty('font-weight', 'bold');
-        this._label1.style.setProperty('color', '#00ff30');
     }
 
     public startDetection = async () => {
@@ -58,7 +61,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
           //  tensor?.dispose();
 
-            this.trace(prediction);
+          // this.trace(prediction);
 
             this.trace_t(prediction);
 
@@ -83,7 +86,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
     private getPrediction = async (tensor: any) => await this._model.predict(tensor).data();
     
-    private trace = (prediction: any) => {    
+   /* private trace = (prediction: any) => {    
 
         if (String(this._label.textContent).includes('хз')) {
             this._label.textContent += '.';
@@ -111,14 +114,14 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         } else {
             this._label.textContent = 'хз непонятно';
         }
-    }
+    }*/
 
     private trace_t = (prediction: any) => {    
 
-        this._label1.textContent = '';
-
-        prediction.forEach((value: number) => {
-            this._label1.textContent += value.toFixed(2) + (value > 0.9 ? '^' : ' ');
+        prediction.forEach((value: number, index: number) => {
+            const color = Utils.rgbToHex({ r: value * 255.0, g: (1 - value) * 255.0, b: 255.0})
+            this._logger[index].style.setProperty('color', color);
+            this._logger[index].textContent = value.toFixed(2);
         });
     }
 }

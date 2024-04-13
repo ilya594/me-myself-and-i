@@ -44,6 +44,10 @@ export function rbgToHsv({r, g, b}: any) {
     return {h: h * 360, s: s * 100, v: v * 100};
 };
 
+export function rgbToHex({r, g, b}: any) {
+    return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
+}
+
 export function addTimeStamp(canvas: HTMLCanvasElement, date = new Date()): HTMLCanvasElement {
     const context = canvas.getContext('2d');
     context.font = '42px Courier New';

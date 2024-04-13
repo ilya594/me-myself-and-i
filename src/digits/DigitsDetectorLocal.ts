@@ -84,7 +84,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
             this._logger[index].textContent = value.toFixed(2);
         });
 
-        this._logger[prediction.length - 1].textContent += '.........атвічяю пацикі)))'
+        //this._logger[prediction.length - 1].textContent += '.........атвічяю пацикі)))'
     }
 }
 

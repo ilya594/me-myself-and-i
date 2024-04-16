@@ -1,3 +1,4 @@
+import { MOTION_DETECT_CHECKPOINT_SIZE, MOTION_DETECT_DELAY, MOTION_DETECT_HEAP_SIZE, MOTION_DETECT_PIXEL_COEF } from "../utils/Constants";
 import * as Events from "../utils/Events";    
 import * as Utils from "../utils/Utils";
 
@@ -10,8 +11,8 @@ export class MotionDetector extends Events.EventHandler {
     private _graphic: any;
 
     private _points: any = {
-        size: 100,
-        coefs: [0.70, 0.25],
+        size: MOTION_DETECT_CHECKPOINT_SIZE,
+        coefs: [0.5, 0.5],
         canvas: null,
         context: function() {
             return this.canvas.getContext('2d', { willReadFrequently: true });
@@ -59,7 +60,7 @@ export class MotionDetector extends Events.EventHandler {
         this._graphic.style.setProperty('position', 'absolute');
         this._graphic.style.setProperty('bottom', '0%');
         this._graphic.style.setProperty('left', '0%');
-        this._graphic.style.setProperty('height', '40%');
+        this._graphic.style.setProperty('height', '50%');
         this._graphic.style.setProperty('width', '100%');
 
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
@@ -80,11 +81,12 @@ export class MotionDetector extends Events.EventHandler {
 
         context.clearRect(0, 0, size, size);
 
-        context.drawImage(this._viewport, 
+        context.drawImage(
+            this._viewport, 
             this._width * this._points.coefs[0], 
             this._height * this._points.coefs[1], 
             size, size, 0, 0, size, size
-            );  
+        );  
     }
 
     private analyzeVideoFrame = (): any => {
@@ -102,34 +104,35 @@ export class MotionDetector extends Events.EventHandler {
         return hsv;
     }
 
-    private analyzeDeltaValues = (value: any, limit: number = 30) => {
+    private analyzeDeltaValues = (value: any) => {
 
-        const current: number = value.h;
-        const previous: number = this._values.h.last;
-        const average: number = this._values.h.average;
+        const current: number = value.hue;
+        const previous: number = this._values.hue.last;
+        const average: number = this._values.hue.average;
 
         let timeout: number = 0;
 
-        if (Math.abs(current - average) > limit && Math.abs(previous - average) > limit) {
-            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
-            timeout = 777;
-        }
+       // if (
+          //  Math.abs(current - average) > MOTION_DETECT_PIXEL_COEF && 
+          //  Math.abs(previous - average) > MOTION_DETECT_PIXEL_COEF
+       // ) {
+          //  this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
+          //  timeout = MOTION_DETECT_DELAY;
+       // }
 
         this._values.add(value);
 
-        setTimeout(() => { 
-            this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame)
-        }, timeout);
+        setTimeout(() => this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame), timeout);
     }
 
     private trace = ({h, s, v}: any) => {
         
-        this.drawDeltaGraphics(this._values.h, "#00ff00", true, - this._graphic.getBoundingClientRect().height / 4);
+        this.drawDeltaGraphics(this._values.hue, "#00ff00", true, -1.11 * this._values.hue.average);
 
         this._label.textContent = 'Δ ' +
         '[' + h.toFixed(1) + '] ' + 
         '[' + s.toFixed(1) + '] ' + 
-        '[' + v.toFixed(1) + ']' + ' ¿ delbiki detected: ' + (Math.random() > 0.999 ? '1' : '0');    
+        '[' + v.toFixed(1) + ']';  
     }
 
     private drawDeltaGraphics = (values: any, color: string, clear: boolean = false, adjust: number = 0) => {
@@ -158,19 +161,11 @@ class DeltaValues {
     private _s: DeltaValue = new DeltaValue();
     private _v: DeltaValue = new DeltaValue();
 
-    public get h() {
-        return this._h;
-    }
+    public get hue() { return this._h; }
 
-    public get s() {
-        return this._s;
-    }
+    public get saturation() { return this._s; }
 
-    public get v() {
-        return this._v;
-    }
-
-    constructor() {}
+    public get brightness() { return this._v; }
 
     public add = (value: { h: number, s: number, v: number }) => {
         this._h.add(value.h);
@@ -186,9 +181,7 @@ class DeltaValue {
         average: Number,
     }
 
-    public size: number = 300;//document.querySelector("video").getBoundingClientRect().width; //TODO get rid of this magic const!
-
-    constructor() {}
+    public size: number = MOTION_DETECT_HEAP_SIZE;
 
     public get average(): number {
         return this._values.average;

@@ -112,13 +112,13 @@ export class MotionDetector extends Events.EventHandler {
 
         let timeout: number = 0;
 
-       // if (
-          //  Math.abs(current - average) > MOTION_DETECT_PIXEL_COEF && 
-          //  Math.abs(previous - average) > MOTION_DETECT_PIXEL_COEF
-       // ) {
-          //  this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
-          //  timeout = MOTION_DETECT_DELAY;
-       // }
+        if (
+            Math.abs(current - average) > MOTION_DETECT_PIXEL_COEF && 
+            Math.abs(previous - average) > MOTION_DETECT_PIXEL_COEF
+        ) {
+            timeout = MOTION_DETECT_DELAY;
+            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
+        }
 
         this._values.add(value);
 
@@ -127,7 +127,7 @@ export class MotionDetector extends Events.EventHandler {
 
     private trace = ({h, s, v}: any) => {
         
-        this.drawDeltaGraphics(this._values.hue, "#00ff00", true, -1.11 * this._values.hue.average);
+        this.drawDeltaGraphics(this._values.hue, "#00ff00", true, - this._graphic.getBoundingClientRect().height / 4);
 
         this._label.textContent = 'Δ ' +
         '[' + h.toFixed(1) + '] ' + 

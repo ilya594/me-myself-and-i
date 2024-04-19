@@ -126,8 +126,10 @@ export class MotionDetector extends Events.EventHandler {
     }
 
     private trace = ({h, s, v}: any) => {
+
+     
         
-        this.drawDeltaGraphics(this._values.hue, "#00ff00", true, - this._graphic.getBoundingClientRect().height / 4);
+        this.drawDeltaGraphics(this._values.hue, "#00ff00", true, 0);
 
         this._label.textContent = 'Δ ' +
         '[' + h.toFixed(1) + '] ' + 
@@ -212,8 +214,8 @@ class DeltaValue {
     }
 
     private updateCached = (): void => {
-        if (this._values.cached.length >= this.size) {
-            this._values.cached = this._values.cached.slice(1);
+        if (this._values.cached.length > this.size) {
+            this._values.cached.shift();
         }
     }
 }

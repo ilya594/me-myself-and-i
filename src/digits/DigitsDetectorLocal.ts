@@ -52,8 +52,13 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
         this._canvas =  document.createElement("canvas"); this._container.appendChild(this._canvas);
         this._canvas.style.setProperty('position', 'absolute');
-        this._canvas.style.setProperty('x', String(this._viewport.x) + 'px');
-        this._canvas.style.setProperty('y', String(this._viewport.y - 140) + 'px');
+        this._canvas.width = 1180;
+        this._canvas.height = 280;
+        this._canvas.x = this._viewport.x;
+        this._canvas.y = this._viewport.y;
+
+        //this._canvas.style.setProperty('x', String(this._viewport.x) + 'px');
+       // this._canvas.style.setProperty('y', String(this._viewport.y - 140) + 'px');
     }
 
     public startDetection = async () => {
@@ -75,7 +80,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         let context = this._canvas.getContext('2d', { willReadFrequently: true});
 
         context.clearRect(0, 0, 1120, 280);
-        context.lineWidth = 1;
+        context.lineWidth = '1';
         context.strokeStyle = '#00ff00';
         
         for (let i = 0; i < 4; i++) {

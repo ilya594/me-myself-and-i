@@ -16,6 +16,8 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
     private _label : any;
 
+    private _canvas: any;
+
     constructor() {
         super();
     }
@@ -47,6 +49,8 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');
         this._label.style.setProperty('color', '#ff0000');
+
+        this._canvas =  document.createElement("canvas"); this._container.appendChild(this._canvas);
     }
 
     public startDetection = async () => {
@@ -64,11 +68,27 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
     private calculateTensor = () => {
 
+
+        let context = this._canvas.getContext('2d', { willReadFrequently: true});
+
+        context.clearRect(0, 0, 1120, 280);
+        context.lineWidth = 1;
+        context.strokeStyle = '#00ff00';
+        
+        for (let i = 0; i < 4; i++) {
+            context.rect(i * 280, 0, 280, 280);
+        }
+
+
         return tf.browser.fromPixels(this._viewport, 1)
             .resizeBilinear([28, 28])
             .expandDims(0)
             .toFloat()
             .div(255.0);
+
+    }
+
+    private drawBorders = () => {
 
     }
 

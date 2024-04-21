@@ -54,8 +54,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         this._canvas.style.setProperty('position', 'absolute');
         this._canvas.width = 1180;
         this._canvas.height = 280;
-        this._canvas.x = this._viewport.x;
-        this._canvas.y = this._viewport.y + 300;
+        this._canvas.style.setProperty('bottom', '11%');
 
         //this._canvas.style.setProperty('x', String(this._viewport.x) + 'px');
        // this._canvas.style.setProperty('y', String(this._viewport.y - 140) + 'px');
@@ -82,10 +81,14 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         context.clearRect(0, 0, 1120, 280);
         context.lineWidth = '1';
         context.strokeStyle = '#00ff00';
+        context.beginPath();
+
         
         for (let i = 0; i < 4; i++) {
             context.rect(i * 280, 0, 280, 280);
         }
+
+        context.stroke();
 
 
         return tf.browser.fromPixels(this._viewport, 1)

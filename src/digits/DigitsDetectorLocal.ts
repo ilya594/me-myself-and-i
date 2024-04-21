@@ -55,7 +55,7 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         this._canvas.width = 1180;
         this._canvas.height = 280;
         this._canvas.x = this._viewport.x;
-        this._canvas.y = this._viewport.y;
+        this._canvas.y = this._viewport.y + 300;
 
         //this._canvas.style.setProperty('x', String(this._viewport.x) + 'px');
        // this._canvas.style.setProperty('y', String(this._viewport.y - 140) + 'px');

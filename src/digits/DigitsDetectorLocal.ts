@@ -52,9 +52,12 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
         this._canvas =  document.createElement("canvas"); this._container.appendChild(this._canvas);
         this._canvas.style.setProperty('position', 'absolute');
+        this._canvas.style.setProperty('left', '3%');
+        this._canvas.style.x = this._viewport.x;
+        this._canvas.style.display = 'flex';
         this._canvas.width = 1180;
         this._canvas.height = 280;
-        this._canvas.style.setProperty('bottom', '11%');
+
 
         //this._canvas.style.setProperty('x', String(this._viewport.x) + 'px');
        // this._canvas.style.setProperty('y', String(this._viewport.y - 140) + 'px');

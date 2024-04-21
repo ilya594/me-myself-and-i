@@ -51,6 +51,9 @@ export class DigitsDetectorLocal extends Events.EventHandler {
         this._label.style.setProperty('color', '#ff0000');
 
         this._canvas =  document.createElement("canvas"); this._container.appendChild(this._canvas);
+        this._canvas.style.setProperty('position', 'absolute');
+        this._canvas.style.setProperty('x', String(this._viewport.x) + 'px');
+        this._canvas.style.setProperty('y', String(this._viewport.y - 140) + 'px');
     }
 
     public startDetection = async () => {

@@ -24,8 +24,26 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
     public initialize = async () => {
 
-        this._container = document.getElementById("view-page");
+        this._container = document.createElement("div"); document.body.appendChild(this._container);
         this._viewport = document.querySelector("video");      
+
+        document.getElementById("entry-page").style.display = 'none';
+        document.getElementById("view-page").style.display = 'none'; 
+        document.getElementById("loader").style.display = 'none';    
+
+        this._viewport = document.createElement("video"); this._container.appendChild(this._viewport);
+        this._viewport.style.opacity = 0.1;
+        
+        
+        const options: MediaStreamConstraints = { video: /*{ width: 1120, height: 140 }*/true, audio: false };
+
+        const stream: MediaStream = await navigator.mediaDevices.getDisplayMedia(options);
+
+      //  autoplay style="display: none; filter: grayscale(100);"
+      //  const viewport = document.querySelector("video");              
+      this._viewport.onloadedmetadata = this._viewport.play;         
+      this._viewport.srcObject = stream;
+      this._viewport.style.display = 'flex';
 
         this._model = await tf.loadLayersModel(url);
 
@@ -64,6 +82,8 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
         //this._canvas.style.setProperty('x', String(this._viewport.x) + 'px');
        // this._canvas.style.setProperty('y', String(this._viewport.y - 140) + 'px');
+
+       this.startDetection();
     }
 
     public startDetection = async () => {
@@ -84,13 +104,18 @@ export class DigitsDetectorLocal extends Events.EventHandler {
 
         let context = this._canvas.getContext('2d', { willReadFrequently: true});
 
+        let rectangle = this._viewport.getBoundingClientRect();
+
+        this._canvas.style.x = rectangle.x;
+
+
         context.clearRect(0, 0, 1120, 280);
         context.lineWidth = '1';
         context.strokeStyle = '#00ff00';
         context.beginPath();
 
         
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 3; i++) {
             context.rect(i * 280, 0, 280, 280);
         }
 

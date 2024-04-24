@@ -12,7 +12,7 @@ export class MotionDetector extends Events.EventHandler {
 
     private _points: any = {
         size: MOTION_DETECT_CHECKPOINT_SIZE,
-        coefs: [0.5, 0.5],
+        coefs: [0.66, 0.25],
         canvas: null,
         context: function() {
             return this.canvas.getContext('2d', { willReadFrequently: true });

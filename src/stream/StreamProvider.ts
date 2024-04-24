@@ -60,11 +60,11 @@ export class StreamProvider extends Events.EventHandler {
 
     private initializeLocalStream = async () => {
 
-        const options: MediaStreamConstraints = { video: { width: 1120, height: 280 }, audio: false };
+      //  const options: MediaStreamConstraints = { video: { width: 1120, height: 280 }, audio: false };
 
-        const stream: MediaStream = await navigator.mediaDevices.getUserMedia(options);
+      //  const stream: MediaStream = await navigator.mediaDevices.getUserMedia(options);
 
-        this.dispatchEvent(Events.STREAM_RECEIVED, stream);
+        //this.dispatchEvent(Events.STREAM_RECEIVED, stream);
     }
 
     private destroy = () => {

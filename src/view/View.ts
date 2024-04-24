@@ -27,7 +27,7 @@ export class View extends Events.EventHandler {
     }
 
 
-    // TODO move this somewhere idk
+    // TODO move this somewhere idk/////////////////////////////////////////////////////////////////
     public displayStream = (stream: any) => {
 
       document.getElementById("loader").style.display = 'none';    

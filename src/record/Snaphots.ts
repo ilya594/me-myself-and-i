@@ -5,7 +5,8 @@ import {
     VIDEO_HEIGHT, 
     SNAP_WIDTH, 
     SNAP_HEIGHT, 
-    SNAP_COUNT, 
+    SNAP_COUNT,
+    SNAP_SAVER_OPACITY, 
 } from "../utils/Constants";
 import * as Utils from "../utils/Utils";
 //import * as Events from "./utils/Events";
@@ -99,7 +100,7 @@ class Snaphots {
         this._snapsaver.style.setProperty('display', 'inline'); 
         this._snapsaver.width = this.w;
         this._snapsaver.height = this.h;
-        this._snapsaver.getContext('2d').globalAlpha = 0.4;  
+        this._snapsaver.getContext('2d').globalAlpha = SNAP_SAVER_OPACITY;  
         this._snapsaver.getContext('2d').drawImage(source, 0, 0, this.w, this.h); 
 
         this.startSaverTween(this.w, this.h);

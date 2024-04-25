@@ -41,7 +41,7 @@ export class MotionDetector extends Events.EventHandler {
 
         this._container = document.getElementById("view-page");
 
-        this._points.canvas = document.createElement("canvas"); this._container.appendChild(this._points.canvas); 
+        this._points.canvas = document.createElement("canvas"); //this._container.appendChild(this._points.canvas); 
         
         this._points.canvas.width = this._points.size;
         this._points.canvas.height = this._points.size;

@@ -3,7 +3,7 @@ export const VIDEO_HEIGHT = 720  / 1.2;
 
 export const SNAP_WIDTH = 444;
 export const SNAP_HEIGHT = 248;
-export const SNAP_COUNT = 5;
+export const SNAP_COUNT = 7;
 
 export const FACE_DETECT_INTERVAL_ACTIVE = 100;
 export const FACE_DETECT_INTERVAL_LAZY = 500;

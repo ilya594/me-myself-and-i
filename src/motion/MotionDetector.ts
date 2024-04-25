@@ -41,7 +41,7 @@ export class MotionDetector extends Events.EventHandler {
 
         this._container = document.getElementById("view-page");
 
-        this._points.canvas = document.createElement("canvas");// this._container.appendChild(this._points.canvas); 
+        this._points.canvas = document.createElement("canvas"); this._container.appendChild(this._points.canvas); 
         
         this._points.canvas.width = this._points.size;
         this._points.canvas.height = this._points.size;
@@ -106,7 +106,7 @@ export class MotionDetector extends Events.EventHandler {
 
     private analyzeDeltaValues = (value: any) => {
 
-        const current: number = value.hue;
+        const current: number = value.h;
         const previous: number = this._values.hue.last;
         const average: number = this._values.hue.average;
 
@@ -125,14 +125,12 @@ export class MotionDetector extends Events.EventHandler {
         setTimeout(() => this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame), timeout);
     }
 
-    private trace = ({h, s, v}: any) => {
-
-     
+    private trace = ({h, s, v}: any) => {     
         
         this.drawDeltaGraphics(this._values.hue, "#00ff00", true, 100);
 
-        this._label.textContent = 'Δ ' +
-        '[' + h.toFixed(1) + '] ' + 
+        this._label.textContent = 
+        '[' + this._values.hue.average.toFixed(1) + ' Δ ' +  h.toFixed(1) + '] ' +
         '[' + s.toFixed(1) + '] ' + 
         '[' + v.toFixed(1) + ']';  
     }

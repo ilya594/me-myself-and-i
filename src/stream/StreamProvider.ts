@@ -59,7 +59,7 @@ export class StreamProvider extends Events.EventHandler {
     }
 
     public sendSnaphot = (snapshot: HTMLCanvasElement) => {
-      this._connection.send('snapshot-send-homie', snapshot.toDataURL());
+      this._connection.send('snapshot-send-homie-message', snapshot.toDataURL());
     }
 
     private initializeLocalStream = async () => {

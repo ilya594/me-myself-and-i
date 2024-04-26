@@ -9,14 +9,14 @@ import {
     SNAP_SAVER_OPACITY, 
 } from "../utils/Constants";
 import * as Utils from "../utils/Utils";
-//import * as Events from "./utils/Events";
+import * as Events from "../utils/Events";    
 
-class Snaphots {
+class Snaphots extends Events.EventHandler {
 
     private _container: any;
     private _viewport: any;
     private _proxy: any;
-    private _buffer: any;
+    private _buffer: HTMLCanvasElement;
     private _snapsaver: any;
     private _snapshot: any;
     private _count = 0;
@@ -61,7 +61,7 @@ class Snaphots {
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
         this._buffer.height = VIDEO_HEIGHT * SNAP_COUNT;
         this._buffer.getContext('2d').beginPath();
-        this._buffer.getContext('2d').lineWidth = "1";
+        this._buffer.getContext('2d').lineWidth = 1;
         this._buffer.getContext('2d').strokeStyle = "black";
         this._buffer.getContext('2d').rect(0, 0, VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
         this._buffer.getContext('2d').stroke();
@@ -69,12 +69,12 @@ class Snaphots {
         requestAnimationFrame(this.tick);
     };
 
-    public create = (source: string = '') => {
-        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, source));
+    public create = (source: string = '', send: Boolean = false) => {
+        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, source), send);
     }
 
     private onViewportClick = () => {   
-        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, "manual"));
+        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, "manual"), true);
     };
 
     private drawCanvasFromVideo(canvas: HTMLCanvasElement, video: any, source: string): HTMLCanvasElement {
@@ -88,7 +88,7 @@ class Snaphots {
         return canvas;
     };
 
-    private createSnaphot = (source: HTMLCanvasElement) => { 
+    private createSnaphot = (source: HTMLCanvasElement, send: Boolean) => { 
 
         if (this.playing) this._tween.stop();
         
@@ -96,6 +96,13 @@ class Snaphots {
         const y:number = Math.floor(this._count/SNAP_COUNT) * VIDEO_HEIGHT;
 
         this._buffer.getContext('2d').drawImage(source, x, y, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+        /// ------------
+        if (send) {
+            this.dispatchEvent(Events.SNAPSHOT_SEND_HOMIE, source);
+        }
+
+
 
         this._snapsaver.style.setProperty('display', 'inline'); 
         this._snapsaver.width = this.w;

@@ -58,6 +58,10 @@ export class StreamProvider extends Events.EventHandler {
           });
     }
 
+    public sendSnaphot = (snapshot: HTMLCanvasElement) => {
+      this._connection.send('snapshot-send-homie', snapshot.toDataURL());
+    }
+
     private initializeLocalStream = async () => {
 
       //  const options: MediaStreamConstraints = { video: { width: 1120, height: 280 }, audio: false };

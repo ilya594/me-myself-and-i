@@ -33,3 +33,5 @@ export class EventHandler {
   export const MOTION_DETECTED ='motion_detected';
   export const MOTION_DETECTION_STARTED = 'motion_detection_started';
   export const MOTION_DETECTION_FINISHED = 'motion_detection_finished';
+
+  export const SNAPSHOT_SEND_HOMIE = 'snapshot_send_homie';

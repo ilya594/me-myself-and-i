@@ -45,6 +45,8 @@ class Entry {
 
       await Snaphots.initialize();
 
+            Snaphots.addEventListener(Events.SNAPSHOT_SEND_HOMIE, (data: any) => StreamProvider.sendSnaphot(data));
+
      // await DigitsDetector.initialize();
 
       await MotionDetector.initialize();

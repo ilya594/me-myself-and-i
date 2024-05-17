@@ -9,7 +9,7 @@ export class View extends Events.EventHandler {
     }
 
     public initialize = async () => {
-        window.onload = (_) => this.initializeView();
+      window.onload = (_) => this.initializeView();
     }
 
     private initializeView = async () => {

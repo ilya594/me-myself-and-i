@@ -127,7 +127,7 @@ export class MotionDetector extends Events.EventHandler {
 
     private trace = ({h, s, v}: any) => {     
         
-        this.drawDeltaGraphics(this._values.hue, "#00ff00", true, 100);
+        this.drawDeltaGraphics(this._values.hue, "#00ff00", true, -100);
 
         this._label.textContent = 
         '[' + this._values.hue.average.toFixed(1) + ' Δ ' +  h.toFixed(1) + '] ' +

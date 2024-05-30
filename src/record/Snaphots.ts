@@ -97,13 +97,6 @@ class Snaphots extends Events.EventHandler {
 
         this._buffer.getContext('2d').drawImage(source, x, y, VIDEO_WIDTH, VIDEO_HEIGHT);
 
-        /// ------------
-        if (send) {
-            this.dispatchEvent(Events.SNAPSHOT_SEND_HOMIE, source);
-        }
-
-
-
         this._snapsaver.style.setProperty('display', 'inline'); 
         this._snapsaver.width = this.w;
         this._snapsaver.height = this.h;
@@ -147,7 +140,7 @@ class Snaphots extends Events.EventHandler {
     }
 
     private flushBuffer = () => {
-
+        this.dispatchSendEvent();
         this.viewSnapshotCollection();
         this._buffer.getContext('2d').clearRect(0, 0, VIDEO_WIDTH * SNAP_COUNT, VIDEO_HEIGHT * SNAP_COUNT);
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
@@ -155,15 +148,22 @@ class Snaphots extends Events.EventHandler {
         this._count = 0;
     };
 
-    private viewSnapshotCollection = () => {
+    private viewSnapshotCollection = () => {           
+
+        const data = this._buffer.toDataURL();
 
         const tab: any = window.open();
+
         tab.document.body.style.width = tab.document.body.style.height = '100%';
         tab.document.body.style.overflow = 'hidden';
         tab.document.body.innerHTML = '<div width="100%" height="100%">' + 
-            '<img src="' + this._buffer.toDataURL() +
+            '<img src="' + data +
             '" width="' + VIDEO_WIDTH + 'px" height="' + VIDEO_HEIGHT + 'px">' +
             '</div>';
+    }
+
+    private dispatchSendEvent = () => {
+        this.dispatchEvent(Events.SNAPSHOT_SEND_HOMIE, this._buffer.toDataURL());
     }
 
     private tick = (time: number) => {

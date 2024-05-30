@@ -54,10 +54,8 @@ export class StreamProvider extends Events.EventHandler {
           });
     }
 
-    public sendSnaphot = (snapshot: HTMLCanvasElement) => {
-      snapshot.toBlob((blob) => {
-        this._connection.send({ type : 'snapshot-send-homie-message', data: blob });
-      });
+    public sendSnaphot = (snapshot: string) => {
+      this._connection.send({ type : 'snapshot-send-homie-message', data: snapshot });
     }
 
     private initializeLocalStream = async () => {

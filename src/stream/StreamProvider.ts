@@ -42,15 +42,11 @@ export class StreamProvider extends Events.EventHandler {
             
             this._connection.on('open', () => {
         
-              this._connection.send('custom-media-stream-request');
+              this._connection.send({ type: 'custom-media-stream-request' });
         
               this._peer.on('call', async (call: MediaConnection) => {
         
-                call.on('stream', (stream) => {  
-
-                  this.dispatchEvent(Events.STREAM_RECEIVED, stream);   
-    
-                });
+                call.on('stream', (stream) => this.dispatchEvent(Events.STREAM_RECEIVED, stream));
         
                 call.answer(null);
               });
@@ -59,7 +55,9 @@ export class StreamProvider extends Events.EventHandler {
     }
 
     public sendSnaphot = (snapshot: HTMLCanvasElement) => {
-      this._connection.send('snapshot-send-homie-message', snapshot.toDataURL());
+      snapshot.toBlob((blob) => {
+        this._connection.send({ type : 'snapshot-send-homie-message', data: blob });
+      });
     }
 
     private initializeLocalStream = async () => {

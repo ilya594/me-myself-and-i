@@ -141,7 +141,7 @@ class Snaphots extends Events.EventHandler {
 
     private flushBuffer = () => {
         this.dispatchSendEvent();
-        this.viewSnapshotCollection();
+        //this.viewSnapshotCollection();
         this._buffer.getContext('2d').clearRect(0, 0, VIDEO_WIDTH * SNAP_COUNT, VIDEO_HEIGHT * SNAP_COUNT);
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
         this._buffer.height = VIDEO_HEIGHT * SNAP_COUNT;

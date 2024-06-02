@@ -28,13 +28,17 @@ export class MotionDetector extends Events.EventHandler {
 
         this._viewport = document.querySelector("video");   
 
-        this._viewport.onresize = () => {
+        this.startDetector();
+        
+        this.dispatchEvent(Events.STREAM_BALANCED, null);
+
+        /*this._viewport.onresize = () => {
             if (this._width === 1280 && this._height === 720) {
                 this._viewport.onresize = null;
                 this.startDetector();
                 this.dispatchEvent(Events.STREAM_BALANCED, null);
             }
-        };
+        };*/
     };
 
     private startDetector = async () => {

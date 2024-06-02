@@ -36,7 +36,7 @@ export class View extends Events.EventHandler {
       viewport.srcObject = stream;
       viewport.style.display = 'flex';
       
-      document.body.requestFullscreen();
+     // document.body.requestFullscreen();
     }
 
 

@@ -1,7 +1,7 @@
 import Snaphots from "./record/Snaphots";
 import MotionDetector from "./motion/MotionDetector";
 import * as Events from "./utils/Events";  
-import DigitsDetector from "./digits/DigitsDetector";
+//import DigitsDetector from "./digits/DigitsDetector";
 import StreamProvider from "./stream/StreamProvider";
 import View from "./view/View";
 import DigitsDetectorLocal from "./digits/DigitsDetectorLocal";
@@ -44,7 +44,6 @@ class Entry {
       (await StreamProvider.initialize()).addEventListener(Events.STREAM_RECEIVED, (stream: any) => View.displayStream(stream));
 
       await Snaphots.initialize();
-
             Snaphots.addEventListener(Events.SNAPSHOT_SEND_HOMIE, (data: any) => StreamProvider.sendSnaphot(data));
 
      // await DigitsDetector.initialize();

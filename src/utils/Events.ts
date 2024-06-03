@@ -35,3 +35,6 @@ export class EventHandler {
   export const MOTION_DETECTION_FINISHED = 'motion_detection_finished';
 
   export const SNAPSHOT_SEND_HOMIE = 'snapshot_send_homie';
+
+
+  export const CHANGE_TRACE_VISIBILITY = 'change_trace_visibility';

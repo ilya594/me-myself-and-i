@@ -10,6 +10,7 @@ import {
 } from "../utils/Constants";
 import * as Utils from "../utils/Utils";
 import * as Events from "../utils/Events";    
+import Console from '../utils/Console';
 
 class Snaphots extends Events.EventHandler {
 
@@ -65,6 +66,7 @@ class Snaphots extends Events.EventHandler {
         this._buffer.getContext('2d').strokeStyle = "black";
         this._buffer.getContext('2d').rect(0, 0, VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
         this._buffer.getContext('2d').stroke();
+
 
         requestAnimationFrame(this.tick);
     };

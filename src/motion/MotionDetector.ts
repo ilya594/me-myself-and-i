@@ -1,3 +1,4 @@
+import Console from "../utils/Console";
 import { MOTION_DETECT_CHECKPOINT_SIZE, MOTION_DETECT_DELAY, MOTION_DETECT_HEAP_SIZE, MOTION_DETECT_PIXEL_COEF } from "../utils/Constants";
 import * as Events from "../utils/Events";    
 import * as Utils from "../utils/Utils";
@@ -9,6 +10,8 @@ export class MotionDetector extends Events.EventHandler {
 
     private _label: any;
     private _graphic: any;
+
+    private _showTrace: Boolean = false;
 
     private _points: any = {
         size: MOTION_DETECT_CHECKPOINT_SIZE,
@@ -67,6 +70,15 @@ export class MotionDetector extends Events.EventHandler {
         this._graphic.style.setProperty('height', '50%');
         this._graphic.style.setProperty('width', '100%');
 
+        Console.addEventListener(Events.CHANGE_TRACE_VISIBILITY, () => { 
+            const map = { 'true': 'inline', 'false': 'none'};
+            this._showTrace = !this._showTrace; 
+            //@ts-ignore
+            this._graphic.style.setProperty('display', String(map[String(this._showTrace)]));
+            //@ts-ignore
+            this._label.style.setProperty('display', String(map[String(this._showTrace)]));
+        });
+
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
     }
 
@@ -103,7 +115,9 @@ export class MotionDetector extends Events.EventHandler {
 
         this.analyzeDeltaValues(hsv); 
 
-        this.trace(hsv);
+        if (this._showTrace) {
+            this.trace(hsv);
+        }
 
         return hsv;
     }

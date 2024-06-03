@@ -5,6 +5,7 @@ import * as Events from "./utils/Events";
 import StreamProvider from "./stream/StreamProvider";
 import View from "./view/View";
 import DigitsDetectorLocal from "./digits/DigitsDetectorLocal";
+import Console from "./utils/Console";
 
 class Entry {
 
@@ -50,7 +51,9 @@ class Entry {
 
       await MotionDetector.initialize();
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
-        //    MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
+        //  MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
+
+      await Console.initialize();
     }
 
     private initializeComponents_digits = async () => {

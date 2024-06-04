@@ -113,7 +113,7 @@ class Snaphots extends Events.EventHandler {
         const ini = { scaleX: 1,            scaleY: 1,             x: 0,           y: 0 };
         const end = { scaleX: SNAP_WIDTH / w, scaleY: SNAP_HEIGHT / h, x: this._viewport.getBoundingClientRect().left - this._viewport.offsetLeft - this._viewport.offsetParent.offsetLeft + (this.w - SNAP_WIDTH)/2, y: -(h - SNAP_HEIGHT)/2 };   //TODO simplify this !!!!!
         this._tween = new TWEEN.Tween(ini)
-            .to({ scaleX: end.scaleX, scaleY: end.scaleY, x: end.x, y: end.y }, 2000)
+            .to({ scaleX: end.scaleX, scaleY: end.scaleY, x: end.x, y: end.y }, 333)
             .easing(TWEEN.Easing.Linear.None)
 	        .onUpdate(() => this._snapsaver.style.setProperty('transform', 
                                     'translate(' + ini.x + 'px,' + ini.y + 'px)' + 

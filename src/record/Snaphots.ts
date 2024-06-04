@@ -141,6 +141,7 @@ class Snaphots extends Events.EventHandler {
         this._snapsaver.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);            
 
         if (++this._count === SNAP_COUNT * SNAP_COUNT) this.flushBuffer();  
+        document.getElementById("snaps-button").innerHTML = String(this._count);
     }
 
     private flushBuffer = () => {
@@ -150,6 +151,7 @@ class Snaphots extends Events.EventHandler {
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
         this._buffer.height = VIDEO_HEIGHT * SNAP_COUNT;
         this._count = 0;
+        document.getElementById("snaps-button").innerHTML = String(this._count);
     };
 
     private viewSnapshotCollection = () => {           

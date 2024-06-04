@@ -2,6 +2,7 @@ import Console from "../utils/Console";
 import { MOTION_DETECT_CHECKPOINT_SIZE, MOTION_DETECT_DELAY, MOTION_DETECT_HEAP_SIZE, MOTION_DETECT_PIXEL_COEF } from "../utils/Constants";
 import * as Events from "../utils/Events";    
 import * as Utils from "../utils/Utils";
+import Controls from "../view/Controls";
 
 export class MotionDetector extends Events.EventHandler {
   
@@ -70,7 +71,7 @@ export class MotionDetector extends Events.EventHandler {
         this._graphic.style.setProperty('height', '50%');
         this._graphic.style.setProperty('width', '100%');
 
-        Console.addEventListener(Events.CHANGE_TRACE_VISIBILITY, () => { 
+        Controls.addEventListener(Events.CHANGE_TRACE_VISIBILITY, () => { 
             const map = { 'true': 'inline', 'false': 'none'};
             this._showTrace = !this._showTrace; 
             //@ts-ignore

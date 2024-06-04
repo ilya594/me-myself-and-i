@@ -1,5 +1,6 @@
 
 import * as Events from "../utils/Events";  
+import Controls from "./Controls";
 
 
 export class View extends Events.EventHandler {
@@ -22,7 +23,7 @@ export class View extends Events.EventHandler {
 
         this.dispatchEvent(Events.USER_PROCEEDED, null);
 
-        //this.initializeComponents(); 
+        Controls.initialize();
       }
     }
 

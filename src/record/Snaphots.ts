@@ -43,8 +43,8 @@ class Snaphots extends Events.EventHandler {
 
         this._snapshot = document.createElement("canvas"); this._container.appendChild(this._snapshot);
         this._snapshot.style.setProperty('position', 'absolute');
-        this._snapshot.style.setProperty('top', '0');
-        this._snapshot.style.setProperty('right', '0');
+        //this._snapshot.style.setProperty('x', '1280px');
+      //  this._snapshot.style.setProperty('left', '0');
 
         this._snapshot.width = SNAP_WIDTH;
         this._snapshot.height = SNAP_HEIGHT;
@@ -111,9 +111,9 @@ class Snaphots extends Events.EventHandler {
     private startSaverTween = (w: number, h: number) => {
 
         const ini = { scaleX: 1,            scaleY: 1,             x: 0,           y: 0 };
-        const end = { scaleX: SNAP_WIDTH/w, scaleY: SNAP_HEIGHT/h, x: (w - SNAP_WIDTH)/2, y: -(h - SNAP_HEIGHT)/2 };   
+        const end = { scaleX: SNAP_WIDTH / w, scaleY: SNAP_HEIGHT / h, x: this._viewport.getBoundingClientRect().left - this._viewport.offsetLeft - this._viewport.offsetParent.offsetLeft + (this.w - SNAP_WIDTH)/2, y: -(h - SNAP_HEIGHT)/2 };   //TODO simplify this !!!!!
         this._tween = new TWEEN.Tween(ini)
-            .to({ scaleX: end.scaleX, scaleY: end.scaleY, x: end.x, y: end.y }, 200)
+            .to({ scaleX: end.scaleX, scaleY: end.scaleY, x: end.x, y: end.y }, 2000)
             .easing(TWEEN.Easing.Linear.None)
 	        .onUpdate(() => this._snapsaver.style.setProperty('transform', 
                                     'translate(' + ini.x + 'px,' + ini.y + 'px)' + 
@@ -124,6 +124,8 @@ class Snaphots extends Events.EventHandler {
     }
 
     private onSaverTweenComplete = () => {
+        
+        this._snapshot.style.setProperty('transform', 'translate(' + String(this._viewport.getBoundingClientRect().left - this._viewport.offsetLeft - this._viewport.offsetParent.offsetLeft + (this.w - SNAP_WIDTH)/2) + 'px,' + String(-(this.h - SNAP_HEIGHT)/2) + 'px)' + 'scale(' + 1 + ',' + 1 + ')');    //TODO simplify this !!!!!
 
         this._snapshot.getContext('2d').globalAlpha = 1;
         this._snapshot.getContext('2d').clearRect(0, 0, SNAP_WIDTH + 1, SNAP_HEIGHT) + 1;

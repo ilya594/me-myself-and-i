@@ -1,4 +1,5 @@
 
+import StreamProvider from "../stream/StreamProvider";
 import * as Events from "../utils/Events";  
 
 
@@ -9,11 +10,25 @@ export class Controls extends Events.EventHandler {
     }
 
     private _container: any;
+    private _viewport: any;
 
     private _traceButton: any;
 
     public initialize = async () => {
-        this._container = document.getElementById("view-page");
+
+        this._container = document.getElementById("controls");
+        
+
+        StreamProvider.addEventListener(Events.STREAM_RECEIVED, () => {
+
+            this._viewport = document.querySelector("video");
+
+            setTimeout(() => {
+                this._container.style.setProperty('visibility', 'visible');
+                this._container.style.setProperty('left', String(this._viewport.offsetLeft + 5) + 'px');
+                this._container.style.setProperty('top', String(this._viewport.offsetTop + 5) + 'px');
+            }, 444);
+        });
 
         this.createTraceButton();
     }

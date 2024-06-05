@@ -58,7 +58,7 @@ export class MotionDetector extends Events.EventHandler {
         this._label = document.createElement("label"); this._container.appendChild(this._label);       
         this._label.style.setProperty('position', 'absolute');
         this._label.style.setProperty('top', '3%');
-        this._label.style.setProperty('left', '3%');
+        this._label.style.setProperty('left', '13%');
         this._label.style.setProperty('font-size', '34px');
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');

@@ -23,11 +23,7 @@ export class Controls extends Events.EventHandler {
 
             this._viewport = document.querySelector("video");
 
-            setTimeout(() => {
-                this._container.style.setProperty('visibility', 'visible');
-                this._container.style.setProperty('left', String(this._viewport.offsetLeft + 5) + 'px');
-                this._container.style.setProperty('top', String(this._viewport.offsetTop + 5) + 'px');
-            }, 444);
+            this._container.style.setProperty('visibility', 'visible');
         });
 
         this.createTraceButton();

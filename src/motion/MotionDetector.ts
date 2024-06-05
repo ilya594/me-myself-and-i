@@ -35,14 +35,6 @@ export class MotionDetector extends Events.EventHandler {
         this.startDetector();
         
         this.dispatchEvent(Events.STREAM_BALANCED, null);
-
-        /*this._viewport.onresize = () => {
-            if (this._width === 1280 && this._height === 720) {
-                this._viewport.onresize = null;
-                this.startDetector();
-                this.dispatchEvent(Events.STREAM_BALANCED, null);
-            }
-        };*/
     };
 
     private startDetector = async () => {
@@ -144,14 +136,17 @@ export class MotionDetector extends Events.EventHandler {
         setTimeout(() => this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame), timeout);
     }
 
-    private trace = ({h, s, v}: any) => {     
+    private trace = ({ h, s, v }: any) => {     
         
         this.drawDeltaGraphics(this._values.hue, "#00ff00", true, -100);
 
         this._label.textContent = 
-        '[' + this._values.hue.average.toFixed(1) + ' Δ ' +  h.toFixed(1) + '] ' +
-        '[' + s.toFixed(1) + '] ' + 
-        '[' + v.toFixed(1) + ']';  
+            '[' + this._values.hue.average.toFixed(1) + 
+            ' Δ ' +  h.toFixed(1) + '] ' +
+            '[' + s.toFixed(1) + '] ' + 
+            '[' + v.toFixed(1) + '] [' + 
+            this._viewport.videoWidth + ' x ' + 
+            this._viewport.videoHeight + ']';
     }
 
     private drawDeltaGraphics = (values: any, color: string, clear: boolean = false, adjust: number = 0) => {

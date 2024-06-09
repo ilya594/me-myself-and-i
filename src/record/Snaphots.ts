@@ -144,9 +144,8 @@ class Snaphots extends Events.EventHandler {
         document.getElementById("snaps-button").innerHTML = String(this._count);
     }
 
-    private flushBuffer = () => {
+    public flushBuffer = () => {
         this.dispatchSendEvent();
-        //this.viewSnapshotCollection();
         this._buffer.getContext('2d').clearRect(0, 0, VIDEO_WIDTH * SNAP_COUNT, VIDEO_HEIGHT * SNAP_COUNT);
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
         this._buffer.height = VIDEO_HEIGHT * SNAP_COUNT;

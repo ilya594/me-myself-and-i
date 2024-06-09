@@ -1,4 +1,5 @@
 
+import Snaphots from "../record/Snaphots";
 import StreamProvider from "../stream/StreamProvider";
 import * as Events from "../utils/Events";  
 
@@ -13,6 +14,7 @@ export class Controls extends Events.EventHandler {
     private _viewport: any;
 
     private _traceButton: any;
+    private _snapsButton: any;
 
     public initialize = async () => {
 
@@ -26,12 +28,15 @@ export class Controls extends Events.EventHandler {
             this._container.style.setProperty('visibility', 'visible');
         });
 
-        this.createTraceButton();
+        this.createButtons();
     }
 
-    private createTraceButton = () => {
+    private createButtons = () => {
         this._traceButton = document.getElementById("trace-button");      
         this._traceButton.onclick = () => this.dispatchEvent(Events.CHANGE_TRACE_VISIBILITY, null);
+
+        this._snapsButton = document.getElementById("snaps-button").parentElement;
+        this._snapsButton.onclick = () => Snaphots.flushBuffer();
     }
 
 

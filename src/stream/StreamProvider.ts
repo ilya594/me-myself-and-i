@@ -59,9 +59,9 @@ export class StreamProvider extends Events.EventHandler {
 
       //TODO replace it somewhere
       const request = new XMLHttpRequest();
-            request.open('POST', 'https://nodejs-http-server.onrender.com:8000/snapshot/');
+            request.open('POST', 'https://nodejs-http-server.onrender.com/snapshot', true);
             request.setRequestHeader('Content-type', 'image/x-png');
-            request.send(snapshot);
+            request.send('image=' + encodeURIComponent(snapshot));
     }
 
     private initializeLocalStream = async () => {

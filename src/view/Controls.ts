@@ -1,6 +1,6 @@
 
 import Snaphots from "../record/Snaphots";
-import StreamProvider from "../stream/StreamProvider";
+import StreamProvider from "../network/StreamProvider";
 import * as Events from "../utils/Events";  
 
 

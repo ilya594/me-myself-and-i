@@ -29,43 +29,34 @@ export class StreamProvider extends Events.EventHandler {
 
     private initializePeerStream = async () => {
 
-        const params = {
-            host: "nodejs-peer-server.onrender.com",
-            path: "/peer",
-            secure: true,
-          };
+      const params = {
+        host: "nodejs-peer-server.onrender.com",
+        path: "/peer",
+        secure: true,
+      };
     
-          this._peer = new Peer(id(), params);      
+      this._peer = new Peer(id(), params);      
         
-          this._peer.on('open', () => {
+      this._peer.on('open', () => {
         
-            this._connection = this._peer.connect('streamer');
+        this._connection = this._peer.connect('streamer');
             
-            this._connection.on('open', () => {
+        this._connection.on('open', () => {
         
-              this._connection.send({ type: 'custom-media-stream-request' });
+          this._connection.send({ type: 'custom-media-stream-request' });
         
-              this._peer.on('call', async (call: MediaConnection) => {
+          this._peer.on('call', async (call: MediaConnection) => {
         
-                call.on('stream', (stream) => this.dispatchEvent(Events.STREAM_RECEIVED, stream));
+            call.on('stream', (stream) => this.dispatchEvent(Events.STREAM_RECEIVED, stream));
         
-                call.answer(null);
-              });
-            })
+            call.answer(null);
           });
+        });
+      });
     }
 
-    public sendSnaphot = (snapshot: any) => {
-      
-     this._connection.send({ type : 'snapshot-send-homie-message', data: snapshot });
-
-     const name: string = new Date().toLocaleString('ua-UA', { timeZone: 'Europe/Kyiv' }).replace(/:/g, '.') + '.png';
-  
-      axios({
-        method: 'post',
-        url: "https://nodejs-http-server.onrender.com/snapshot",
-        data: { file: snapshot, name: name }, 
-      });      
+    public sendSnaphot = (snapshot: string) => {
+      this._connection.send({ type : 'snapshot-send-homie-message', data: snapshot });     
     }
 
     private initializeLocalStream = async () => {

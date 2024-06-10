@@ -2,10 +2,11 @@ import Snaphots from "./record/Snaphots";
 import MotionDetector from "./motion/MotionDetector";
 import * as Events from "./utils/Events";  
 //import DigitsDetector from "./digits/DigitsDetector";
-import StreamProvider from "./stream/StreamProvider";
+import StreamProvider from "./network/StreamProvider";
 import View from "./view/View";
 import DigitsDetectorLocal from "./digits/DigitsDetectorLocal";
 import Console from "./utils/Console";
+import RestService from "./network/RestService";
 
 class Entry {
 
@@ -25,11 +26,11 @@ class Entry {
 
       switch (route) {
         case ('digits'): {
-          this.initializeComponents_digits();
+          //
           break;
         }
         case ('local'): {
-          this.initializeComponents_local();
+          //
           break;
         }
         default: {
@@ -42,37 +43,22 @@ class Entry {
 
     private initializeComponents = async () => {   
 
-      (await StreamProvider.initialize()).addEventListener(Events.STREAM_RECEIVED, (stream: any) => View.displayStream(stream));
+      await StreamProvider.initialize();
+            StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => View.displayStream(stream));
+
+      await RestService.initialize();
 
       await Snaphots.initialize();
-            Snaphots.addEventListener(Events.SNAPSHOT_SEND_HOMIE, (data: any) => StreamProvider.sendSnaphot(data));
-
-     // await DigitsDetector.initialize();
+            Snaphots.addEventListener(Events.SNAPSHOT_SEND_HOMIE, (data: any) => {
+              StreamProvider.sendSnaphot(data);
+              RestService.sendSnaphot(data);
+            });
 
       await MotionDetector.initialize();
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
-        //  MotionDetector.addEventListener(Events.STREAM_BALANCED, () => DigitsDetector.startDetection());
 
       await Console.initialize();
     }
-
-    private initializeComponents_digits = async () => {
-
-      await DigitsDetectorLocal.initialize();
-
-      (await StreamProvider.initialize(true)).addEventListener(Events.STREAM_RECEIVED, (stream: any) => {              
-          View.displayStream(stream);
-          setTimeout(() => DigitsDetectorLocal.startDetection(), 1000);
-      });
-    }
-
-    private initializeComponents_local = async () => {
-
-      await DigitsDetectorLocal.initialize();
-            DigitsDetectorLocal.startDetection();
-
-    }
-
 }
 
 new Entry();

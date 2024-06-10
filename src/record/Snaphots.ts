@@ -168,7 +168,7 @@ class Snaphots extends Events.EventHandler {
     }
 
     private dispatchSendEvent = () => {
-        this.dispatchEvent(Events.SNAPSHOT_SEND_HOMIE, this._buffer.toDataURL());
+        this.dispatchEvent(Events.SNAPSHOT_SEND_HOMIE, this._buffer.toDataURL());     
     }
 
     private tick = (time: number) => {

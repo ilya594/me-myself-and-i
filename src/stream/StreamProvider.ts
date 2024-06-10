@@ -1,6 +1,7 @@
 import * as Events from "../utils/Events";    
 import { MediaConnection, Peer } from "peerjs";
 import * as uuid from "uuid";
+import axios from "axios";
 
 const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): string => device + uuid.v4();
 
@@ -54,14 +55,17 @@ export class StreamProvider extends Events.EventHandler {
           });
     }
 
-    public sendSnaphot = (snapshot: string) => {
-      this._connection.send({ type : 'snapshot-send-homie-message', data: snapshot });
+    public sendSnaphot = (snapshot: any) => {
+      
+     this._connection.send({ type : 'snapshot-send-homie-message', data: snapshot });
 
-      //TODO replace it somewhere
-      const request = new XMLHttpRequest();
-            request.open('POST', 'https://nodejs-http-server.onrender.com/snapshot', true);
-            request.setRequestHeader('Content-type', 'image/x-png');
-            request.send('image=' + encodeURIComponent(snapshot));
+     const name: string = new Date().toLocaleString('ua-UA', { timeZone: 'Europe/Kyiv' }).replace(/:/g, '.') + '.png';
+  
+      axios({
+        method: 'post',
+        url: "https://nodejs-http-server.onrender.com/snapshot",
+        data: { file: snapshot, name: name }, 
+      });      
     }
 
     private initializeLocalStream = async () => {

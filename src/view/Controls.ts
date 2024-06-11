@@ -48,12 +48,12 @@ export class Controls extends Events.EventHandler {
 
         this._watchButton = document.getElementById("watch-button");
         this._watchButton.onmouseover = () => this._watchToggle_0.style.setProperty('visibility', 'visible');
-        this._watchButton.onmouseout = () => onMouseOut(600);
+        this._watchButton.onmouseleave = () => onMouseOut(600);
 
         this._watchToggle_1 = document.getElementById("watch-toggle-item");
 
         this._watchToggle_0.onmouseover = () => onMouseOver('watch-toggle-month.') && this._watchToggle_1.style.setProperty('visibility', 'visible');
-        this._watchToggle_0.onmouseout = () => { this._watchButton.name.includes('watch-toggle-month.') && (this._watchButton.name = this._watchButton.name.replace('watch-toggle-month.','')); this._watchToggle_1.style.setProperty('visibility', 'hidden'); onMouseOut();};
+        this._watchToggle_0.onmouseleave = () => { this._watchButton.name.includes('watch-toggle-month.') && (this._watchButton.name = this._watchButton.name.replace('watch-toggle-month.','')); this._watchToggle_1.style.setProperty('visibility', 'hidden'); onMouseOut();};
 
         
 

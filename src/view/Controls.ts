@@ -60,7 +60,7 @@ export class Controls extends Events.EventHandler {
         
         const arrow_0 = this._watchToggle_1.firstElementChild;
 
-        const onButtonMouseOver = (index: number) => arrow_0.style.setProperty('top', String(index * 7.7 + 2) + '%');
+        const onButtonMouseOver = (index: number) => arrow_0.style.setProperty('top', (2 + (index * 7.9)).toString() + '%');
 
         for (let i = 0; i < 12; i++) {
             const button = document.getElementById("watch-toggle-month-" + i);

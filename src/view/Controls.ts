@@ -20,6 +20,8 @@ export class Controls extends Events.EventHandler {
     private _watchToggle_0: any;
     private _watchToggle_1: any;
 
+    private _watchButtons_0: Array<any> = [];
+
     public initialize = async () => {
 
         this._container = document.getElementById("controls");        
@@ -56,6 +58,15 @@ export class Controls extends Events.EventHandler {
         this._watchToggle_0.onmouseleave = () => { this._watchButton.name.includes('watch-toggle-month.') && (this._watchButton.name = this._watchButton.name.replace('watch-toggle-month.','')); this._watchToggle_1.style.setProperty('visibility', 'hidden'); onMouseOut();};
 
         
+        const arrow_0 = this._watchToggle_1.firstElementChild;
+
+        const onButtonMouseOver = (index: number) => arrow_0.style.setProperty('top', String(index * 8 + 4) + '%');
+
+        for (let i = 0; i < 12; i++) {
+            const button = document.getElementById("watch-toggle-month-" + i);
+            button.onmouseover = () => onButtonMouseOver(i);
+            this._watchButtons_0.push(button);
+        }
 
     }
 

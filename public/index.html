@@ -86,8 +86,34 @@
   color: #28e717;
 }
 
+.button-months {
+  display: flex;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  border: 1px solid #47fe0f;
+  vertical-align: top; 
+  background-color: #00000000;
+  font-size: 28px;
+  width: 92%;
+  text-align: center;
+  left: 4%;
+  gap: 10px;
+  line-height: 1.29;
+  color: #67fe0f;
+  font-weight: 100;
+  font-family: 'Courier New', Courier, monospace;
+  transition: background-color 370ms cubic-bezier(0,0,.38,.9), box-shadow 370ms cubic-bezier(0,0,.38,.9), border-color 370ms cubic-bezier(0,0,.38,.9), outline 370ms cubic-bezier(0,0,.38,.9);      
+}
+
+.button-months:hover {
+  background-image: none;
+  background-color: #47fe0f;
+  color: #28e717;
+}
+
 .container {
-  display: none; 
+  display: none;
   width: 100vw; 
   height: 100vh; 
   justify-content: center; 
@@ -114,7 +140,7 @@
     <img src="./images/eye.gif" style="width: 100%; height: 100%; opacity: 57%; transform: matrix3d(1,1,0,1,0,1,0);"/>
   </div>
 
-  <div id="view-page" class="container" style="position: relative; display: none;">
+  <div id="view-page" class="container" style="position: relative; visibility: hidden; display: none;">
     <div id="loader" class="center">
       <div class="wave"></div><div class="wave"></div>
       <div class="wave"></div><div class="wave"></div>
@@ -123,7 +149,7 @@
       <div class="wave"></div><div class="wave"></div>
     </div>
 
-    <video autoplay style="display: none; width: 1280px; height: 720px; border-style:solid ; border-color: #28e717; border-left-width: 0"></video>
+    <video autoplay style="display: none; visibility: hidden; width: 1280px; height: 720px; border-style:solid; border-color: #28e717; border-left-width: 0"></video>
 
     <div id="controls" style="position: absolute; top: 6%; left: 1%; visibility: hidden; background: linear-gradient(.25turn, black, 78%, transparent);">
       <div style="display: flex; flex-direction: column; gap: 20px;">
@@ -131,9 +157,29 @@
         <button id="watch-button" class="button" style="background-image: url(./images/guy_watching.png);"></button>
         <button id="trace-button" class="button" style="background-image: url(./images/6956441_preview.png);"></button>
       </div>
-
+    </div>
+    
+    <div id="watch-toggle-month" style="visibility: hidden; display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 11%; height: 560px; min-width: 200px; top: 14%; background: linear-gradient(.25turn, black, 48%, transparent);">
+      <div style="position: absolute; color: #28e717; font-size: 28px; top: 25%; right: 100%;">ᐸ</div>
+      <div class="button-months" style="margin-top: 4%;">january</div>
+      <div class="button-months" style="margin-top: 4%;">february</div>
+      <div class="button-months" style="margin-top: 4%;">march</div>
+      <div class="button-months" style="margin-top: 4%;">april</div>
+      <div class="button-months" style="margin-top: 4%;">may</div>
+      <div class="button-months" style="margin-top: 4%;">june</div>
+      <div class="button-months" style="margin-top: 4%;">july</div>
+      <div class="button-months" style="margin-top: 4%;">august</div>
+      <div class="button-months" style="margin-top: 4%;">september</div>
+      <div class="button-months" style="margin-top: 4%;">october</div>
+      <div class="button-months" style="margin-top: 4%;">november</div>
+      <div class="button-months" style="margin-top: 4%;">december</div>
     </div>
   </div>
+
+  <div id="watch-toggle-item" style="visibility: hidden; display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 26.6%; height: 574px; min-width: 400px; top: 14%; background: linear-gradient(.25turn, black, 68%, transparent);">
+    <div style="position: absolute; color: #28e717; font-size: 28px; top: 25%; right: 100%;">ᐸ</div>
+  </div>
+</div>
 
 </body>
 </html>

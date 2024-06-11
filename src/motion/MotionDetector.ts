@@ -55,6 +55,7 @@ export class MotionDetector extends Events.EventHandler {
         this._label.style.setProperty('font-family', 'Courier New');
         this._label.style.setProperty('font-weight', 'bold');
         this._label.style.setProperty('color', '#00ff30');
+        this._label.style.setProperty('visibility', 'hidden');
 
         this._graphic = document.createElement("canvas"); this._container.appendChild(this._graphic);
         this._graphic.style.setProperty('position', 'absolute');
@@ -62,14 +63,15 @@ export class MotionDetector extends Events.EventHandler {
         this._graphic.style.setProperty('left', '0%');
         this._graphic.style.setProperty('height', '50%');
         this._graphic.style.setProperty('width', '100%');
+        this._graphic.style.setProperty('visibility', 'hidden');
 
         Controls.addEventListener(Events.CHANGE_TRACE_VISIBILITY, () => { 
-            const map = { 'true': 'inline', 'false': 'none'};
+            const map = { 'true': 'visible', 'false': 'hidden'};
             this._showTrace = !this._showTrace; 
             //@ts-ignore
-            this._graphic.style.setProperty('display', String(map[String(this._showTrace)]));
+            this._graphic.style.setProperty('visibility', String(map[String(this._showTrace)]));
             //@ts-ignore
-            this._label.style.setProperty('display', String(map[String(this._showTrace)]));
+            this._label.style.setProperty('visibility', String(map[String(this._showTrace)]));
         });
 
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);

@@ -2,6 +2,7 @@
 import Snaphots from "../record/Snaphots";
 import StreamProvider from "../network/StreamProvider";
 import * as Events from "../utils/Events";  
+import RestService from "../network/RestService";
 
 
 export class Controls extends Events.EventHandler {
@@ -21,6 +22,8 @@ export class Controls extends Events.EventHandler {
     private _watchToggle_1: any;
 
     private _watchButtons_0: Array<any> = [];
+
+    private _filesList: Array<any>;
 
     public initialize = async () => {
 
@@ -46,22 +49,35 @@ export class Controls extends Events.EventHandler {
         this._watchToggle_0 = document.getElementById("watch-toggle-month");
 
         this._watchButton = document.getElementById("watch-button");
-        this._watchButton.onmouseenter = () => this._watchButton.firstElementChild.style.setProperty('visibility', 'visible');
+        this._watchButton.onmouseenter = () => {
+            RestService.getFilesList().then((response: any) => this._filesList = response.data?.data);
+            this._watchButton.firstElementChild.style.setProperty('visibility', 'visible');
+        }
         this._watchButton.onmouseleave = () => this._watchButton.firstElementChild.style.setProperty('visibility', 'hidden');
 
         this._watchToggle_1 = document.getElementById("watch-toggle-item");
         
         const arrow_0 = this._watchToggle_1.firstElementChild;
-
-        const onButtonMouseOver = (index: number) => arrow_0.style.setProperty('top', (2 + (index * 7.9)).toString() + '%');
+        
+        const onButtonMouseOver = (index: number) => {
+            this._watchToggle_1.replaceChildren();
+            this._filesList[index].forEach((fileName: string) => {
+                const imageButton = this._watchButtons_0[0].cloneNode(true);
+                      imageButton.textContent = fileName;
+            this._watchToggle_1.appendChild(imageButton);
+            });
+            arrow_0.style.setProperty('top', (2 + (index * 8.25)).toString() + '%');
+        }
 
         for (let i = 0; i < 12; i++) {
             const button = document.getElementById("watch-toggle-month-" + i);
             button.onmouseenter = () => onButtonMouseOver(i);
             this._watchButtons_0.push(button);
-        }
-
+        }        
     }
+
+
+    
 
 
 }

@@ -154,31 +154,45 @@
     <div id="controls" style="position: absolute; top: 6%; left: 1%; visibility: hidden; background: linear-gradient(.25turn, black, 78%, transparent);">
       <div style="display: flex; flex-direction: column; gap: 20px;">
         <button class="button" style="background-image: url(images/photo_camera.png);"><div id="snaps-button" style="opacity: 70%;"></div></button>
-        <button id="watch-button" class="button" style="background-image: url(./images/guy_watching.png);"></button>
-        <button id="trace-button" class="button" style="background-image: url(./images/6956441_preview.png);"></button>
+
+
+          <button id="watch-button" class="button" style="background-image: url(./images/guy_watching.png);">
+            <div style="visibility: hidden;">
+              <div style="display: flex; flex-direction: column; position: absolute; left: 130px; height: 560px; min-width: 20px; top: 14%; background:#16161605"></div>
+              <div style="display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 150px; height: 560px; min-width: 200px; top: 14%; background: linear-gradient(.25turn, black, 58%, transparent);" id="watch-toggle-month" >
+                  <div style="position: absolute; color: #28e717; font-size: 28px; top: 25%; right: 100%;">ᐸ</div>
+                  <div id="watch-toggle-month-0" class="button-months" style="margin-top: 4%;">january</div>
+                  <div id="watch-toggle-month-1" class="button-months" style="margin-top: 4%;">february</div>
+                  <div id="watch-toggle-month-2" class="button-months" style="margin-top: 4%;">march</div>
+                  <div id="watch-toggle-month-3" class="button-months" style="margin-top: 4%;">april</div>
+                  <div id="watch-toggle-month-4" class="button-months" style="margin-top: 4%;">may</div>
+                  <div id="watch-toggle-month-5" class="button-months" style="margin-top: 4%;">june</div>
+                  <div id="watch-toggle-month-6" class="button-months" style="margin-top: 4%;">july</div>
+                  <div id="watch-toggle-month-7" class="button-months" style="margin-top: 4%;">august</div>
+                  <div id="watch-toggle-month-8" class="button-months" style="margin-top: 4%;">september</div>
+                  <div id="watch-toggle-month-9" class="button-months" style="margin-top: 4%;">october</div>
+                  <div id="watch-toggle-month-10" class="button-months" style="margin-top: 4%;">november</div>
+                  <div id="watch-toggle-month-11" class="button-months" style="margin-top: 4%;">december</div>
+                  <div style="display: flex; flex-direction: column; position: absolute; left: 200px; height: 562px; min-width: 20px; top: -2px; background:#16161605"></div>
+                  <div id="watch-toggle-item" style="display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 220px; height: 562px; min-width: 400px; top: -2px; background: linear-gradient(.25turn, black, 78%, transparent);">
+                    <div style="position: absolute; color: #28e717; font-size: 28px; top: 2%; right: 100%;">ᐸ</div>
+                  </div>
+                </div>
+            </div>
+          </button>
+          <button id="trace-button" class="button" style="background-image: url(./images/6956441_preview.png);"></button>
+          </div>
+
+
+        
+
+
       </div>
     </div>
     
-    <div id="watch-toggle-month" style="visibility: hidden; display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 12%; height: 560px; min-width: 200px; top: 14%; background: linear-gradient(.25turn, black, 58%, transparent);">
-      <div style="position: absolute; color: #28e717; font-size: 28px; top: 25%; right: 100%;">ᐸ</div>
-      <div id="watch-toggle-month-0" class="button-months" style="margin-top: 4%;">january</div>
-      <div id="watch-toggle-month-1" class="button-months" style="margin-top: 4%;">february</div>
-      <div id="watch-toggle-month-2" class="button-months" style="margin-top: 4%;">march</div>
-      <div id="watch-toggle-month-3" class="button-months" style="margin-top: 4%;">april</div>
-      <div id="watch-toggle-month-4" class="button-months" style="margin-top: 4%;">may</div>
-      <div id="watch-toggle-month-5" class="button-months" style="margin-top: 4%;">june</div>
-      <div id="watch-toggle-month-6" class="button-months" style="margin-top: 4%;">july</div>
-      <div id="watch-toggle-month-7" class="button-months" style="margin-top: 4%;">august</div>
-      <div id="watch-toggle-month-8" class="button-months" style="margin-top: 4%;">september</div>
-      <div id="watch-toggle-month-9" class="button-months" style="margin-top: 4%;">october</div>
-      <div id="watch-toggle-month-10" class="button-months" style="margin-top: 4%;">november</div>
-      <div id="watch-toggle-month-11" class="button-months" style="margin-top: 4%;">december</div>
-    </div>
-  </div>
 
-  <div id="watch-toggle-item" style="visibility: hidden; display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 27.6%; height: 574px; min-width: 400px; top: 13.6%; background: linear-gradient(.25turn, black, 78%, transparent);">
-    <div style="position: absolute; color: #28e717; font-size: 28px; top: 2%; right: 100%;">ᐸ</div>
-  </div>
+
+
 
 
 </div>

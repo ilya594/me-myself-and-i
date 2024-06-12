@@ -45,18 +45,11 @@ export class Controls extends Events.EventHandler {
 
         this._watchToggle_0 = document.getElementById("watch-toggle-month");
 
-        const onMouseOut = (timeout: number = 0) => setTimeout(() => !this._watchButton.name.length && this._watchToggle_0.style.setProperty('visibility', 'hidden'), timeout);
-        const onMouseOver = (name: string) => !this._watchButton.name.includes(name) && (this._watchButton.name += name)
-
         this._watchButton = document.getElementById("watch-button");
-        this._watchButton.onmouseover = () => this._watchToggle_0.style.setProperty('visibility', 'visible');
-        this._watchButton.onmouseleave = () => onMouseOut(600);
+        this._watchButton.onmouseenter = () => this._watchButton.firstElementChild.style.setProperty('visibility', 'visible');
+        this._watchButton.onmouseleave = () => this._watchButton.firstElementChild.style.setProperty('visibility', 'hidden');
 
         this._watchToggle_1 = document.getElementById("watch-toggle-item");
-
-        this._watchToggle_0.onmouseover = () => onMouseOver('watch-toggle-month.') && this._watchToggle_1.style.setProperty('visibility', 'visible');
-        this._watchToggle_0.onmouseleave = () => { this._watchButton.name.includes('watch-toggle-month.') && (this._watchButton.name = this._watchButton.name.replace('watch-toggle-month.','')); this._watchToggle_1.style.setProperty('visibility', 'hidden'); onMouseOut();};
-
         
         const arrow_0 = this._watchToggle_1.firstElementChild;
 
@@ -64,7 +57,7 @@ export class Controls extends Events.EventHandler {
 
         for (let i = 0; i < 12; i++) {
             const button = document.getElementById("watch-toggle-month-" + i);
-            button.onmouseover = () => onButtonMouseOver(i);
+            button.onmouseenter = () => onButtonMouseOver(i);
             this._watchButtons_0.push(button);
         }
 

@@ -60,10 +60,11 @@ export class Controls extends Events.EventHandler {
         const arrow_0 = this._watchToggle_1.firstElementChild;
         
         const onButtonMouseOver = (index: number) => {
-            this._watchToggle_1.replaceChildren();
+            this._watchToggle_1.replaceChildren(arrow_0);
             this._filesList[index].forEach((fileName: string) => {
                 const imageButton = this._watchButtons_0[0].cloneNode(true);
                       imageButton.textContent = fileName;
+                      imageButton.style.setProperty('font-size', '24px');
             this._watchToggle_1.appendChild(imageButton);
             });
             arrow_0.style.setProperty('top', (2 + (index * 8.25)).toString() + '%');

@@ -3,6 +3,7 @@ import Snaphots from "../record/Snaphots";
 import StreamProvider from "../network/StreamProvider";
 import * as Events from "../utils/Events";  
 import RestService from "../network/RestService";
+import FileSaver from "file-saver";
 
 
 export class Controls extends Events.EventHandler {
@@ -24,6 +25,8 @@ export class Controls extends Events.EventHandler {
     private _watchButtons_0: Array<any> = [];
 
     private _filesList: Array<any>;
+
+    private _folders = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     public initialize = async () => {
 
@@ -58,15 +61,39 @@ export class Controls extends Events.EventHandler {
         this._watchToggle_1 = document.getElementById("watch-toggle-item");
         
         const arrow_0 = this._watchToggle_1.firstElementChild;
+
+        const onImageButtonClick = (path: string) => {
+            const [month, name] = path.split('/');
+            RestService.getSnapshot(month, name).then((result: string) => {
+                FileSaver.saveAs(result, name);
+            });
+        };
         
         const onButtonMouseOver = (index: number) => {
+
             this._watchToggle_1.replaceChildren(arrow_0);
-            this._filesList[index].forEach((fileName: string) => {
-                const imageButton = this._watchButtons_0[0].cloneNode(true);
-                      imageButton.textContent = fileName;
-                      imageButton.style.setProperty('font-size', '24px');
-            this._watchToggle_1.appendChild(imageButton);
-            });
+
+            if (this._filesList[index].length) {
+                this._filesList[index].forEach((fileName: string) => {
+                    const imageButton = this._watchButtons_0[0].cloneNode(true);
+                          imageButton.textContent = fileName;
+                          imageButton.style.setProperty('font-size', '24px');
+                          imageButton.name = this._folders[index] + '/' + fileName;
+                          imageButton.onclick = () => onImageButtonClick(imageButton.name);
+                    this._watchToggle_1.appendChild(imageButton);                   
+                });
+            } else {
+                const backgroundImage = document.createElement("div");
+                      backgroundImage.style.setProperty('background-image', 'url(./images/nothing_here.png');
+                      backgroundImage.style.setProperty('width', '100%');
+                      backgroundImage.style.setProperty('height', '100%');
+                      backgroundImage.style.setProperty('background-repeat', 'no-repeat');
+                      backgroundImage.style.setProperty('background-position', 'center');
+                      backgroundImage.style.setProperty('opacity',  '77%');
+                      
+                this._watchToggle_1.appendChild(backgroundImage);
+            }
+
             arrow_0.style.setProperty('top', (2 + (index * 8.25)).toString() + '%');
         }
 

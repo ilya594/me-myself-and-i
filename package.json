@@ -12,6 +12,7 @@
   "author": "cankillah",
   "license": "ISC",
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "@types/uuid": "^9.0.8",
     "encoding": "^0.1.13",
     "ts-loader": "^9.4.2",
@@ -24,6 +25,7 @@
     "@tensorflow/tfjs": "^4.17.0",
     "@tweenjs/tween.js": "^23.1.1",
     "axios": "^1.7.2",
+    "file-saver": "^2.0.5",
     "peerjs": "^1.5.2",
     "uuid": "^9.0.1"
   }

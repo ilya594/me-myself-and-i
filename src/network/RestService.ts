@@ -7,8 +7,10 @@ export class RestService extends Events.EventHandler {
     private TIME_ZONE: string = 'Europe/Kyiv';
 
     constructor() {
-        super();
+        super();        
     }
+
+
 
     public initialize = async () => {
         return this;
@@ -25,6 +27,20 @@ export class RestService extends Events.EventHandler {
         data: { file: snapshot, name: name }, 
       });      
     }
+
+    public getSnapshot = async (month: string, name: string) => {
+
+      const response = await axios.get(this.SERVER_URL + 'snapshot', {
+        params: {
+          month: month,
+          name: name,
+        }
+      });
+
+      const url: string = 'data:image/png;base64,'.concat(response.data as string);
+
+      return url;
+    }  
 
     public getFilesList = () => {
       return axios.get(this.SERVER_URL + 'lsall');

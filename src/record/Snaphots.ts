@@ -168,6 +168,7 @@ class Snaphots extends Events.EventHandler {
     }
 
     private dispatchSendEvent = () => {
+        // TODO put this thread-blocking stuff into web-worker
         this.dispatchEvent(Events.SNAPSHOT_SEND_HOMIE, this._buffer.toDataURL());     
     }
 

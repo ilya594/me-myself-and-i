@@ -68,9 +68,21 @@ export class Controls extends Events.EventHandler {
                 FileSaver.saveAs(result, name);
             });
         };
+
+        const addNothingFoundBackground = () => {
+            const backgroundImage = document.createElement("div");
+            backgroundImage.style.setProperty('background-image', 'url(./images/nothing_here.png');
+            backgroundImage.style.setProperty('width', '100%');
+            backgroundImage.style.setProperty('height', '100%');
+            backgroundImage.style.setProperty('background-repeat', 'no-repeat');
+            backgroundImage.style.setProperty('background-position', 'center');
+            backgroundImage.style.setProperty('opacity',  '77%');            
+            this._watchToggle_1.appendChild(backgroundImage);
+        }
+
+        addNothingFoundBackground();
         
         const onButtonMouseOver = (index: number) => {
-
             this._watchToggle_1.replaceChildren(arrow_0);
 
             if (this._filesList[index].length) {
@@ -80,20 +92,31 @@ export class Controls extends Events.EventHandler {
                           imageButton.style.setProperty('font-size', '24px');
                           imageButton.name = this._folders[index] + '/' + fileName;
                           imageButton.onclick = () => onImageButtonClick(imageButton.name);
-                    this._watchToggle_1.appendChild(imageButton);                   
+
+                    /*const deleteButton = this._traceButton.cloneNode(true);
+                          deleteButton.style.setProperty('background-image', 'url(./images/rubbish-bin.png');
+                          deleteButton.style.setProperty('width', '30px');
+                          deleteButton.style.setProperty('height', '30px');
+
+                          deleteButton.style.setProperty('min-height', '1px');
+                            deleteButton.style.setProperty('line-height', undefined);
+                                deleteButton.style.setProperty('padding-bottom', undefined);
+                                    deleteButton.style.setProperty('padding-right', undefined);
+                                    deleteButton.style.setProperty('vertical-align', 'middle');*/
+
+                    const container = document.createElement("div");
+                        //  container.style.setProperty('display', 'flex');
+                         // container.style.setProperty('flex-direction', 'row');
+                          container.appendChild(imageButton);
+                       //   container.appendChild(deleteButton);
+
+
+                    this._watchToggle_1.appendChild(container);
+                    //this._watchToggle_1.appendChild(imageButton);                   
                 });
             } else {
-                const backgroundImage = document.createElement("div");
-                      backgroundImage.style.setProperty('background-image', 'url(./images/nothing_here.png');
-                      backgroundImage.style.setProperty('width', '100%');
-                      backgroundImage.style.setProperty('height', '100%');
-                      backgroundImage.style.setProperty('background-repeat', 'no-repeat');
-                      backgroundImage.style.setProperty('background-position', 'center');
-                      backgroundImage.style.setProperty('opacity',  '77%');
-                      
-                this._watchToggle_1.appendChild(backgroundImage);
+                addNothingFoundBackground();
             }
-
             arrow_0.style.setProperty('top', (2 + (index * 8.25)).toString() + '%');
         }
 

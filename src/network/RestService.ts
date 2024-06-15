@@ -10,8 +10,6 @@ export class RestService extends Events.EventHandler {
         super();        
     }
 
-
-
     public initialize = async () => {
         return this;
     }

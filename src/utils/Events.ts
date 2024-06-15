@@ -38,3 +38,7 @@ export class EventHandler {
 
 
   export const CHANGE_TRACE_VISIBILITY = 'change_trace_visibility';
+
+  export const NETWORK_FOLDERS_LOAD_END = 'network_folders_loaded';  
+  export const NETWORK_SNAPSHOT_LOAD_START = 'network_snapshot_load_start';
+  export const NETWORK_SNAPSHOT_LOAD_END = 'network_snapshot_load_end';

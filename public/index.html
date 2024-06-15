@@ -124,6 +124,33 @@
 	font-size: 46px;
 }
 
+.images-container {
+  display: flex; 
+  flex-direction: column; 
+  border: 1px solid #47fe0f; 
+  position: absolute; left: 220px; 
+  height: 560px; min-width: 400px; 
+  background: linear-gradient(.25turn, rgba(0, 0, 0, 0.692), 88%, transparent); 
+  overflow-y: auto;
+}
+
+/* width */
+.images-container::-webkit-scrollbar {
+  width: 10px;
+}
+/* Track */
+.images-container::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+} 
+/* Handle */
+.images-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(.5turn, #28e717, 58%, transparent);
+}
+/* Handle on hover */
+.images-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(.5turn, #28e717, 58%, transparent);
+}
+
   </style>
   <meta charset="utf-8">
   <title>html-peer-viewer</title>
@@ -173,7 +200,7 @@
                   <div id="watch-toggle-month-10" class="button-months" style="margin-top: 4%;">november</div>
                   <div id="watch-toggle-month-11" class="button-months" style="margin-top: 4%;">december</div>
                   <div style="display: flex; flex-direction: column; position: absolute; left: 200px; height: 560px; min-width: 20px; background:#16161605"></div>
-                  <div id="watch-toggle-item" style="display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 220px; height: 560px; min-width: 400px; background: linear-gradient(.25turn, rgba(0, 0, 0, 0.692), 88%, transparent);">
+                  <div id="watch-toggle-item" class="images-container">
                     <div style="position: absolute; color: #28e717; font-size: 28px; top: 2%; right: 100%;">ᐸ</div>
                   </div>
                 </div>
@@ -183,7 +210,7 @@
           </div>
 
 
-        
+
 
 
       </div>

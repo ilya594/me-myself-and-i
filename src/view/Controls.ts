@@ -65,7 +65,8 @@ export class Controls extends Events.EventHandler {
 
         const contextMenu = document.getElementById("context-menu");
               //@ts-ignore
-              contextMenu.firstElementChild.onclick = () => {
+              contextMenu.firstElementChild.onclick = (event) => {
+                event.preventDefault(); event.stopPropagation();
                 const [month, name] = contextMenu.nonce.split('/');
                 RestService.deleteSnapshot(month, name).then((result: any) => {
                     console.log(result);

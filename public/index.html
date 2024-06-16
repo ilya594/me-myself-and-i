@@ -128,10 +128,19 @@
   display: flex; 
   flex-direction: column; 
   border: 1px solid #47fe0f; 
-  position: absolute; left: 220px; 
-  height: 560px; min-width: 400px; 
+  position: absolute; 
+  left: 220px; 
+  height: 560px; 
+  min-width: 400px; 
   background: linear-gradient(.25turn, rgba(0, 0, 0, 0.692), 88%, transparent); 
   overflow-y: auto;
+  font-weight: 100;
+  font-size: 28px;
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1.29;
+  color: #67fe0f;
+  text-align: center;
+  vertical-align: top; 
 }
 
 /* width */
@@ -182,10 +191,10 @@
         <button class="button" style="background-image: url(images/photo_camera.png);"><div id="snaps-button" style="opacity: 70%;"></div></button>
 
 
-          <button id="watch-button" class="button" style="background-image: url(./images/guy_watching.png); z-index: 9999;">
+          <button id="watch-button" class="button" style="background-image: url(./images/guy_watching.png); z-index: 9990;">
             <div style="visibility: hidden;">
               <div style="display: flex; flex-direction: column; position: absolute; left: 130px; height: 560px; min-width: 20px; top: 14%; background:#16161605"></div>
-              <div style="display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 150px; height: 560px; min-width: 200px; top: 14%; background: linear-gradient(.25turn, black, 58%, transparent);" id="watch-toggle-month" >
+              <div id="watch-toggle-month" style="display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 150px; height: 560px; min-width: 200px; top: 14%; background: linear-gradient(.25turn, black, 58%, transparent);"  >
                   <div style="position: absolute; color: #28e717; font-size: 28px; top: 25%; right: 100%;">ᐸ</div>
                   <div id="watch-toggle-month-0" class="button-months" style="margin-top: 4%;">january</div>
                   <div id="watch-toggle-month-1" class="button-months" style="margin-top: 4%;">february</div>
@@ -201,7 +210,11 @@
                   <div id="watch-toggle-month-11" class="button-months" style="margin-top: 4%;">december</div>
                   <div style="display: flex; flex-direction: column; position: absolute; left: 200px; height: 560px; min-width: 20px; background:#16161605"></div>
                   <div id="watch-toggle-item" class="images-container">
-                    <div style="position: absolute; color: #28e717; font-size: 28px; top: 2%; right: 100%;">ᐸ</div>
+                    <div style="position: absolute; color: #28e717; font-size: 28px; top: 2%; right: 100%; z-index: 9998;">ᐸ</div>
+                    <div id="context-menu" style="display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 150px; height: 100px; min-width: 200px; top: 14%; background: black; z-index: 9991; visibility: hidden;">
+                      <div id="delete-button" class="button-months" style="margin-top: 4%;">delete</div>
+                      <div id="else-button" class="button-months" style="margin-top: 4%;">......</div>
+                    </div>
                   </div>
                 </div>
             </div>

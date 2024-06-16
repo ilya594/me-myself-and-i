@@ -23,6 +23,7 @@ export class Controls extends Events.EventHandler {
     private _watchToggle_1: any;
 
     private _watchButtons_0: Array<any> = [];
+    private _imageButtons: Array<any> = [];
 
     private _filesList: Array<any>;
 
@@ -62,6 +63,16 @@ export class Controls extends Events.EventHandler {
         
         const arrow_0 = this._watchToggle_1.firstElementChild;
 
+        const contextMenu = document.getElementById("context-menu");
+              //@ts-ignore
+              contextMenu.firstElementChild.onclick = () => {
+                const [month, name] = contextMenu.nonce.split('/');
+                RestService.deleteSnapshot(month, name).then((result: any) => {
+                    console.log(result);
+                });
+              }
+        this._watchToggle_1.removeChild(contextMenu);
+
         const onImageButtonClick = (path: string) => {
             const [month, name] = path.split('/');
             RestService.getSnapshot(month, name).then((result: string) => {
@@ -80,44 +91,50 @@ export class Controls extends Events.EventHandler {
             this._watchToggle_1.appendChild(backgroundImage);
         }
 
+        const addImageControlContainer = (index: number) => {
+            this._imageButtons.length = 0;
+            this._filesList[index].forEach((fileName: string) => {
+                const imageButton = this._watchButtons_0[0].cloneNode(true);
+                      imageButton.textContent = fileName;
+                      imageButton.style.setProperty('font-size', '24px');
+                      imageButton.name = this._folders[index] + '/' + fileName;
+                      imageButton.onclick = () => onImageButtonClick(imageButton.name);
+                      imageButton.onmouseenter = () => {
+                        this._imageButtons.forEach((button: any) => {
+                            if (button !== imageButton) button.style.removeProperty('background-color');
+                        })
+                      }
+                      imageButton.oncontextmenu = () => {
+                        imageButton.appendChild(contextMenu);                 
+                        contextMenu.style.setProperty('visibility', 'visible');
+                        contextMenu.nonce = this._folders[index] + '/' + fileName;
+                        contextMenu.onmouseleave = () => {
+                            contextMenu.style.setProperty('visibility', 'hidden');
+                            imageButton.style.removeProperty('background-color');
+                        };
+                        imageButton.style.setProperty('background-color', '#ff0000');
+                        return false;
+                    }
+                this._imageButtons.push(imageButton);
+                this._watchToggle_1.appendChild(imageButton); 
+            });
+        }
+
         addNothingFoundBackground();
+
+        
         
         const onButtonMouseOver = (index: number) => {
+
             this._watchToggle_1.replaceChildren(arrow_0);
+            arrow_0.style.setProperty('top', (2 + (index * 8.25)).toString() + '%');
 
             if (this._filesList[index].length) {
-                this._filesList[index].forEach((fileName: string) => {
-                    const imageButton = this._watchButtons_0[0].cloneNode(true);
-                          imageButton.textContent = fileName;
-                          imageButton.style.setProperty('font-size', '24px');
-                          imageButton.name = this._folders[index] + '/' + fileName;
-                          imageButton.onclick = () => onImageButtonClick(imageButton.name);
-
-                    /*const deleteButton = this._traceButton.cloneNode(true);
-                          deleteButton.style.setProperty('background-image', 'url(./images/rubbish-bin.png');
-                          deleteButton.style.setProperty('width', '30px');
-                          deleteButton.style.setProperty('height', '30px');
-
-                          deleteButton.style.setProperty('min-height', '1px');
-                            deleteButton.style.setProperty('line-height', undefined);
-                                deleteButton.style.setProperty('padding-bottom', undefined);
-                                    deleteButton.style.setProperty('padding-right', undefined);
-                                    deleteButton.style.setProperty('vertical-align', 'middle');*/
-
-                    const container = document.createElement("div");
-                        //  container.style.setProperty('display', 'flex');
-                         // container.style.setProperty('flex-direction', 'row');
-                          container.appendChild(imageButton);
-                       //   container.appendChild(deleteButton);
-
-
-                    this._watchToggle_1.appendChild(container);
-                    //this._watchToggle_1.appendChild(imageButton);                   
-                });
+                addImageControlContainer(index);                 
             } else {
                 addNothingFoundBackground();
             }
-            arrow_0.style.setProperty('top', (2 + (index * 8.25)).toString() + '%');
+            
         }
 
         for (let i = 0; i < 12; i++) {

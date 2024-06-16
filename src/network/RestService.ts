@@ -40,6 +40,17 @@ export class RestService extends Events.EventHandler {
       return url;
     }  
 
+    public deleteSnapshot = async (month: string, name: string) => {
+      const response = await axios.get(this.SERVER_URL + 'delsnapshot', {
+        params: {
+          month: month,
+          name: name,
+        }
+      });
+
+      return response.data;
+    };
+
     public getFilesList = () => {
       return axios.get(this.SERVER_URL + 'lsall');
     };

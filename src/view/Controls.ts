@@ -65,18 +65,33 @@ export class Controls extends Events.EventHandler {
 
         const contextMenu = document.getElementById("context-menu");
               //@ts-ignore
+
               contextMenu.firstElementChild.onclick = (event) => {
                 event.preventDefault(); event.stopPropagation();
+
+                const button = contextMenu.parentElement;
+                      button.classList.toggle('button-months-deleting');
+                      button.setAttribute('_state', 'deleting');
+
                 const [month, name] = contextMenu.nonce.split('/');
-                RestService.deleteSnapshot(month, name).then((result: any) => {
-                    console.log(result);
+                RestService.deleteSnapshot(month, name).then((_: any) => {                    
+                          button.classList.remove('button-months-deleting');
+                          button.removeAttribute('_state');
+                    this._watchToggle_1.removeChild(button);
                 });
               }
         this._watchToggle_1.removeChild(contextMenu);
 
-        const onImageButtonClick = (path: string) => {
-            const [month, name] = path.split('/');
+        const onImageButtonClick = (button: any) => {
+            if (button._state) return;
+            const [month, name] = button.name.split('/');
+
+            button.classList.toggle('button-months-downloading');
+            button.setAttribute('_state', 'downloading');
+
             RestService.getSnapshot(month, name).then((result: string) => {
+                button.classList.remove('button-months-downloading');
+                button.removeAttribute('_state');
                 FileSaver.saveAs(result, name);
             });
         };
@@ -99,13 +114,15 @@ export class Controls extends Events.EventHandler {
                       imageButton.textContent = fileName;
                       imageButton.style.setProperty('font-size', '24px');
                       imageButton.name = this._folders[index] + '/' + fileName;
-                      imageButton.onclick = () => onImageButtonClick(imageButton.name);
+                      imageButton.onclick = () => onImageButtonClick(imageButton); 
                       imageButton.onmouseenter = () => {
+                        if (imageButton._state) return;
                         this._imageButtons.forEach((button: any) => {
-                            if (button !== imageButton) button.style.removeProperty('background-color');
+                            if (button && button !== imageButton) button.style.removeProperty('background-color');
                         })
                       }
                       imageButton.oncontextmenu = () => {
+                        if (imageButton._state) return;
                         imageButton.appendChild(contextMenu);                 
                         contextMenu.style.setProperty('visibility', 'visible');
                         contextMenu.nonce = this._folders[index] + '/' + fileName;
@@ -121,12 +138,10 @@ export class Controls extends Events.EventHandler {
             });
         }
 
-        addNothingFoundBackground();
+        addNothingFoundBackground();        
 
-        
         
         const onButtonMouseOver = (index: number) => {
-
             this._watchToggle_1.replaceChildren(arrow_0);
             arrow_0.style.setProperty('top', (2 + (index * 8.25)).toString() + '%');
 
@@ -134,8 +149,7 @@ export class Controls extends Events.EventHandler {
                 addImageControlContainer(index);                 
             } else {
                 addNothingFoundBackground();
-            }
-            
+            }            
         }
 
         for (let i = 0; i < 12; i++) {

@@ -24,6 +24,7 @@ export class Controls extends Events.EventHandler {
 
     private _watchButtons_0: Array<any> = [];
     private _imageButtons: Array<any> = [];
+    private _imageButtonsBlocked: boolean = false;
 
     private _filesList: Array<any>;
 
@@ -69,14 +70,16 @@ export class Controls extends Events.EventHandler {
               contextMenu.firstElementChild.onclick = (event) => {
                 event.preventDefault(); event.stopPropagation();
 
+                contextMenu.parentElement.removeChild(contextMenu);
+
                 const button = contextMenu.parentElement;
                       button.classList.toggle('button-months-deleting');
-                      button.setAttribute('_state', 'deleting');
+                      this._imageButtonsBlocked = true;
 
                 const [month, name] = contextMenu.nonce.split('/');
                 RestService.deleteSnapshot(month, name).then((_: any) => {                    
                           button.classList.remove('button-months-deleting');
-                          button.removeAttribute('_state');
+                          this._imageButtonsBlocked = false;
                     this._watchToggle_1.removeChild(button);
                 });
               }
@@ -86,12 +89,13 @@ export class Controls extends Events.EventHandler {
             if (button._state) return;
             const [month, name] = button.name.split('/');
 
+            this._imageButtonsBlocked = true;
             button.classList.toggle('button-months-downloading');
-            button.setAttribute('_state', 'downloading');
+            
 
             RestService.getSnapshot(month, name).then((result: string) => {
                 button.classList.remove('button-months-downloading');
-                button.removeAttribute('_state');
+                this._imageButtonsBlocked = false;
                 FileSaver.saveAs(result, name);
             });
         };
@@ -116,13 +120,13 @@ export class Controls extends Events.EventHandler {
                       imageButton.name = this._folders[index] + '/' + fileName;
                       imageButton.onclick = () => onImageButtonClick(imageButton); 
                       imageButton.onmouseenter = () => {
-                        if (imageButton._state) return;
+                        if (this._imageButtonsBlocked) return;
                         this._imageButtons.forEach((button: any) => {
                             if (button && button !== imageButton) button.style.removeProperty('background-color');
                         })
                       }
                       imageButton.oncontextmenu = () => {
-                        if (imageButton._state) return;
+                        if (this._imageButtonsBlocked) return;
                         imageButton.appendChild(contextMenu);                 
                         contextMenu.style.setProperty('visibility', 'visible');
                         contextMenu.nonce = this._folders[index] + '/' + fileName;

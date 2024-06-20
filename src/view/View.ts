@@ -17,15 +17,21 @@ export class View extends Events.EventHandler {
       //@ts-ignore-line
       //screen.lockOrientation?.("landscape") || screen.lock?.("landscape");
 
-      document.getElementById("entry-page").style.setProperty('visibility', 'hidden');
-      document.getElementById("view-page").style.setProperty('visibility', 'visible'); 
+      document.querySelector("img").src = "./images/eye_frozen.png";
 
-      document.getElementById("entry-page").style.display = 'none';
-      document.getElementById("view-page").style.display = 'flex'; 
+      document.querySelector("img").onclick = () => {
+        document.getElementById("entry-page").style.setProperty('visibility', 'hidden');
+        document.getElementById("view-page").style.setProperty('visibility', 'visible'); 
+  
+        document.getElementById("entry-page").style.display = 'none';
+        document.getElementById("view-page").style.display = 'flex'; 
+  
+        Controls.initialize();
+  
+        this.dispatchEvent(Events.USER_PROCEEDED, null);
+      };
 
-      this.dispatchEvent(Events.USER_PROCEEDED, null);
 
-      Controls.initialize();
     }
 
 

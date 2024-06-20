@@ -20,7 +20,7 @@ export class Authentification extends Events.EventHandler {
 
     private _authenticate = async () => {
 
-      const sign = { x: new Array<number>(), y: new Array<number>() };
+      let sign = { x: new Array<number>(), y: new Array<number>() };
 
       window.onmousedown = (event: MouseEvent) => {
         event.preventDefault();
@@ -29,7 +29,11 @@ export class Authentification extends Events.EventHandler {
         }
       };
 
-      window.onmouseup = async (event: MouseEvent) => { 
+      window.oncontextmenu = () => { return false; }
+
+      window.onmouseup = async (event: MouseEvent) => {
+        event.preventDefault();
+        window.onmousemove = null;
         this._buffer = document.createElement("canvas"); document.getElementById("entry-page").appendChild(this._buffer);
         this._buffer.width = window.screen.height;
         this._buffer.height = window.screen.height;
@@ -50,6 +54,8 @@ export class Authentification extends Events.EventHandler {
         }
         this._buffer.getContext('2d').closePath();
 
+        sign = { x: new Array<number>(), y: new Array<number>() };
+
         const tensor = tf.browser.fromPixels(this._buffer, 1)
         .resizeBilinear([28, 28])
         .expandDims(0)
@@ -67,16 +73,25 @@ export class Authentification extends Events.EventHandler {
         
         sorted = sorted.sort((a, b) => a.probability > b.probability ? 1 : -1)
 
-        RestService.validatePrediction(prediction).then((result) => {
-          if (result) {
-            window.onmousedown = null;
-            window.onmouseup = null;
-            window.onmousemove = null;
-            document.getElementById("entry-page").removeChild(this._buffer);
+        RestService.validatePrediction(sorted).then((result) => {
+          if (!!result.data) {
+            this._destroy();
             this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
           }
         }); 
     }
+  }
+
+  private _destroy = () => {
+    window.onmousedown = null;
+    window.onmouseup = null;
+    window.onmousemove = null;
+    try {
+      document.getElementById("entry-page").removeChild(this._buffer);
+    } catch (error) {
+      //TODO
+    }
+
   }
 
 

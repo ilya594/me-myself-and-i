@@ -10,24 +10,22 @@ export class View extends Events.EventHandler {
     }
 
     public initialize = async () => {
-      window.onload = (_) => this.initializeView();
+      this.initializeView();
     }
 
     private initializeView = async () => {
       //@ts-ignore-line
       //screen.lockOrientation?.("landscape") || screen.lock?.("landscape");
 
-      document.querySelector("img").onclick = (_) => {
-        document.getElementById("entry-page").style.setProperty('visibility', 'hidden');
-        document.getElementById("view-page").style.setProperty('visibility', 'visible'); 
+      document.getElementById("entry-page").style.setProperty('visibility', 'hidden');
+      document.getElementById("view-page").style.setProperty('visibility', 'visible'); 
 
-        document.getElementById("entry-page").style.display = 'none';
-        document.getElementById("view-page").style.display = 'flex'; 
+      document.getElementById("entry-page").style.display = 'none';
+      document.getElementById("view-page").style.display = 'flex'; 
 
-        this.dispatchEvent(Events.USER_PROCEEDED, null);
+      this.dispatchEvent(Events.USER_PROCEEDED, null);
 
-        Controls.initialize();
-      }
+      Controls.initialize();
     }
 
 

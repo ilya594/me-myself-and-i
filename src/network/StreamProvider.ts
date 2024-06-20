@@ -14,7 +14,7 @@ export class StreamProvider extends Events.EventHandler {
         super();
 
         window.onunload = (_) => this.destroy();
-        window.onpagehide = (_) => { debugger; };
+        window.onpagehide = (_) => { this.destroy(); };
     }
 
     public initialize = async (local: boolean = false) => {

@@ -13,7 +13,7 @@ import Authentification from "./auth/Authentification";
 class Entry {
 
     constructor() {
-      this.initializeAuth();
+      window.onload = () => this.initializeAuth();      
     }
 
     private initializeAuth = async () => {

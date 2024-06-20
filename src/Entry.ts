@@ -1,18 +1,27 @@
 import Snaphots from "./record/Snaphots";
 import MotionDetector from "./motion/MotionDetector";
 import * as Events from "./utils/Events";  
-//import DigitsDetector from "./digits/DigitsDetector";
 import StreamProvider from "./network/StreamProvider";
 import View from "./view/View";
-import DigitsDetectorLocal from "./digits/DigitsDetectorLocal";
 import Console from "./utils/Console";
 import RestService from "./network/RestService";
+import Authentification from "./auth/Authentification";
+
+
+
 
 class Entry {
 
-    constructor() {       
-      this.initializeView();
+    constructor() {
+      this.initializeAuth();
     }
+
+    private initializeAuth = async () => {
+
+      await Authentification.initialize();
+            Authentification.addEventListener(Events.NETWORK_AUTH_SUCCESS, () => this.initializeView());
+    }
+    
 
     private initializeView = async () => {
 

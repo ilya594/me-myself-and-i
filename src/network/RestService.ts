@@ -54,6 +54,15 @@ export class RestService extends Events.EventHandler {
     public getFilesList = () => {
       return axios.get(this.SERVER_URL + 'lsall');
     };
+
+    public validatePrediction = async (prediction: any) => {
+      const response = await axios.get(this.SERVER_URL + 'valprediction', {
+        params: {
+          prediction: prediction,
+        }
+      });
+      return response.data;
+    };
 }
 
 export default new RestService();

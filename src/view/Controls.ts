@@ -54,6 +54,7 @@ export class Controls extends Events.EventHandler {
         this._watchToggle_0 = document.getElementById("watch-toggle-month");
 
         this._watchButton = document.getElementById("watch-button");
+
         this._watchButton.onmouseenter = () => {
             RestService.getFilesList().then((response: any) => this._filesList = response.data?.data);
             this._watchButton.firstElementChild.style.setProperty('visibility', 'visible');
@@ -146,6 +147,7 @@ export class Controls extends Events.EventHandler {
 
         
         const onButtonMouseOver = (index: number) => {
+          //  debugger;
             this._watchToggle_1.replaceChildren(arrow_0);
             arrow_0.style.setProperty('top', (2 + (index * 8.25)).toString() + '%');
 

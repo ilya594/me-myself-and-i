@@ -1,0 +1,85 @@
+import RestService from "../network/RestService";
+import * as Events from "../utils/Events";    
+import * as tf from '@tensorflow/tfjs';
+
+export class Authentification extends Events.EventHandler {
+
+    constructor() {
+        super();        
+    }
+
+    private _url = './model_0/model.json';
+    private _buffer: any;
+
+    public initialize = async () => {
+
+      this._authenticate();
+
+      return this;
+    }
+
+    private _authenticate = async () => {
+
+      const sign = { x: new Array<number>(), y: new Array<number>() };
+
+      window.onmousedown = (event: MouseEvent) => {
+        event.preventDefault();
+        window.onmousemove = (event: MouseEvent) => {
+          sign.x.push(event.clientX) && sign.y.push(event.clientY);
+        }
+      };
+
+      window.onmouseup = async (event: MouseEvent) => { 
+        this._buffer = document.createElement("canvas"); document.getElementById("entry-page").appendChild(this._buffer);
+        this._buffer.width = window.screen.height;
+        this._buffer.height = window.screen.height;
+
+        this._buffer.getContext('2d').lineWidth = 100;
+        this._buffer.getContext('2d').strokeStyle = "white";
+        this._buffer.getContext('2d').beginPath();
+        this._buffer.style.setProperty('opacity', '1%');
+        this._buffer.style.setProperty('position', 'absolute');
+
+        let length = sign.x.length;
+        let offset = this._buffer.offsetLeft;
+
+        for (let i = 1; i < length; i++) {
+          this._buffer.getContext('2d').moveTo(sign.x[i - 1] - offset, sign.y[i - 1]);
+          this._buffer.getContext('2d').lineTo(sign.x[i] - offset, sign.y[i]);
+          this._buffer.getContext('2d').stroke();
+        }
+        this._buffer.getContext('2d').closePath();
+
+        const tensor = tf.browser.fromPixels(this._buffer, 1)
+        .resizeBilinear([28, 28])
+        .expandDims(0)
+        .toFloat()
+        .div(255.0);
+        
+
+        const model: any = await tf.loadLayersModel(this._url);
+
+        const prediction = await model.predict(tensor).dataSync();
+
+        let sorted = [];
+
+        for (let i = 0; i < prediction.length; i++) sorted.push({ value: i, probability: prediction[i]});
+        
+        sorted = sorted.sort((a, b) => a.probability > b.probability ? 1 : -1)
+
+        RestService.validatePrediction(prediction).then((result) => {
+          if (result) {
+            window.onmousedown = null;
+            window.onmouseup = null;
+            window.onmousemove = null;
+            document.getElementById("entry-page").removeChild(this._buffer);
+            this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
+          }
+        }); 
+    }
+  }
+
+
+}
+
+export default new Authentification();

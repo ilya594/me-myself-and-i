@@ -42,3 +42,5 @@ export class EventHandler {
   export const NETWORK_FOLDERS_LOAD_END = 'network_folders_loaded';  
   export const NETWORK_SNAPSHOT_LOAD_START = 'network_snapshot_load_start';
   export const NETWORK_SNAPSHOT_LOAD_END = 'network_snapshot_load_end';
+
+  export const NETWORK_AUTH_SUCCESS = 'network_auth_success';

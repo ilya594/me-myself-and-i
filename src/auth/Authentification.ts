@@ -22,18 +22,35 @@ export class Authentification extends Events.EventHandler {
 
       let sign = { x: new Array<number>(), y: new Array<number>() };
 
-      window.onmousedown = (event: MouseEvent) => {
-        event.preventDefault();
+      const onStart = (event: any) => {
+        try {
+          event.preventDefault();
+        } catch (error) {
+          //TODO
+        }
         window.onmousemove = (event: MouseEvent) => {
           sign.x.push(event.clientX) && sign.y.push(event.clientY);
         }
-      };
+        window.ontouchmove = (event: TouchEvent) => {
+          sign.x.push(event.targetTouches[0].clientX) && sign.y.push(event.targetTouches[0].clientY);
+        }
+      }
 
-      window.oncontextmenu = () => { return false; }
+      window.onmousedown = (event: any) => onStart(event);
+      window.ontouchstart = (event: any) => onStart(event);
 
-      window.onmouseup = async (event: MouseEvent) => {
-        event.preventDefault();
+      window.oncontextmenu = () => { return false; } 
+
+      const onEnd = async (event: any) => {
+        try {
+          event.preventDefault();
+        } catch (error) {
+          //TODO
+        }
+
         window.onmousemove = null;
+        window.ontouchmove = null;
+        
         this._buffer = document.createElement("canvas"); document.getElementById("entry-page").appendChild(this._buffer);
         this._buffer.width = window.screen.height;
         this._buffer.height = window.screen.height;
@@ -41,7 +58,7 @@ export class Authentification extends Events.EventHandler {
         this._buffer.getContext('2d').lineWidth = 100;
         this._buffer.getContext('2d').strokeStyle = "white";
         this._buffer.getContext('2d').beginPath();
-        this._buffer.style.setProperty('opacity', '1%');
+        this._buffer.style.setProperty('opacity', '99%');
         this._buffer.style.setProperty('position', 'absolute');
 
         let length = sign.x.length;
@@ -76,16 +93,22 @@ export class Authentification extends Events.EventHandler {
         RestService.validatePrediction(sorted).then((result) => {
           if (!!result.data) {
             this._destroy();
+            window.ontouchstart = null;
+            window.ontouchend = null;
             this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
           }
         }); 
-    }
+      }      
+      
+      window.onmouseup = (event: any) => onEnd(event);
+      window.ontouchend = (event: any) => onEnd(event);
   }
 
   private _destroy = () => {
     window.onmousedown = null;
     window.onmouseup = null;
     window.onmousemove = null;
+   
     try {
       document.getElementById("entry-page").removeChild(this._buffer);
     } catch (error) {

@@ -17,7 +17,7 @@ export class View extends Events.EventHandler {
       //@ts-ignore-line
       //screen.lockOrientation?.("landscape") || screen.lock?.("landscape");
 
-      document.querySelector("img").src = "./images/eye_frozen.png";
+      //document.querySelector("img").src = "./images/eye_frozen.png";
 
       document.querySelector("img").onclick = () => {
         document.getElementById("entry-page").style.setProperty('visibility', 'hidden');

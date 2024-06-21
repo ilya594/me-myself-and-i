@@ -71,11 +71,11 @@ export class Controls extends Events.EventHandler {
               contextMenu.firstElementChild.onclick = (event) => {
                 event.preventDefault(); event.stopPropagation();
 
-                contextMenu.parentElement.removeChild(contextMenu);
-
                 const button = contextMenu.parentElement;
-                      button.classList.toggle('button-months-deleting');
-                      this._imageButtonsBlocked = true;
+                button.classList.toggle('button-months-deleting');
+                this._imageButtonsBlocked = true;
+
+                contextMenu.parentElement.removeChild(contextMenu);
 
                 const [month, name] = contextMenu.nonce.split('/');
                 RestService.deleteSnapshot(month, name).then((_: any) => {                    
@@ -84,7 +84,6 @@ export class Controls extends Events.EventHandler {
                     this._watchToggle_1.removeChild(button);
                 });
               }
-        this._watchToggle_1.removeChild(contextMenu);
 
         const onImageButtonClick = (button: any) => {
             if (button._state) return;

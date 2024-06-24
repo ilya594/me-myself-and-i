@@ -23,7 +23,7 @@ export class Authentification extends Events.EventHandler {
       let sign = { x: new Array<number>(), y: new Array<number>() };
 
       const onStart = (event: any) => {
-        document.querySelectorAll("img")[0].src = "./images/eye_2.png";
+        document.querySelectorAll("img")[0].src = "./images/eye_0_1.png";
         window.onmousemove = (event: MouseEvent) => {
           sign.x.push(event.clientX) && sign.y.push(event.clientY);
         }
@@ -35,6 +35,8 @@ export class Authentification extends Events.EventHandler {
       }
 
       const onEnd = async (event: any) => {
+
+        document.querySelectorAll("img")[0].src = "./images/eye_0_2.png";
 
         window.onmousemove = null;
         window.onmouseup = null;
@@ -84,12 +86,12 @@ export class Authentification extends Events.EventHandler {
 
         RestService.validatePrediction(sorted).then((result) => {
 
-          document.querySelectorAll("img")[0].src = "./images/eye_1.gif";
-
           if (result.data) {
-            setTimeout(() => { document.querySelectorAll("img")[0].src = "./images/eye_3.png" }, 300);
+            setTimeout(() => { document.querySelectorAll("img")[0].src = "./images/eye_0_3.png" }, 300);
             this._destroy();
             this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
+          } else {
+            document.querySelectorAll("img")[0].src = "./images/eye_0.png";
           }
         }); 
     }

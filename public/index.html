@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-  <link rel="prefetch" href="./images/eye_1.gif" />
-  <link rel="prefetch" href="./images/eye_2.png" />
-  <link rel="prefetch" href="./images/eye_3.png" />
+  <link rel="preload" href="./images/eye_1.gif" as="image"/>
+  <link rel="preload" href="./images/eye_2.png" as="image"/>
+  <link rel="preload" href="./images/eye_3.png" as="image"/>
   <style>    
 .center {
   height: 100vh;
@@ -311,6 +311,12 @@
   background: linear-gradient(.5turn, #28e717, 58%, transparent);
 }
 
+.entry-image {
+  width: 100%; 
+  height: 100%; 
+  opacity: 87%; 
+}
+
   </style>
   <meta charset="utf-8">
   <title>html-peer-viewer</title>
@@ -323,8 +329,8 @@
 <body style="height: 100%; width: 100%; overflow: hidden; background: #000000;">
 
   <div id="entry-page" class="container" style="display: flex;">
-    <picture style="width: 120%; height: 120%; margin-left: -10%; margin-top: 10%;">
-      <img src="./images/eye_1.gif" fetchpriority="high" style="width: 100%; height: 100%; opacity: 87%; transform: matrix3d(1,1,0,1,0,1,0); filter: blur(10px);"/>
+    <picture style="width: 120%; height: 120%; margin-left: -10%; margin-top: 10%; opacity: 87%; transform: matrix3d(1,1,0,1,0,1,0); filter: blur(10px);">
+      <img class="entry-image" fetchpriority="high" src="./images/eye_1.gif";/>
     </picture>
   </div>
 

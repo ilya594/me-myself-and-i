@@ -24,7 +24,7 @@ module.exports = {
     path: path.resolve(__dirname, 'public'),
   },
   mode: 'development',
-  target: ['web'],
+  target: ['es6', 'web'],
 
   devServer: {
     historyApiFallback: true,
@@ -34,5 +34,10 @@ module.exports = {
       cert: fs.readFileSync('./cert/cert.pem'),
       ca: fs.readFileSync('./cert/csr.pem')
     }*/
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+      },
   }
 }

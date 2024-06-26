@@ -8,12 +8,10 @@ import RestService from "./network/RestService";
 import Authentification from "./auth/Authentification";
 
 
-
-
 class Entry {
 
     constructor() {
-      window.onload = () => this.initializeAuth();      
+      this.initializeAuth();
     }
 
     private initializeAuth = async () => {
@@ -23,22 +21,25 @@ class Entry {
     
 
     private initializeView = async () => {
-
       await View.initialize();
             View.addEventListener(Events.USER_PROCEEDED, () => this.initializeRoutes());
     }
 
-    private initializeRoutes = () => {
+    private initializeRoutes = async () => {
 
       const route: string = window.location.search?.substring(1);
 
       switch (route) {
-        case ('digits'): {
-          //
+        case ('client'): {
+          this.initializeComponents();
           break;
         }
-        case ('local'): {
-          //
+        case ('provider'): {
+          //TODO
+          break;
+        }
+        case ('mix'): {
+          await this.initializeIntegratedComponents();
           break;
         }
         default: {
@@ -48,11 +49,31 @@ class Entry {
       }
     }
 
+    private initializeIntegratedComponents = async () => {
+
+      const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js');
+        
+      //'https://localhost:8080/index.js');
+
+      const streamer = new Streamer();
+      const stream = await streamer.initialize();
+
+      await StreamProvider.initialize(true);
+            View.displayStream(stream);
+
+      await this.initializeCommonComponents();
+    }
+
 
     private initializeComponents = async () => {   
 
       await StreamProvider.initialize();
             StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => View.displayStream(stream));
+
+      await this.initializeCommonComponents();
+    }
+
+    private initializeCommonComponents = async () => {
 
       await RestService.initialize();
 
@@ -60,7 +81,7 @@ class Entry {
             Snaphots.addEventListener(Events.SNAPSHOT_SEND_HOMIE, (data: any) => {
               StreamProvider.sendSnaphot(data);
               RestService.sendSnaphot(data);
-            });
+      });
 
       await MotionDetector.initialize();
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());

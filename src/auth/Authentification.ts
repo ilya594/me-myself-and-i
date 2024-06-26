@@ -2,7 +2,7 @@ import RestService from "../network/RestService";
 import * as Events from "../utils/Events";    
 import * as tf from '@tensorflow/tfjs';
 
-export class Authentification extends Events.EventHandler {
+class Authentification extends Events.EventHandler {
 
     constructor() {
         super();        

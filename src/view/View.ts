@@ -37,7 +37,6 @@ export class View extends Events.EventHandler {
 
     // TODO move this somewhere idk/////////////////////////////////////////////////////////////////
     public displayStream = (stream: any) => {
-
       document.getElementById("loader").style.setProperty('visibility', 'hidden'); 
       document.getElementById("loader").style.display = 'none';   
 

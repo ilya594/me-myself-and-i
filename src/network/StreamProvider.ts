@@ -61,6 +61,7 @@ export class StreamProvider extends Events.EventHandler {
     }
 
     private initializeLocalStream = async () => {
+      this.dispatchEvent(Events.STREAM_RECEIVED, null);
 
       //  const options: MediaStreamConstraints = { video: { width: 1120, height: 280 }, audio: false };
 

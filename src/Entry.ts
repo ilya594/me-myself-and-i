@@ -6,6 +6,7 @@ import View from "./view/View";
 import Console from "./utils/Console";
 import RestService from "./network/RestService";
 import Authentification from "./auth/Authentification";
+import Controls from "./view/Controls";
 
 
 class Entry {
@@ -60,6 +61,7 @@ class Entry {
 
       await StreamProvider.initialize(true);
             View.displayStream(stream);
+            Controls.setVisible(true);
 
       await this.initializeCommonComponents();
     }
@@ -68,7 +70,10 @@ class Entry {
     private initializeComponents = async () => {   
 
       await StreamProvider.initialize();
-            StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => View.displayStream(stream));
+            StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => {
+              View.displayStream(stream)
+              Controls.setVisible(true);
+            });
 
       await this.initializeCommonComponents();
     }

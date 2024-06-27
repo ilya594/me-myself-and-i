@@ -13,7 +13,7 @@ export class EventHandler {
       return delete this.events[eventName];
     }
   
-    public dispatchEvent(eventName:string, data:any) {
+    public dispatchEvent(eventName:string, data:any = null) {
       const event = this.events[eventName];
       if (event) {
         event.forEach((handler:Function) => {

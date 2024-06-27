@@ -32,17 +32,16 @@ export class Controls extends Events.EventHandler {
 
     public initialize = async () => {
 
-        this._container = document.getElementById("controls");        
+        this._container = document.getElementById("controls"); 
 
-        StreamProvider.addEventListener(Events.STREAM_RECEIVED, () => {
-
-            this._viewport = document.querySelector("video");
-
-            this._container.style.setProperty('visibility', 'visible');
-        });
+        this._viewport = document.querySelector("video");
 
         this.createButtons();
     }
+
+    public setVisible = (value: boolean) => {
+        this._container.style.setProperty('visibility', value ? 'visible' : 'hidden');
+    }        
 
     private createButtons = () => {
         this._traceButton = document.getElementById("trace-button");      

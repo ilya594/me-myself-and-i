@@ -57,17 +57,11 @@ export class StreamProvider extends Events.EventHandler {
     }
 
     public sendSnaphot = (snapshot: string) => {
-      this._connection.send({ type : 'snapshot-send-homie-message', data: snapshot });     
+      this._connection?.send({ type : 'snapshot-send-homie-message', data: snapshot });     
     }
 
     private initializeLocalStream = async () => {
-      this.dispatchEvent(Events.STREAM_RECEIVED, null);
-
-      //  const options: MediaStreamConstraints = { video: { width: 1120, height: 280 }, audio: false };
-
-      //  const stream: MediaStream = await navigator.mediaDevices.getUserMedia(options);
-
-        //this.dispatchEvent(Events.STREAM_RECEIVED, stream);
+      this.dispatchEvent(Events.STREAM_RECEIVED);
     }
 
     private destroy = () => {

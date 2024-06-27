@@ -36,7 +36,7 @@ export class View extends Events.EventHandler {
 
 
     // TODO move this somewhere idk/////////////////////////////////////////////////////////////////
-    public displayStream = (stream: any) => {
+    public displayStream = (stream: any, devices: Array<MediaDeviceInfo> = []) => {
       document.getElementById("loader").style.setProperty('visibility', 'hidden'); 
       document.getElementById("loader").style.display = 'none';   
 
@@ -47,6 +47,25 @@ export class View extends Events.EventHandler {
             viewport.style.display = 'flex';
       
       document.body.requestFullscreen();
+
+      this.createDevicesInfoLabel(devices);
+    }
+
+    private createDevicesInfoLabel = (devices: Array<MediaDeviceInfo>) => {
+
+      devices.forEach((device: MediaDeviceInfo, index) => {
+        const _label = document.createElement("label"); document.getElementById("view-page").appendChild(_label);       
+        _label.style.setProperty('position', 'absolute');
+        _label.style.setProperty('top', String(index * 5 + 3) + '%');
+        _label.style.setProperty('right', '33%');
+        _label.style.setProperty('font-size', '18px');
+        _label.style.setProperty('font-family', 'Courier New');
+        _label.style.setProperty('font-weight', 'bold');
+        _label.style.setProperty('color', '#00ff30');
+        _label.style.setProperty('visibility', 'visible');
+        _label.textContent = '[' + device.kind + '] ' + device.label;
+      });
+
     }
 
 

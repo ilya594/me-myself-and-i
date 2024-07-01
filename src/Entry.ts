@@ -61,7 +61,7 @@ class Entry {
       }
     }
 
-    private initializeIntegratedComponents = async ( options: any = null ) => {
+    private initializeIntegratedComponents = async ( options: any = { label: '720' } ) => {
 
       const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js');
         

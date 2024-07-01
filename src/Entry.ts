@@ -8,11 +8,24 @@ import RestService from "./network/RestService";
 import Authentification from "./auth/Authentification";
 import Controls from "./view/Controls";
 
+const route = (): string => window.location.search?.substring(1); 
 
 class Entry {
 
     constructor() {
-      this.initializeAuth();
+      switch (route()) {
+        case ('show'): {
+          this.initializeView();
+          break;
+        }
+
+        default: {
+          this.initializeAuth();
+          break;
+        }
+      }
+
+      this.initializeView();
     }
 
     private initializeAuth = async () => {
@@ -28,15 +41,13 @@ class Entry {
 
     private initializeRoutes = async () => {
 
-      const route: string = window.location.search?.substring(1);
-
-      switch (route) {
+      switch (route()) {
         case ('client'): {
           this.initializeComponents();
           break;
         }
-        case ('provider'): {
-          //TODO
+        case ('show'): {
+          await this.initializeIntegratedComponents( { kind: 'videoinput' } );
           break;
         }
         case ('mix'): {
@@ -50,13 +61,13 @@ class Entry {
       }
     }
 
-    private initializeIntegratedComponents = async () => {
+    private initializeIntegratedComponents = async ( options: any = null ) => {
 
       const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js');
         
   
       const streamer = new Streamer();
-      const { stream, devices } = await streamer.initialize();
+      const { stream, devices } = await streamer.initialize(options);
 
       await StreamProvider.initialize(true);
             View.displayStream(stream, devices);

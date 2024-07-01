@@ -24,8 +24,6 @@ class Entry {
           break;
         }
       }
-
-      this.initializeView();
     }
 
     private initializeAuth = async () => {

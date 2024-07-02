@@ -17,7 +17,7 @@ class Snaphots extends Events.EventHandler {
     private _container: any;
     private _viewport: any;
     private _proxy: any;
-    private _buffer: HTMLCanvasElement;
+    private _buffer: OffscreenCanvas;
     private _snapsaver: any;
     private _snapshot: any;
     private _count = 0;
@@ -58,7 +58,7 @@ class Snaphots extends Events.EventHandler {
 
         this._proxy = document.createElement("canvas");
 
-        this._buffer = document.createElement("canvas");
+        this._buffer = new OffscreenCanvas(VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
         this._buffer.height = VIDEO_HEIGHT * SNAP_COUNT;
         this._buffer.getContext('2d').beginPath();
@@ -66,7 +66,6 @@ class Snaphots extends Events.EventHandler {
         this._buffer.getContext('2d').strokeStyle = "black";
         this._buffer.getContext('2d').rect(0, 0, VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
         this._buffer.getContext('2d').stroke();
-
 
         requestAnimationFrame(this.tick);
     };
@@ -97,7 +96,7 @@ class Snaphots extends Events.EventHandler {
         const x:number = (this._count % SNAP_COUNT) * VIDEO_WIDTH;
         const y:number = Math.floor(this._count/SNAP_COUNT) * VIDEO_HEIGHT;
 
-        this._buffer.getContext('2d').drawImage(source, x, y, VIDEO_WIDTH, VIDEO_HEIGHT);
+        (this._buffer.getContext('2d') as any).drawImage(source, x, y, VIDEO_WIDTH, VIDEO_HEIGHT);
 
         this._snapsaver.style.setProperty('display', 'inline'); 
         this._snapsaver.width = this.w;
@@ -140,36 +139,49 @@ class Snaphots extends Events.EventHandler {
         this._snapsaver.style.setProperty('display', 'none'); 
         this._snapsaver.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);            
 
-        if (++this._count === SNAP_COUNT * SNAP_COUNT) this.flushBuffer();  
-        document.getElementById("snaps-button").innerHTML = String(this._count);
+        document.getElementById("snaps-button").innerHTML = String(++this._count);
+
+        if (this._count === SNAP_COUNT * SNAP_COUNT) this.flushBuffer();  
+
     }
 
     public flushBuffer = () => {
         this.dispatchSendEvent();
-        this._buffer.getContext('2d').clearRect(0, 0, VIDEO_WIDTH * SNAP_COUNT, VIDEO_HEIGHT * SNAP_COUNT);
+        (this._buffer.getContext('2d') as any).clearRect(0, 0, VIDEO_WIDTH * SNAP_COUNT, VIDEO_HEIGHT * SNAP_COUNT);
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
         this._buffer.height = VIDEO_HEIGHT * SNAP_COUNT;
-        this._count = 0;
-        document.getElementById("snaps-button").innerHTML = String(this._count);
+        document.getElementById("snaps-button").innerHTML = String(this._count = 0);
     };
 
-    private viewSnapshotCollection = () => {           
+    private viewSnapshotCollection = async () => {           
 
-        const data = this._buffer.toDataURL();
+        this.bufferToDataUrl((data: string) => {
 
-        const tab: any = window.open();
+            const tab: any = window.open();
 
-        tab.document.body.style.width = tab.document.body.style.height = '100%';
-        tab.document.body.style.overflow = 'hidden';
-        tab.document.body.innerHTML = '<div width="100%" height="100%">' + 
-            '<img src="' + data +
-            '" width="' + VIDEO_WIDTH + 'px" height="' + VIDEO_HEIGHT + 'px">' +
-            '</div>';
+            tab.document.body.style.width = tab.document.body.style.height = '100%';
+            tab.document.body.style.overflow = 'hidden';
+            tab.document.body.innerHTML =
+             '<div width="100%" height="100%">' + '<img src="' + data + '" width="' + VIDEO_WIDTH + 'px" height="' + VIDEO_HEIGHT + 'px">' + '</div>';
+        });
+    }
+
+    private bufferToDataUrl = (callback: Function): void => {
+
+        (this._buffer as OffscreenCanvas).convertToBlob().then((value: Blob) => {
+
+            const reader: FileReader = new FileReader();
+
+            const file: File = new File([value], '_.png', { type: 'image/png' });
+    
+            reader.onload = (result: any) => callback(result?.target?.result);
+    
+            reader.readAsDataURL(file);
+        });
     }
 
     private dispatchSendEvent = () => {
-        // TODO put this thread-blocking stuff into web-worker
-        this.dispatchEvent(Events.SNAPSHOT_SEND_HOMIE, this._buffer.toDataURL());     
+        this.bufferToDataUrl((data: string) => this.dispatchEvent(Events.SNAPSHOT_SEND_HOMIE, data));   
     }
 
     private tick = (time: number) => {

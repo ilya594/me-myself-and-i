@@ -56,8 +56,8 @@ export class View extends Events.EventHandler {
       devices.forEach((device: MediaDeviceInfo, index) => {
         const _label = document.createElement("label"); document.getElementById("view-page").appendChild(_label);       
         _label.style.setProperty('position', 'absolute');
-        _label.style.setProperty('top', String(index * 5 + 3) + '%');
-        _label.style.setProperty('right', '33%');
+        _label.style.setProperty('top', String(index * 5 + 25) + '%');
+        _label.style.setProperty('right', '3%');
         _label.style.setProperty('font-size', '18px');
         _label.style.setProperty('font-family', 'Courier New');
         _label.style.setProperty('font-weight', 'bold');

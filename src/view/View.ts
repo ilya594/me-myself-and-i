@@ -30,8 +30,6 @@ export class View extends Events.EventHandler {
   
         this.dispatchEvent(Events.USER_PROCEEDED, null);
       };
-
-
     }
 
 
@@ -45,10 +43,10 @@ export class View extends Events.EventHandler {
             viewport.srcObject = stream;
             viewport.style.setProperty('visibility', 'visible');
             viewport.style.display = 'flex';
+
+            this.createDevicesInfoLabel(devices);
       
       document.body.requestFullscreen();
-
-      this.createDevicesInfoLabel(devices);
     }
 
     private createDevicesInfoLabel = (devices: Array<MediaDeviceInfo>) => {
@@ -56,7 +54,7 @@ export class View extends Events.EventHandler {
       devices.forEach((device: MediaDeviceInfo, index) => {
         const _label = document.createElement("label"); document.getElementById("view-page").appendChild(_label);       
         _label.style.setProperty('position', 'absolute');
-        _label.style.setProperty('top', String(index * 5 + 25) + '%');
+        _label.style.setProperty('top', String(index * 5 + 45) + '%');
         _label.style.setProperty('right', '3%');
         _label.style.setProperty('font-size', '18px');
         _label.style.setProperty('font-family', 'Courier New');

@@ -23,6 +23,7 @@ class Console extends EventHandler {
         this._console.style.setProperty('background-color', 'black');
         this._console.style.setProperty('font-size', '48px');
         this._console.style.setProperty('text-align', 'left');
+        this._console.style.setProperty('text-shadow', '0 0 8px rgba(0,0,0,0.5)');
        // this._console.style.setProperty('vertical-align', 'middle');
        // this._console.style.setProperty('line-height', '30%');
         this._console.style.setProperty('font-family', 'Courier New');

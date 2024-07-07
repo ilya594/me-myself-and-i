@@ -27,6 +27,8 @@ class Entry {
     }
 
     private initializeAuth = async () => {
+      await Console.initialize();
+
       await Authentification.initialize();
             Authentification.addEventListener(Events.NETWORK_AUTH_SUCCESS, () => this.initializeView());
     }

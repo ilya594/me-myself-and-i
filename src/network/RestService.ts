@@ -63,6 +63,15 @@ export class RestService extends Events.EventHandler {
       });
       return response.data;
     };
+
+    public validatePinhash = async (hash: string) => {
+      const response = await axios.get(this.SERVER_URL + 'login', {
+        params: {
+          pin: [hash],
+        }
+      });
+      return response.data;
+    }
 }
 
 export default new RestService();

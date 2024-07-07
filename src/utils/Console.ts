@@ -42,8 +42,7 @@ class Console extends EventHandler {
             
             switch (event.key) {
                 case 'q': {
-                    this._console.style.setProperty('display', { inline : 'none', none : 'inline'}
-                        [String(this._console.style.getPropertyValue('display'))]);
+                    this.switchVisibility();
                     break;
                 }
                 case 'Enter': {
@@ -52,7 +51,11 @@ class Console extends EventHandler {
                 }
             }
         };
+    }
 
+    public switchVisibility = () => {
+        this._console.style.setProperty('display', { inline : 'none', none : 'inline'}
+            [String(this._console.style.getPropertyValue('display'))]);
     }
 
     private executeCommand = (command: String) => {
@@ -63,8 +66,7 @@ class Console extends EventHandler {
             }
         }
         this._console.value = '>';
-        this._console.style.setProperty('display', { inline : 'none', none : 'inline'}
-            [String(this._console.style.getPropertyValue('display'))]);
+        this.switchVisibility();
 
     }
 

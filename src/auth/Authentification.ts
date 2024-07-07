@@ -1,4 +1,5 @@
 import RestService from "../network/RestService";
+import Console from "../utils/Console";
 import * as Events from "../utils/Events";    
 import * as tf from '@tensorflow/tfjs';
 
@@ -18,7 +19,30 @@ class Authentification extends Events.EventHandler {
       return this;
     }
 
-    private _authenticate = async () => {
+    private _authenticate = () => {
+
+      const pinhash: string = localStorage.getItem('pinhash');
+
+      const queryPinControl = () => {
+        Console.switchVisibility();
+      }
+
+      if (pinhash) {
+        RestService.validatePinhash(pinhash).then((result) => {
+          if (result.data) {
+            this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
+          } else {
+            queryPinControl();
+          }
+        })
+      } else {
+        queryPinControl();
+      }
+
+
+    }
+
+    private _authenticate_1 = async () => {
 
       let sign = { x: new Array<number>(), y: new Array<number>() };
 
@@ -48,9 +72,9 @@ class Authentification extends Events.EventHandler {
         this._buffer.height = window.screen.height;
 
         this._buffer.getContext('2d').lineWidth = 100;
-        this._buffer.getContext('2d').strokeStyle = "gray";
+        this._buffer.getContext('2d').strokeStyle = "white";
         this._buffer.getContext('2d').beginPath();
-        this._buffer.style.setProperty('opacity', '1%');
+        this._buffer.style.setProperty('opacity', '100%');
         this._buffer.style.setProperty('position', 'absolute');
 
         let length = sign.x.length;
@@ -66,10 +90,10 @@ class Authentification extends Events.EventHandler {
         sign = { x: new Array<number>(), y: new Array<number>() };
 
         const tensor = tf.browser.fromPixels(this._buffer, 1)
-        .resizeBilinear([28, 28])
-        .expandDims(0)
-        .toFloat()
-        .div(255.0);
+          .resizeBilinear([28, 28])
+          .expandDims(0)
+          .toFloat()
+          .div(255.0);
         
 
         const model: any = await tf.loadLayersModel(this._url);
@@ -80,8 +104,7 @@ class Authentification extends Events.EventHandler {
 
         for (let i = 0; i < prediction.length; i++) sorted.push({ value: i, probability: prediction[i]});
         
-        sorted = sorted.sort((a, b) => a.probability > b.probability ? 1 : -1)
-
+        sorted = sorted.sort((a, b) => a.probability > b.probability ? 1 : -1);
 
 
         RestService.validatePrediction(sorted).then((result) => {

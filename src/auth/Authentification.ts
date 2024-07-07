@@ -30,18 +30,28 @@ class Authentification extends Events.EventHandler {
 
         Console.addEventListener(Events.CONSOLE_EXECUTE_COMMAND, async (pin: string) => {
 
+          document.querySelectorAll("img")[0].src = "./images/eye_0_2.png";
+
           const salt = genSaltSync(10);
           const hash = hashSync(pin, salt);
 
-          RestService.validatePinhash(hash).then((result) => {
-            debugger;
+          RestService.validatePinhash(hash).then(({ result }) => {
+            if (result) {
+              setTimeout(() => { document.querySelectorAll("img")[0].src = "./images/eye_0_3.png" }, 300);
+              localStorage.setItem('pinhash', hash);
+              this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
+            } else {
+              document.querySelectorAll("img")[0].src = "./images/eye_0.png";
+              Console.switchVisibility();
+            }
           });
         });
       }
 
       if (pinhash) {
-        RestService.validatePinhash(pinhash).then((result) => {
-          if (result.data) {
+        RestService.validatePinhash(pinhash).then(({ result }) => {
+          if (result) {
+            setTimeout(() => { document.querySelectorAll("img")[0].src = "./images/eye_0_3.png" }, 300);
             this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
           } else {
             queryPinControl();

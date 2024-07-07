@@ -2,6 +2,8 @@ import RestService from "../network/RestService";
 import Console from "../utils/Console";
 import * as Events from "../utils/Events";    
 import * as tf from '@tensorflow/tfjs';
+//import * as bcrypt from 'bcrypt';
+import { genSaltSync, hashSync } from "bcrypt-ts";
 
 class Authentification extends Events.EventHandler {
 
@@ -25,6 +27,16 @@ class Authentification extends Events.EventHandler {
 
       const queryPinControl = () => {
         Console.switchVisibility();
+
+        Console.addEventListener(Events.CONSOLE_EXECUTE_COMMAND, async (pin: string) => {
+
+          const salt = genSaltSync(10);
+          const hash = hashSync(pin, salt);
+
+          RestService.validatePinhash(hash).then((result) => {
+            debugger;
+          });
+        });
       }
 
       if (pinhash) {

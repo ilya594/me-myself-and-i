@@ -13,7 +13,7 @@ class Console extends EventHandler {
 
     public initialize = async () => {
 
-        const viewport = document.getElementById("view-page");
+        const viewport = document.getElementById("entry-page");
 
         this._console = document.createElement("textarea"); viewport.appendChild(this._console);
         this._console.style.setProperty('position', 'absolute');
@@ -63,6 +63,10 @@ class Console extends EventHandler {
         switch (command) {
             case 'trace': {
                 this.dispatchEvent(Events.CHANGE_TRACE_VISIBILITY, null);
+                break;
+            }
+            default: {
+                this.dispatchEvent(Events.CONSOLE_EXECUTE_COMMAND, command);
                 break;
             }
         }

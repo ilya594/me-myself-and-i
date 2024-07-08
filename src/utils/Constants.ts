@@ -17,3 +17,5 @@ export const MOTION_DETECT_IMAGE_COEF = 0.05;
 export const MOTION_DETECT_HEAP_SIZE = 300;
 export const MOTION_DETECT_CHECKPOINT_SIZE = 44;
 
+export const PINCODE_CHAR_LENGTH = 4;
+

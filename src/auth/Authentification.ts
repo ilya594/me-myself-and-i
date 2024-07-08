@@ -4,6 +4,7 @@ import * as Events from "../utils/Events";
 import * as tf from '@tensorflow/tfjs';
 //import * as bcrypt from 'bcrypt';
 import { genSaltSync, hashSync } from "bcrypt-ts";
+import Pincode from "../view/Pincode";
 
 class Authentification extends Events.EventHandler {
 
@@ -26,23 +27,23 @@ class Authentification extends Events.EventHandler {
       const pinhash: string = localStorage.getItem('pinhash');
 
       const queryPinControl = () => {
-        Console.switchVisibility();
 
-        Console.addEventListener(Events.CONSOLE_EXECUTE_COMMAND, async (pin: string) => {
+        Pincode.initialize();
 
-          document.querySelectorAll("img")[0].src = "./images/eye_0_2.png";
+        Pincode.addEventListener(Events.CONSOLE_EXECUTE_COMMAND, async (pin: string) => {
+
+          this.showLoadingView();
 
           const salt = genSaltSync(10);
           const hash = hashSync(pin, salt);
 
           RestService.validatePinhash(hash).then(({ result }) => {
             if (result) {
-              setTimeout(() => { document.querySelectorAll("img")[0].src = "./images/eye_0_3.png" }, 300);
               localStorage.setItem('pinhash', hash);
+              this.showSuccessView();
               this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
             } else {
-              document.querySelectorAll("img")[0].src = "./images/eye_0.png";
-              Console.switchVisibility();
+              this.showDefaultView();
             }
           });
         });
@@ -51,7 +52,7 @@ class Authentification extends Events.EventHandler {
       if (pinhash) {
         RestService.validatePinhash(pinhash).then(({ result }) => {
           if (result) {
-            setTimeout(() => { document.querySelectorAll("img")[0].src = "./images/eye_0_3.png" }, 300);
+            this.showSuccessView();
             this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
           } else {
             queryPinControl();
@@ -60,11 +61,21 @@ class Authentification extends Events.EventHandler {
       } else {
         queryPinControl();
       }
-
-
     }
 
-    private _authenticate_1 = async () => {
+    private showLoadingView = () => {
+      document.querySelectorAll("img")[0].src = "./images/eye_0_2.png";
+    }
+
+    private showSuccessView = () => {
+      setTimeout(() => { document.querySelectorAll("img")[0].src = "./images/eye_0_3.png" }, 300);
+    }
+
+    private showDefaultView = () => {
+      document.querySelectorAll("img")[0].src = "./images/eye_0.png";
+    }
+
+    /*private _authenticate_1 = async () => {
 
       let sign = { x: new Array<number>(), y: new Array<number>() };
 
@@ -157,7 +168,7 @@ class Authentification extends Events.EventHandler {
       //TODO
     }
 
-  }
+  }*/
 
 
 }

@@ -3,6 +3,7 @@ import * as Events from "../utils/Events";
 
 class Pincode extends Events.EventHandler {
 
+    private _container: any = null;
     private _inputs: Array<any> = [];
 
     constructor() {
@@ -13,9 +14,11 @@ class Pincode extends Events.EventHandler {
 
         const viewport = document.getElementById("entry-page");
 
+        this._container = document.createElement("div"); viewport.appendChild(this._container);
+
         for (let i = 0; i < PINCODE_CHAR_LENGTH; i++) {
 
-            let _console = document.createElement("input"); viewport.appendChild(_console);
+            let _console = document.createElement("input"); this._container.appendChild(_console);
             _console.type = 'password';
             _console.maxLength = 1;
             _console.style.setProperty('position', 'absolute');
@@ -51,6 +54,14 @@ class Pincode extends Events.EventHandler {
                 }
             }
         };
+    }
+
+    public show = () => {
+        this._container.style.setProperty('display', 'inline');
+    }
+
+    public hide = () => {
+        this._container.style.setProperty('display', 'none');
     }
 }
 

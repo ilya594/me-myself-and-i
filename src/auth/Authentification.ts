@@ -12,8 +12,8 @@ class Authentification extends Events.EventHandler {
         super();        
     }
 
-    private _url = './model_0/model.json';
-    private _buffer: any;
+   // private _url = './model_0/model.json';
+   // private _buffer: any;
 
     public initialize = async () => {
 
@@ -31,6 +31,8 @@ class Authentification extends Events.EventHandler {
         Pincode.initialize();
 
         Pincode.addEventListener(Events.CONSOLE_EXECUTE_COMMAND, async (pin: string) => {
+
+          Pincode.hide();
 
           this.showLoadingView();
 

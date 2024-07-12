@@ -7,6 +7,7 @@ import Console from "./utils/Console";
 import RestService from "./network/RestService";
 import Authentification from "./auth/Authentification";
 import Controls from "./view/Controls";
+import Sounds from "./utils/Sounds";
 
 const route = (): string => window.location.search?.substring(1); 
 
@@ -100,6 +101,9 @@ class Entry {
 
       await MotionDetector.initialize();
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
+
+
+      await Sounds.initialize();
 
       await Console.initialize();
     }

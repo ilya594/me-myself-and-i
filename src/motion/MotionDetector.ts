@@ -130,7 +130,6 @@ export class MotionDetector extends Events.EventHandler {
             Math.abs(previous - average) > MOTION_DETECT_PIXEL_COEF
         ) {
             timeout = MOTION_DETECT_DELAY;
-            document.querySelector("audio").play();
             this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
         }
 

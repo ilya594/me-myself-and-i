@@ -8,24 +8,19 @@ class Sounds extends Events.EventHandler {
     private _container: HTMLAudioElement = null;
 
     constructor() {
-        super();       
-       
+        super();              
+
+        this._timeouts.set(Events.MOTION_DETECTED, { instance: null, delay: 1000 });
     }
 
     public initialize = async () => {
 
         this._container = document.getElementById("audio-container") as HTMLAudioElement;
 
-        this._container.addEventListener("canplaythrough", (event) => {
-            //wazap fool шо ти галава?
-        });
-        //  Memory
-
-
-        MotionDetector.addEventListener(Events.MOTION_DETECTED, () => {
+        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
 
             const timeout = this._timeouts.get(Events.MOTION_DETECTED);
-            
+
             if (!timeout.instance) {
                 (timeout.instance as any) = setTimeout(() => {
                     clearTimeout(timeout.instance as any);

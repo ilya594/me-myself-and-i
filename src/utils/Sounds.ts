@@ -9,6 +9,21 @@ class Sounds extends Events.EventHandler {
         super();        
 
         this._timeouts.set(Events.MOTION_DETECTED, { instance: null, delay: 1000 });
+                                        //@ts-ignore 
+                                        document.querySelector("audio")?.currentTime = Math.floor(Math.random() * 222);
+
+                                        document.querySelector("audio")?.play();
+                        
+                                        setTimeout(() => {
+                                            document.querySelector("audio")?.pause();
+                                            try {
+                                                //@ts-ignore 
+                                                document.querySelector("audio")?.currentTime = 222;
+                                            } catch (e: any) {
+                                                //
+                                            }
+                                        }, 4444);
+        
     }
 
     public initialize = async () => {

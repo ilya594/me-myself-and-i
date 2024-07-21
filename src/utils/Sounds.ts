@@ -18,7 +18,21 @@ class Sounds extends Events.EventHandler {
                 (timeout.instance as any) = setTimeout(() => {
                     clearTimeout(timeout.instance as any);
                 }, timeout.delay);
+
+                                        //@ts-ignore 
+                document.querySelector("audio")?.currentTime = 0;
+
                 document.querySelector("audio")?.play();
+
+                setTimeout(() => {
+                    document.querySelector("audio")?.pause();
+                    try {
+                        //@ts-ignore 
+                        document.querySelector("audio")?.currentTime = 0;
+                    } catch (e: any) {
+                        //
+                    }
+                }, 4444);
             }
         });
 

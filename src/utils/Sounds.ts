@@ -20,7 +20,7 @@ class Sounds extends Events.EventHandler {
                 }, timeout.delay);
 
                                         //@ts-ignore 
-                document.querySelector("audio")?.currentTime = Math.floor(Math.random() * 22222);
+                document.querySelector("audio")?.currentTime = Math.floor(Math.random() * 222);
 
                 document.querySelector("audio")?.play();
 
@@ -28,7 +28,7 @@ class Sounds extends Events.EventHandler {
                     document.querySelector("audio")?.pause();
                     try {
                         //@ts-ignore 
-                        document.querySelector("audio")?.currentTime = 0;
+                        document.querySelector("audio")?.currentTime = 222;
                     } catch (e: any) {
                         //
                     }

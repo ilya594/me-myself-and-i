@@ -7,10 +7,19 @@ class Sounds extends Events.EventHandler {
 
     private _container: HTMLAudioElement = null;
 
+    private _restraints: Array<number> = [ 
+        0.5, 0.5, 0.5, 0.5, 
+        0.5, 0.5, 0.5, 0.5, 
+        0.5, 0.0, 0.0, 0.0, 
+        0.0, 0.0, 0.0, 0.0, 
+        0.0, 0.0, 0.0, 0.0, 
+        0.5, 0.5, 0.5, 0.5 
+    ];
+
     constructor() {
         super();              
 
-        this._timeouts.set(Events.MOTION_DETECTED, { instance: null, delay: 1000 });
+        this._timeouts.set(Events.MOTION_DETECTED, { instance: null, delay: 1111 });
     }
 
     public initialize = async () => {
@@ -27,10 +36,11 @@ class Sounds extends Events.EventHandler {
                 }, timeout.delay);
 
                 this._container.currentTime = Math.floor(Math.random() * 333);
+                this._container.volume = this._restraints[new Date().getHours()] || 0;
                 this._container.play();
 
                 setTimeout(() => {
-                    this._container.pause(); 
+                    this._container.volume = 0;
                 }, 4444);
             }
         });

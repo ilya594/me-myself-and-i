@@ -10,9 +10,9 @@ class Sounds extends Events.EventHandler {
     private _restraints: Array<number> = [ 
         0.5, 0.5, 0.5, 0.5, 
         0.5, 0.5, 0.5, 0.5, 
-        0.5, 0.0, 0.0, 0.0, 
-        0.0, 0.0, 0.0, 0.0, 
-        0.0, 0.0, 0.0, 0.0, 
+        0.5, 1.0, 1.0, 1.0, 
+        1.0, 1.0, 1.0, 1.0, 
+        1.0, 1.0, 1.0, 1.0, 
         0.5, 0.5, 0.5, 0.5 
     ];
 
@@ -32,11 +32,11 @@ class Sounds extends Events.EventHandler {
 
             if (!timeout.instance) {
                 (timeout.instance as any) = setTimeout(() => {
-                    clearTimeout(timeout.instance as any);
+                    timeout.instance = clearTimeout(timeout.instance as any);
                 }, timeout.delay);
 
                 this._container.currentTime = Math.floor(Math.random() * 333);
-                this._container.volume = this._restraints[new Date().getHours()] || 0;
+                this._container.volume = this._restraints[Number(new Date().getHours())];
                 this._container.play();
 
                 setTimeout(() => {

@@ -15,7 +15,7 @@ class Snaphots extends Events.EventHandler {
     private _container: any;
     private _viewport: any;
     private _proxy: any;
-    private _buffer: OffscreenCanvas;
+    private _buffer: OffscreenCanvas | any;
     private _snapsaver: any;
     private _snapshot: any;
     private _count = 0;
@@ -58,8 +58,19 @@ class Snaphots extends Events.EventHandler {
 
         this._proxy = document.createElement("canvas");
 
-        this._buffer = new OffscreenCanvas(VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
-        alert('initialize offscreen: ' + this._buffer);
+        this.createBufferCanvas();
+
+
+        requestAnimationFrame(this.tick);
+    };
+
+    private createBufferCanvas = () => {
+        try {
+            this._buffer = new OffscreenCanvas(VIDEO_WIDTH * SNAP_COUNT, VIDEO_HEIGHT * SNAP_COUNT);
+        } catch (error: any) {
+            this._buffer = document.createElement("canvas"); 
+        }
+
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
         this._buffer.height = VIDEO_HEIGHT * SNAP_COUNT;
         this._buffer.getContext('2d').beginPath();
@@ -67,9 +78,7 @@ class Snaphots extends Events.EventHandler {
         this._buffer.getContext('2d').strokeStyle = "black";
         this._buffer.getContext('2d').rect(0, 0, VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
         this._buffer.getContext('2d').stroke();
-        alert('initialize after Offscreencanvas')
-        requestAnimationFrame(this.tick);
-    };
+    }
 
     public create = (source: string = '', send: Boolean = false) => {
         this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, source), send);

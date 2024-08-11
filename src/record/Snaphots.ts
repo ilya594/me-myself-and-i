@@ -1,5 +1,4 @@
 import * as TWEEN from '@tweenjs/tween.js';
-//import MotionDetector from './detection/MotionDetector';
 import { 
     VIDEO_WIDTH, 
     VIDEO_HEIGHT, 
@@ -10,7 +9,6 @@ import {
 } from "../utils/Constants";
 import * as Utils from "../utils/Utils";
 import * as Events from "../utils/Events";    
-import Console from '../utils/Console';
 
 class Snaphots extends Events.EventHandler {
 
@@ -43,9 +41,6 @@ class Snaphots extends Events.EventHandler {
 
         this._snapshot = document.createElement("canvas"); this._container.appendChild(this._snapshot);
         this._snapshot.style.setProperty('position', 'absolute');
-        //this._snapshot.style.setProperty('x', '1280px');
-      //  this._snapshot.style.setProperty('left', '0');
-
         this._snapshot.width = SNAP_WIDTH;
         this._snapshot.height = SNAP_HEIGHT;
         this._snapshot.getContext('2d').globalAlpha = 0;

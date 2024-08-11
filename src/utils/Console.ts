@@ -9,8 +9,6 @@ class Console extends EventHandler {
 
     constructor() {
         super();
-
-       // this.initialize();
     }
 
     public initialize = async () => {

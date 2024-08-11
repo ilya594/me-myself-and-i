@@ -82,7 +82,7 @@ class Entry {
 
       await StreamProvider.initialize();
             StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => {
-              View.displayStream(stream)
+              View.displayStream(stream);
               Controls.setVisible(true);
             });
 
@@ -99,13 +99,13 @@ class Entry {
               RestService.sendSnaphot(data);
       });*/
 
-      await MotionDetector.initialize();
-            MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
+    /*  await MotionDetector.initialize();
+            MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());*/
 
 
       await Sounds.initialize();
 
-      await Console.initialize();
+   //   await Console.initialize();
     }
 }
 

@@ -27,7 +27,7 @@ class Snaphots extends Events.EventHandler {
     public get playing() { return !!this._tween?.isPlaying; };
 
     public initialize = async () => {
-
+        alert('initialize')
         this._container = document.getElementById("view-page");
 
         this._viewport = document.querySelector("video");
@@ -64,7 +64,7 @@ class Snaphots extends Events.EventHandler {
         this._buffer.getContext('2d').strokeStyle = "black";
         this._buffer.getContext('2d').rect(0, 0, VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
         this._buffer.getContext('2d').stroke();
-
+        alert('initialize after Offscreencanvas')
         requestAnimationFrame(this.tick);
     };
 
@@ -73,12 +73,12 @@ class Snaphots extends Events.EventHandler {
     }
 
     private onViewportClick = (event: any) => {   
-        event.preventDefault();
-        event.stopPropagation();
+        alert('onViewportClick')
         this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, "manual"), true);
     };
 
     private drawCanvasFromVideo(canvas: HTMLCanvasElement, video: any, source: string): HTMLCanvasElement {
+        alert('drawCanvasFromVideo')
         const w:number = canvas.width = video.getBoundingClientRect().width;
         const h:number = canvas.height = video.getBoundingClientRect().height;
         const context = canvas.getContext('2d'); 
@@ -90,7 +90,7 @@ class Snaphots extends Events.EventHandler {
     };
 
     private createSnaphot = (source: HTMLCanvasElement, send: Boolean) => { 
-
+        alert('createSnaphot')
         if (this.playing) this._tween.stop();
         
         const x:number = (this._count % SNAP_COUNT) * VIDEO_WIDTH;
@@ -108,7 +108,7 @@ class Snaphots extends Events.EventHandler {
     };
 
     private startSaverTween = (w: number, h: number) => {
-
+        alert('startSaverTween')
         const ini = { scaleX: 1,            scaleY: 1,             x: 0,           y: 0 };
         const end = { scaleX: SNAP_WIDTH / w, scaleY: SNAP_HEIGHT / h, x: this._viewport.getBoundingClientRect().left - this._viewport.offsetLeft - this._viewport.offsetParent.offsetLeft + (this.w - SNAP_WIDTH)/2, y: -(h - SNAP_HEIGHT)/2 };   //TODO simplify this !!!!!
         this._tween = new TWEEN.Tween(ini)
@@ -123,7 +123,7 @@ class Snaphots extends Events.EventHandler {
     }
 
     private onSaverTweenComplete = () => {
-        
+        alert('onSaverTweenComplete')
         this._snapshot.style.setProperty('transform', 'translate(' + String(this._viewport.getBoundingClientRect().left - this._viewport.offsetLeft - this._viewport.offsetParent.offsetLeft + (this.w - SNAP_WIDTH)/2) + 'px,' + String(-(this.h - SNAP_HEIGHT)/2) + 'px)' + 'scale(' + 1 + ',' + 1 + ')');    //TODO simplify this !!!!!
 
         this._snapshot.getContext('2d').globalAlpha = 1;

@@ -39,7 +39,9 @@ class Snaphots extends Events.EventHandler {
         this._snapsaver.addEventListener("click", this.onViewportClick);
         this._snapsaver.addEventListener("touchstart", this.onViewportClick);
         this._snapsaver.style.setProperty('transform', 'translate(' + 0 + 'px,' + 0 + 'px)' + 'scale(' + 1 + ',' + 1 + ')');         
-        this._snapsaver.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);  
+        let context = this._snapsaver.getContext('2d');
+        alert('initialize context: ' + context);
+            context.clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);  
 
         this._snapshot = document.createElement("canvas"); this._container.appendChild(this._snapshot);
         this._snapshot.style.setProperty('position', 'absolute');
@@ -57,6 +59,7 @@ class Snaphots extends Events.EventHandler {
         this._proxy = document.createElement("canvas");
 
         this._buffer = new OffscreenCanvas(VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
+        alert('initialize offscreen: ' + this._buffer);
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
         this._buffer.height = VIDEO_HEIGHT * SNAP_COUNT;
         this._buffer.getContext('2d').beginPath();

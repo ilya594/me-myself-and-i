@@ -93,11 +93,11 @@ class Entry {
 
       await RestService.initialize();
 
-      /*await Snaphots.initialize();
+      await Snaphots.initialize();
             Snaphots.addEventListener(Events.SNAPSHOT_SEND_HOMIE, (data: any) => {
               StreamProvider.sendSnaphot(data);
               RestService.sendSnaphot(data);
-      });*/
+      });
 
     /*  await MotionDetector.initialize();
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());*/

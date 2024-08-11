@@ -99,8 +99,8 @@ class Entry {
               RestService.sendSnaphot(data);
       });
 
-    /*  await MotionDetector.initialize();
-            MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());*/
+      await MotionDetector.initialize();
+            MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
 
 
       await Sounds.initialize();

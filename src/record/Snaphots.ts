@@ -31,16 +31,17 @@ class Snaphots extends Events.EventHandler {
         this._container = document.getElementById("view-page");
 
         this._viewport = document.querySelector("video");
-        this._viewport.onclick = () => this.onViewportClick();
+        this._viewport.addEventListener("mousedown", this.onViewportClick);
 
         this._snapsaver = document.createElement("canvas"); this._container.appendChild(this._snapsaver);
         this._snapsaver.style.setProperty('position', 'absolute');
-        this._snapsaver.onclick = () => this.onViewportClick(); 
+        this._snapsaver.addEventListener("mousedown", this.onViewportClick);
         this._snapsaver.style.setProperty('transform', 'translate(' + 0 + 'px,' + 0 + 'px)' + 'scale(' + 1 + ',' + 1 + ')');         
         this._snapsaver.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);  
 
         this._snapshot = document.createElement("canvas"); this._container.appendChild(this._snapshot);
         this._snapshot.style.setProperty('position', 'absolute');
+
         this._snapshot.width = SNAP_WIDTH;
         this._snapshot.height = SNAP_HEIGHT;
         this._snapshot.getContext('2d').globalAlpha = 0;
@@ -69,7 +70,9 @@ class Snaphots extends Events.EventHandler {
         this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, source), send);
     }
 
-    private onViewportClick = () => {   
+    private onViewportClick = (event: any) => {   
+        event.preventDefault();
+        event.stopPropagation();
         this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, "manual"), true);
     };
 

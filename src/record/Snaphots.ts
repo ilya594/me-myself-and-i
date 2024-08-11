@@ -31,11 +31,13 @@ class Snaphots extends Events.EventHandler {
         this._container = document.getElementById("view-page");
 
         this._viewport = document.querySelector("video");
-        this._viewport.addEventListener("mousedown", this.onViewportClick);
+        this._viewport.addEventListener("click", this.onViewportClick);
+        this._viewport.addEventListener("touchstart", this.onViewportClick);
 
         this._snapsaver = document.createElement("canvas"); this._container.appendChild(this._snapsaver);
         this._snapsaver.style.setProperty('position', 'absolute');
-        this._snapsaver.addEventListener("mousedown", this.onViewportClick);
+        this._snapsaver.addEventListener("click", this.onViewportClick);
+        this._snapsaver.addEventListener("touchstart", this.onViewportClick);
         this._snapsaver.style.setProperty('transform', 'translate(' + 0 + 'px,' + 0 + 'px)' + 'scale(' + 1 + ',' + 1 + ')');         
         this._snapsaver.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);  
 
@@ -94,7 +96,7 @@ class Snaphots extends Events.EventHandler {
         const x:number = (this._count % SNAP_COUNT) * VIDEO_WIDTH;
         const y:number = Math.floor(this._count/SNAP_COUNT) * VIDEO_HEIGHT;
 
-        (this._buffer.getContext('2d') as any).drawImage(source, x, y, VIDEO_WIDTH, VIDEO_HEIGHT);
+        this._buffer.getContext('2d').drawImage(source, x, y, VIDEO_WIDTH, VIDEO_HEIGHT);
 
         this._snapsaver.style.setProperty('display', 'inline'); 
         this._snapsaver.width = this.w;

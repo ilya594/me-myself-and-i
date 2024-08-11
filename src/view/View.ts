@@ -44,7 +44,7 @@ export class View extends Events.EventHandler {
             viewport.style.setProperty('visibility', 'visible');
             viewport.style.display = 'flex';
 
-            this.createDevicesInfoLabel(devices);
+          //  this.createDevicesInfoLabel(devices);
       
      // document.body.requestFullscreen();
     }

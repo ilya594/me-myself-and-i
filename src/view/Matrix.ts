@@ -29,8 +29,6 @@ class Matrix {
 
         document.onmousemove = () => this.hide();    
         
-        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, this.hide);
-
         return this.will();
     }
 

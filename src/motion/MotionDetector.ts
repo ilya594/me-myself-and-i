@@ -2,6 +2,7 @@ import { MOTION_DETECT_CHECKPOINT_SIZE, MOTION_DETECT_DELAY, MOTION_DETECT_HEAP_
 import * as Events from "../utils/Events";    
 import * as Utils from "../utils/Utils";
 import Controls from "../view/Controls";
+import Matrix from "../view/Matrix";
 
 export class MotionDetector extends Events.EventHandler {
   
@@ -129,6 +130,7 @@ export class MotionDetector extends Events.EventHandler {
             Math.abs(previous - average) > MOTION_DETECT_PIXEL_COEF
         ) {
             timeout = MOTION_DETECT_DELAY;
+            Matrix.hide();
             this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
         }
 

@@ -81,7 +81,7 @@ export function matrixEffect(canvas: HTMLCanvasElement, interval: any) {
         w = (canvas.width = window.innerWidth),
         h = (canvas.height = window.innerHeight);
     
-    const str = "А+Б0В-Г1Д=Е2Ё Ж3З И4Й К5Л М6Н О7П Р8С Т9У Ф!Х Ц?Ч Ш.ЩЪ,Ы Ь:ЭЮ;Я开儿 艾诶开伊 艾2艾 西吉3艾%$艾伊467娜%伊6abcdef3@jk=lm%no#p-qrstu&v*wxy3z",
+    const str = "А+Б0В-Г1Д=Е2Ё Ж3З И4Й К5Л М6Н О7П Р8С Т9У Ф!Х Ц?Ч Ш.ЩЪ,Ы Ь:ЭЮ;Я 开儿 艾  诶 开伊 艾2 艾  西 吉 3艾 %$艾 伊4 67 娜% 伊 6a bc def 3@j k=l m% no#p-qrstu &v*wxy3z",
     matrix = str.split("");
     
     let font = 24,

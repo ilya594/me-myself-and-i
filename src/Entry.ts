@@ -8,6 +8,8 @@ import RestService from "./network/RestService";
 import Authentification from "./auth/Authentification";
 import Controls from "./view/Controls";
 import Sounds from "./utils/Sounds";
+import * as Utils from './utils/Utils';
+import Matrix from "./view/Matrix";
 
 const route = (): string => window.location.search?.substring(1); 
 
@@ -28,6 +30,9 @@ class Entry {
     }
 
     private initializeAuth = async () => {
+
+      Utils.tryResizeWindow();
+
       await Console.initialize();
 
       await Authentification.initialize();
@@ -104,6 +109,8 @@ class Entry {
 
 
       await Sounds.initialize();
+
+      await Matrix.initialize();
 
    //   await Console.initialize();
     }

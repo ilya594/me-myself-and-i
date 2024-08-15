@@ -75,32 +75,37 @@ export function tryResizeWindow() {
     }
 }
 
-export function matrixEffect(C: HTMLCanvasElement, interval: any) {
-    let context = C.getContext("2d"),
-    W = (C.width = window.innerWidth),
-    H = (C.height = window.innerHeight);
+export function matrixEffect(canvas: HTMLCanvasElement, interval: any) {
+    
+    let context = canvas.getContext("2d"),
+        w = (canvas.width = window.innerWidth),
+        h = (canvas.height = window.innerHeight);
     
     const str = "А+Б0В-Г1Д=Е2Ё Ж3З И4Й К5Л М6Н О7П Р8С Т9У Ф!Х Ц?Ч Ш.ЩЪ,Ы Ь:ЭЮ;Я开儿 艾诶开伊 艾2艾 西吉3艾%$艾伊467娜%伊6abcdef3@jk=lm%no#p-qrstu&v*wxy3z",
     matrix = str.split("");
     
-    let font = 11,
-    col = W / font,
-    arr: any = [];
+    let font = 24,
+        col = w / font,
+        arr: any = [];
+
+
     
     for (let i = 0; i < col; i++) arr[i] = 1;
     
     function draw() {
+
         context.fillStyle = "rgba(0,0,0,.05)";
-        context.fillRect(0, 0, W, H);
-        context.  fillStyle = "#0f0";
+        context.fillRect(0, 0, w, h);
+        context.fillStyle = "#0f0";
         context.font = font + "px system-ui";
-    for (let i = 0; i < arr.length; i++) {
-    let txt = matrix[Math.floor(Math.random() * matrix.length)];
-    context.fillText(txt, i * font, arr[i] * font);
-    if (arr[i] * font > H && Math.random() > 0.975) arr[i] = 0;
-    arr[i]++;
-    }
+
+        for (let i = 0; i < arr.length; i++) {
+            const txt = matrix[Math.floor(Math.random() * matrix.length)];
+            context.fillText(txt, i * font, arr[i] * font);
+            if (arr[i] * font > h && Math.random() > 0.975) arr[i] = 0;
+            arr[i]++;
+        }
     }
     
-    interval = setInterval(draw, 80);
+    interval = setInterval(draw, 100);
 }

@@ -4,13 +4,11 @@ import * as Events from "../utils/Events";
 
 class Matrix {
 
-    private _timeouts: Map<string, any> = new Map();
-
     private _page: any;
     private _container: any;
     private _graphic: HTMLCanvasElement;
 
-    public interval: any;
+    private _interval: any;
 
     constructor() {
 
@@ -35,7 +33,7 @@ class Matrix {
     public show = () => {
         if (!this.exists()) {
             this._page.appendChild(this._container);
-            Utils.matrixEffect(this._graphic, this.interval);     
+            this.matrixEffect(this._graphic);     
         }   
     }
 
@@ -43,18 +41,56 @@ class Matrix {
         if (this.exists()) {
             this._graphic.getContext("2d").clearRect(0, 0, window.innerWidth, window.innerHeight);
             this._page.removeChild(this._container);
-            this.interval = clearInterval(this.interval);  
+            clearInterval(this._interval);  
 
             this.will();
         }      
     }
 
     private will = () => {
-        return setTimeout(() => this.show(), 11111);
+        return setTimeout(() => this.show(), 77777);
     }
 
     private exists = () => {
         return document.getElementById("view-page") && document.getElementById("container");
+    }
+
+
+    private matrixEffect(canvas: HTMLCanvasElement) {
+    
+        let context = canvas.getContext("2d"),
+            w = (canvas.width = window.innerWidth),
+            h = (canvas.height = window.innerHeight);
+        
+        const str = "А+Б0ƓВڲ-Г1Д=Е2Ё Ж3З И4Йۺ К5Лإ М6Нڧ О7П ۴Р8Сñ Тʬ9УƔڟ Ф!ڮХ ЦÛ?Ч ƪШ.іагнп шьцск бйщцгу ритй шлщшб пртаиук ؿЩЪ,Ы Ь:ЭЮ;ڿڿڦЯ 开儿 艾  诶Ƣ 开伊 艾2 艾ƕڪ   西Ý 吉 3艾 %$艾 伊4 ¿ 67 娜% ڠ伊 6a bcƜ dٿefï 3@j k=l m% no#pؠ-qrstu &v* ڜ wxy3z ¼ ¾ æè ƩỺ ʭʩʥ˩˩ͼ  ͽͽΔΔΔΔω ϘϠ ϠϡϢϧ Ϩ ϬϬϪЉЊѭ ѭѬ ѸѶѺ҂؏	ڝ ҈ҨӜ ٹ ӾӾ֍",
+        matrix = str.split("");
+        
+        let font = 24,
+            col = w / font,
+            arr: any = [];   
+    
+        
+        for (let i = 0; i < col; i++) arr[i] = 1;
+        
+        function draw() {
+    
+            context.fillStyle = "rgba(0,0,0,.05)";
+            context.fillRect(0, 0, w, h);
+            context.fillStyle = "#0f0";
+            if (Math.random() > 0.9977) {
+                context.fillStyle = "#f00";
+            }
+            context.font = font + "px system-ui";
+    
+            for (let i = 0; i < arr.length; i++) {
+                const txt = matrix[Math.floor(Math.random() * matrix.length)];
+                context.fillText(txt, i * font, arr[i] * font);
+                if (arr[i] * font > h && Math.random() > 0.975) arr[i] = 0;
+                arr[i]++;
+            }
+        }
+        
+        this._interval = setInterval(draw, 100);
     }
 
   

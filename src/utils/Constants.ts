@@ -19,3 +19,6 @@ export const MOTION_DETECT_CHECKPOINT_SIZE = 44;
 
 export const PINCODE_CHAR_LENGTH = 4;
 
+export const MATRIX_COOLDOWN_DELAY = 77777;
+export const MATRIX_FONT_SIZE = 24;
+

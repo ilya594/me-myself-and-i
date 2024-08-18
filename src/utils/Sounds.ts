@@ -19,7 +19,7 @@ class Sounds extends Events.EventHandler {
     constructor() {
         super();              
 
-        this._timeouts.set(Events.MOTION_DETECTED, { instance: null, delay: 1111 });
+        this._timeouts.set(Events.MOTION_DETECTED, { instance: null, delay: 7777 });
     }
 
     public initialize = async () => {

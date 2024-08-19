@@ -18,6 +18,7 @@ export class Controls extends Events.EventHandler {
     private _traceButton: any;
     private _snapsButton: any;
     private _watchButton: any;
+    private _voiceButton: any;
 
     private _watchToggle_0: any;
     private _watchToggle_1: any;
@@ -46,6 +47,16 @@ export class Controls extends Events.EventHandler {
     private createButtons = () => {
         this._traceButton = document.getElementById("trace-button");      
         this._traceButton.onclick = () => this.dispatchEvent(Events.CHANGE_TRACE_VISIBILITY, null);
+
+        this._voiceButton = document.getElementById("voice-button");
+        this._voiceButton.onclick = () => {
+            const current = Number(this._voiceButton.style.opacity);
+            this._voiceButton.style.opacity = String(current + 0.2);
+            if (Number(this._voiceButton.style.opacity) > 1) {
+                this._voiceButton.style.opacity = String(0.2);
+            }
+            this.dispatchEvent(Events.CHANGE_VOICE_ENABLED, Number(this._voiceButton.style.opacity));
+        }
 
         this._snapsButton = document.getElementById("snaps-button").parentElement;
         this._snapsButton.onclick = () => Snaphots.flushBuffer();

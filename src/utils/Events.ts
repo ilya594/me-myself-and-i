@@ -46,3 +46,5 @@ export class EventHandler {
   export const NETWORK_AUTH_SUCCESS = 'network_auth_success';
 
   export const CONSOLE_EXECUTE_COMMAND = 'console_execute_command';
+
+  export const CHANGE_VOICE_ENABLED = 'change_voice_enabled';

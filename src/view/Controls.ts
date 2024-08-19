@@ -51,9 +51,9 @@ export class Controls extends Events.EventHandler {
         this._voiceButton = document.getElementById("voice-button");
         this._voiceButton.onclick = () => {
             const current = Number(this._voiceButton.style.opacity);
-            this._voiceButton.style.opacity = String(current + 0.2);
+            this._voiceButton.style.opacity = String(current + 0.1);
             if (Number(this._voiceButton.style.opacity) > 1) {
-                this._voiceButton.style.opacity = String(0.2);
+                this._voiceButton.style.opacity = String(0.1);
             }
             this.dispatchEvent(Events.CHANGE_VOICE_ENABLED, Number(this._voiceButton.style.opacity));
         }

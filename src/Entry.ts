@@ -112,7 +112,7 @@ class Entry {
 
       await Matrix.initialize();
 
-   //   await Console.initialize();
+   // await Console.initialize();
     }
 }
 

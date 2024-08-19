@@ -55,7 +55,8 @@ class Matrix {
     }
 
     private will = () => {
-        return this._timeout = setTimeout(() => this.show(), MATRIX_COOLDOWN_DELAY);
+        clearTimeout(this._timeout);
+        return (this._timeout = setTimeout(() => this.show(), MATRIX_COOLDOWN_DELAY));
     }
 
     private exists = () => {
@@ -66,8 +67,8 @@ class Matrix {
     private matrixEffect(canvas: HTMLCanvasElement) {
     
         const context = canvas.getContext("2d"),
-            w = (canvas.width = window.outerWidth),
-            h = (canvas.height = window.outerHeight);
+            w = (canvas.width = window.innerWidth),
+            h = (canvas.height = window.innerHeight);
         
         const str = "А+Б0ƓВڲ-Г1Д=Е2Ё Ж3З И4Йۺ К5Лإ М6Нڧ О7П ۴Р8Сñ Тʬ9УƔڟ Ф!ڮХ ЦÛ?Ч ƪШ.іагb н ьцск бйщцгу ритй" +
                     "шлщшб пртаиук ؿЩЪ,Ы Ь:ЭЮ;ڿڿڦЯ 开儿 艾  诶Ƣ 开伊 艾2 艾ƕڪ   西Ý 吉 3艾 %$艾 伊4 ¿ 67 娜% ڠ伊" + 
@@ -105,7 +106,7 @@ class Matrix {
             }
         }
         
-        this._interval = setInterval(draw, 100);
+        this._interval = setInterval(draw, 20);
     }
 
   

@@ -73,13 +73,17 @@ class Entry {
         
   
       const streamer = new Streamer();
-      const { stream, devices } = await streamer.initialize(options);
+      const { stream, devices, callbacks } = await streamer.initialize(options);
 
       await StreamProvider.initialize(true);
             View.displayStream(stream, devices);
             Controls.setVisible(true);
 
       await this.initializeCommonComponents();
+
+      callbacks.get('sounds-adjust-homie-volume')().then((data: any) => {
+        Sounds.volume = Number(data);
+      });
     }
 
 

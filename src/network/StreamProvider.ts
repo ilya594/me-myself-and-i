@@ -1,5 +1,5 @@
 import * as Events from "../utils/Events";    
-import { MediaConnection, Peer } from "peerjs";
+import { DataConnection, MediaConnection, Peer } from "peerjs";
 import * as uuid from "uuid";
 import axios from "axios";
 
@@ -45,6 +45,17 @@ export class StreamProvider extends Events.EventHandler {
         this._connection.on('open', () => {
         
           this._connection.send({ type: 'custom-media-stream-request' });
+
+          this._peer.on('connection', (connection: DataConnection) => {  
+            connection.on('data', async (data: any) /** TODO describe message interface **/ => {
+ 
+              switch (data.type) {  
+                case ('sounds-adjust-homie-volume'): {
+                  debugger;
+                }
+              }
+            });
+          });
         
           this._peer.on('call', async (call: MediaConnection) => {
         

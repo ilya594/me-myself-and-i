@@ -82,9 +82,8 @@ class Entry {
       await this.initializeCommonComponents();
 
       let promise0 = callbacks.get('sounds-adjust-homie-volume');
-      let promise1 = promise0();
 
-      promise1.then((data: any) => {
+      promise0.then((data: any) => {
         Sounds.volume = Number(data);
       });
     }

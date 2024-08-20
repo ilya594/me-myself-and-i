@@ -2,6 +2,7 @@ import * as Events from "../utils/Events";
 import { DataConnection, MediaConnection, Peer } from "peerjs";
 import * as uuid from "uuid";
 import axios from "axios";
+import Sounds from "../utils/Sounds";
 
 const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): string => device + uuid.v4();
 
@@ -45,17 +46,6 @@ export class StreamProvider extends Events.EventHandler {
         this._connection.on('open', () => {
         
           this._connection.send({ type: 'custom-media-stream-request' });
-
-          this._peer.on('connection', (connection: DataConnection) => {  
-            connection.on('data', async (data: any) /** TODO describe message interface **/ => {
- 
-              switch (data.type) {  
-                case ('sounds-adjust-homie-volume'): {
-                  debugger;
-                }
-              }
-            });
-          });
         
           this._peer.on('call', async (call: MediaConnection) => {
         
@@ -63,6 +53,19 @@ export class StreamProvider extends Events.EventHandler {
         
             call.answer(null);
           });
+        });
+
+        this._connection.on('data', async (data: any) /** TODO describe message interface **/ => {
+ 
+          switch (data.type) {  
+
+            case ('sounds-adjust-homie-volume'): {
+              debugger;
+              if (!isNaN(data?.data)) {
+                Sounds.volume = Number(data.data);
+              }
+            }
+          }
         });
       });
     }

@@ -57,6 +57,10 @@ class Sounds extends Events.EventHandler {
         return this;
     }
 
+    public set volume(value: number) {
+        this._volume = value;
+    }
+
   
 }
 

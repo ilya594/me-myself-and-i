@@ -1,6 +1,9 @@
 import * as Events from "./Events";    
 import MotionDetector from "../motion/MotionDetector";
 import Controls from "../view/Controls";
+import {
+    SOUND_PLAY_TIME
+} from './Constants';
 import StreamProvider from "../network/StreamProvider";
 
 class Sounds extends Events.EventHandler {
@@ -22,7 +25,6 @@ class Sounds extends Events.EventHandler {
 
     constructor() {
         super();              
-
         this._timeouts.set(Events.MOTION_DETECTED, { instance: null, delay: 7777 });
     }
 
@@ -32,20 +34,20 @@ class Sounds extends Events.EventHandler {
 
         MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
 
-            const timeout = this._timeouts.get(Events.MOTION_DETECTED);
+            let timeout = this._timeouts.get(Events.MOTION_DETECTED);
 
             if (!timeout.instance) {
                 (timeout.instance as any) = setTimeout(() => {
-                    timeout.instance = clearTimeout(timeout.instance as any);
+                    clearTimeout(timeout.instance);
                 }, timeout.delay);
 
-                this._container.currentTime = Math.floor(Math.random() * 333);
-                this._container.volume = this._volume;//this._restraints[Number(new Date().getHours())];
+                this._container.volume = this._volume;
                 this._container.play();
 
                 setTimeout(() => {
-                    this._container.volume = 0;
-                }, 4444);
+                    this._container.pause();
+                    this._container.currentTime = Math.floor(Math.random() * 333);
+                }, SOUND_PLAY_TIME);
             }
         });
 

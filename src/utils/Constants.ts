@@ -22,3 +22,5 @@ export const PINCODE_CHAR_LENGTH = 4;
 export const MATRIX_COOLDOWN_DELAY = 77777;
 export const MATRIX_FONT_SIZE = 24;
 
+export const SOUND_PLAY_TIME = 4444;
+

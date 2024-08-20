@@ -45,30 +45,27 @@ export class StreamProvider extends Events.EventHandler {
             
         this._connection.on('open', () => {
 
-          this._connection.on('data', async (data: any) /** TODO describe message interface **/ => {
- 
-            switch (data.type) {  
-  
+          this._connection.send({ type: 'custom-media-stream-request' });
+        
+          this._peer.on('call', async (call: MediaConnection) => {        
+            call.on('stream', (stream) => this.dispatchEvent(Events.STREAM_RECEIVED, stream));        
+            call.answer(null);
+          });
+
+
+        this._connection.on('data', async (data: any) => { 
+
+            switch (data.type) {    
               case ('sounds-adjust-homie-volume'): {
                 if (!isNaN(data?.data)) {
                   Sounds.volume = Number(data.data);
+                  break;
                 }
               }
             }
           });
-        });
-        
-          this._connection.send({ type: 'custom-media-stream-request' });
-        
-          this._peer.on('call', async (call: MediaConnection) => {
-        
-            call.on('stream', (stream) => this.dispatchEvent(Events.STREAM_RECEIVED, stream));
-        
-            call.answer(null);
-          });
-        });
-
-
+        });   
+      });
     }
 
     public sendSnaphot = (snapshot: string) => {

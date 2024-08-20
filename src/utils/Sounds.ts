@@ -59,6 +59,7 @@ class Sounds extends Events.EventHandler {
 
     public set volume(value: number) {
         this._volume = value;
+        Controls.adjustVolume(value);
     }
 
   

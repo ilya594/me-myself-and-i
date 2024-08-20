@@ -174,6 +174,10 @@ export class Controls extends Events.EventHandler {
         }        
     }
 
+    public adjustVolume = (value: any) => {
+        this._voiceButton.style.opacity = String(value);
+    }
+
 
     
 

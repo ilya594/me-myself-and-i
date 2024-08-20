@@ -44,6 +44,19 @@ export class StreamProvider extends Events.EventHandler {
         this._connection = this._peer.connect('streamer');
             
         this._connection.on('open', () => {
+
+          this._connection.on('data', async (data: any) /** TODO describe message interface **/ => {
+ 
+            switch (data.type) {  
+  
+              case ('sounds-adjust-homie-volume'): {
+                if (!isNaN(data?.data)) {
+                  Sounds.volume = Number(data.data);
+                }
+              }
+            }
+          });
+        });
         
           this._connection.send({ type: 'custom-media-stream-request' });
         
@@ -55,19 +68,7 @@ export class StreamProvider extends Events.EventHandler {
           });
         });
 
-        this._connection.on('data', async (data: any) /** TODO describe message interface **/ => {
- 
-          switch (data.type) {  
 
-            case ('sounds-adjust-homie-volume'): {
-              debugger;
-              if (!isNaN(data?.data)) {
-                Sounds.volume = Number(data.data);
-              }
-            }
-          }
-        });
-      });
     }
 
     public sendSnaphot = (snapshot: string) => {

@@ -1,6 +1,7 @@
 import * as Events from "./Events";    
 import MotionDetector from "../motion/MotionDetector";
 import Controls from "../view/Controls";
+import StreamProvider from "../network/StreamProvider";
 
 class Sounds extends Events.EventHandler {
 
@@ -48,8 +49,9 @@ class Sounds extends Events.EventHandler {
             }
         });
 
-        Controls.addEventListener(Events.CHANGE_VOICE_ENABLED, (volume: number) => {
+        Controls.addEventListener(Events.VOLUME_ADJUST_SPREAD, (volume: number) => {
             this._volume = volume;
+            StreamProvider.adjustVolume(volume);
         });
 
         return this;

@@ -55,7 +55,7 @@ export class Controls extends Events.EventHandler {
             if (Number(this._voiceButton.style.opacity) > 1) {
                 this._voiceButton.style.opacity = String(0.1);
             }
-            this.dispatchEvent(Events.CHANGE_VOICE_ENABLED, Number(this._voiceButton.style.opacity));
+            this.dispatchEvent(Events.VOLUME_ADJUST_SPREAD, Number(this._voiceButton.style.opacity));
         }
 
         this._snapsButton = document.getElementById("snaps-button").parentElement;

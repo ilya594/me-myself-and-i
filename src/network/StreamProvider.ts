@@ -60,6 +60,10 @@ export class StreamProvider extends Events.EventHandler {
       this._connection?.send({ type : 'snapshot-send-homie-message', data: snapshot });     
     }
 
+    public adjustVolume = (value: number) => {
+      this._connection?.send({ type: 'sounds-adjust-homie-volume', data: value });
+    }
+
     private initializeLocalStream = async () => {
       this.dispatchEvent(Events.STREAM_RECEIVED);
     }

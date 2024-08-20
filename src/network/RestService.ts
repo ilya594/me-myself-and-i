@@ -74,16 +74,4 @@ export class RestService extends Events.EventHandler {
     }
 }
 
-/*
-class Fool {
-  constructor(){
-
-  }
-
-  public static get(): !Promise {
-
-  }
-
-}*/
-
 export default new RestService();

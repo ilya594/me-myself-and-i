@@ -51,19 +51,6 @@ export class StreamProvider extends Events.EventHandler {
             call.on('stream', (stream) => this.dispatchEvent(Events.STREAM_RECEIVED, stream));        
             call.answer(null);
           });
-
-
-        this._connection.on('data', async (data: any) => { 
-
-            switch (data.type) {    
-              case ('sounds-adjust-homie-volume'): {
-                if (!isNaN(data?.data)) {
-                  Sounds.volume = Number(data.data);
-                  break;
-                }
-              }
-            }
-          });
         });   
       });
     }

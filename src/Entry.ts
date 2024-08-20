@@ -71,21 +71,16 @@ class Entry {
 
       const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js');
         
-  
+      const callbacks = new Map().set('sounds-adjust-homie-volume', Sounds.adjustVolume);
+
       const streamer = new Streamer();
-      const { stream, devices, callbacks } = await streamer.initialize(options);
+      const { stream, devices } = await streamer.initialize(options, callbacks);
 
       await StreamProvider.initialize(true);
             View.displayStream(stream, devices);
             Controls.setVisible(true);
 
       await this.initializeCommonComponents();
-
-      let promise0 = callbacks.get('sounds-adjust-homie-volume');
-
-      promise0.then((data: any) => {
-        Sounds.volume = Number(data);
-      });
     }
 
 

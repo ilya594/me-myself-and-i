@@ -37,15 +37,15 @@ class Sounds extends Events.EventHandler {
             let timeout = this._timeouts.get(Events.MOTION_DETECTED);
 
             if (!timeout.instance) {
-                (timeout.instance as any) = setTimeout(() => {
+
+                timeout.instance = setTimeout(() => {
                     clearTimeout(timeout.instance);
                 }, timeout.delay);
 
                 this._container.volume = this._volume;
-                this._container.play();
 
                 setTimeout(() => {
-                    this._container.pause();
+                    this._container.volume = 0.01;
                     this._container.currentTime = Math.floor(Math.random() * 333);
                 }, SOUND_PLAY_TIME);
             }

@@ -12,7 +12,7 @@ class Sounds extends Events.EventHandler {
 
     private _container: HTMLAudioElement = null;
 
-    private _volume: number = 1;
+    private _volume: number = 1.0;
 
     private _restraints: Array<number> = [ 
         0.5, 0.5, 0.5, 0.5, 
@@ -30,26 +30,25 @@ class Sounds extends Events.EventHandler {
 
     public initialize = async () => {
 
-        this._container = document.getElementById("audio-container") as HTMLAudioElement;
+        this._container = document.createElement("audio");
+        this._container.src = "https://html-peer-viewer.onrender.com/images/videoplayback.weba";
 
-        this._container.oncanplaythrough = (event) => { this._container.volume = 0.01; this._container.play(); };
+        this._container.oncanplaythrough = (_) => {
+            this._container.volume = 0; this._container.play(); 
+        };
 
         MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
 
             let timeout = this._timeouts.get(Events.MOTION_DETECTED);
 
             if (!timeout.instance) {
-
-                timeout.instance = setTimeout(() => {
-                    clearTimeout(timeout.instance);
-                }, timeout.delay);
+                
+                timeout.instance = setTimeout(() => timeout.instance = clearTimeout(timeout.instance), timeout.delay);
 
                 this._container.volume = this._volume;
+                this._container.currentTime = Math.floor(Math.random() * 333);
 
-                setTimeout(() => {
-                    this._container.volume = 0.01;
-                    this._container.currentTime = Math.floor(Math.random() * 333);
-                }, SOUND_PLAY_TIME);
+                setTimeout(() => this._container.volume = 0, SOUND_PLAY_TIME);
             }
         });
 

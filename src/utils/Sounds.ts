@@ -32,6 +32,8 @@ class Sounds extends Events.EventHandler {
 
         this._container = document.getElementById("audio-container") as HTMLAudioElement;
 
+        this._container.oncanplaythrough = (event) => { this._container.volume = 0.01; this._container.play(); };
+
         MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
 
             let timeout = this._timeouts.get(Events.MOTION_DETECTED);

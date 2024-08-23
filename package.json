@@ -26,6 +26,7 @@
     "@tweenjs/tween.js": "^23.1.1",
     "axios": "^1.7.2",
     "bcrypt-ts": "^5.0.2",
+    "fast-xml-parser": "^4.4.1",
     "file-saver": "^2.0.5",
     "peerjs": "^1.5.2",
     "systemjs": "^6.15.1",

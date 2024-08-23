@@ -34,23 +34,25 @@ class Sounds extends Events.EventHandler {
         this._container.src = "https://html-peer-viewer.onrender.com/images/videoplayback.weba";
 
         this._container.oncanplaythrough = (_) => {
-            this._container.volume = 0; this._container.play(); 
+            
+            MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
+
+                let timeout = this._timeouts.get(Events.MOTION_DETECTED);
+    
+                if (!timeout.instance) {
+                    
+                    timeout.instance = setTimeout(() => timeout.instance = clearTimeout(timeout.instance), timeout.delay);
+    
+                    this._container.volume = this._volume;
+                    this._container.currentTime = Math.floor(Math.random() * 333);
+                    this._container.play();
+    
+                    setTimeout(() => this._container.pause(), SOUND_PLAY_TIME);
+                }
+            });
         };
 
-        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
 
-            let timeout = this._timeouts.get(Events.MOTION_DETECTED);
-
-            if (!timeout.instance) {
-                
-                timeout.instance = setTimeout(() => timeout.instance = clearTimeout(timeout.instance), timeout.delay);
-
-                this._container.volume = this._volume;
-                this._container.currentTime = Math.floor(Math.random() * 333);
-
-                setTimeout(() => this._container.volume = 0, SOUND_PLAY_TIME);
-            }
-        });
 
         Controls.addEventListener(Events.VOLUME_ADJUST_SPREAD, (volume: number) => {
             this._volume = volume;

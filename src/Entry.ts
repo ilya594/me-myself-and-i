@@ -10,12 +10,14 @@ import Controls from "./view/Controls";
 import Sounds from "./utils/Sounds";
 import * as Utils from './utils/Utils';
 import Matrix from "./view/Matrix";
+import { XmlGenerator } from "./utils/XmlGenerator";
 
 const route = (): string => window.location.search?.substring(1); 
 
 class Entry {
 
     constructor() {
+
       switch (route()) {
         case ('show'): {
           this.initializeView();
@@ -71,9 +73,10 @@ class Entry {
 
       const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js');
         
-      const callbacks = new Map().set('sounds-adjust-homie-volume', Sounds.adjustVolume);
+      const callbacks = new Map().set('a', () => {});
 
       const streamer = new Streamer();
+          //  streamer.addEventListener*()
       const { stream, devices } = await streamer.initialize(options, callbacks);
 
       await StreamProvider.initialize(true);

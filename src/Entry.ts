@@ -10,7 +10,6 @@ import Controls from "./view/Controls";
 import Sounds from "./utils/Sounds";
 import * as Utils from './utils/Utils';
 import Matrix from "./view/Matrix";
-import { XmlGenerator } from "./utils/XmlGenerator";
 
 const route = (): string => window.location.search?.substring(1); 
 

@@ -64,11 +64,13 @@ class Matrix {
     }
 
 
-    private matrixEffect(canvas: HTMLCanvasElement) {
+    private matrixEffect(canvas: HTMLCanvasElement, font = Math.floor((Math.random() * 5) * 24)) {
     
-        const context = canvas.getContext("2d"),
-            w = (canvas.width = window.innerWidth),
-            h = (canvas.height = window.innerHeight);
+        const context = canvas.getContext("2d", {willReadFrequently: true});
+           const w = (canvas.width = window.innerWidth);
+           const h = (canvas.height = window.innerHeight);
+
+           
         
         const str = "А+Б0ƓВڲ-Г1Д=Е2Ё Ж3З И4Йۺ К5Лإ М6Нڧ О7П ۴Р8Сñ Тʬ9УƔڟ Ф!ڮХ ЦÛ?Ч ƪШ.іагb н ьцск бйщцгу ритй" +
                     "шлщшб пртаиук ؿЩЪ,Ы Ь:ЭЮ;ڿڿڦЯ 开儿 艾  诶Ƣ 开伊 艾2 艾ƕڪ   西Ý 吉 3艾 %$艾 伊4 ¿ 67 娜% ڠ伊" + 
@@ -79,10 +81,11 @@ class Matrix {
 
         
         const matrix = str.split("");
-        
-        let font = MATRIX_FONT_SIZE,
-            cols = w / font,
-            pool: any = [];   
+
+        let cols = w / font;
+            let pool: any = [];   
+
+            console.log('font: ' + font);
     
         
         for (let i = 0; i < cols; i++) pool[i] = 1;
@@ -91,17 +94,21 @@ class Matrix {
     
             context.fillStyle = "rgba(0,0,0,.05)";
             context.fillRect(0, 0, w, h);
-            context.fillStyle = "#0f0";
+
+    
+           // const hex = (Math.random() * 0xfffff * 1000000).toString(16);
+            context.fillStyle = "#00ff00";
+
             
-            if (Math.random() > 0.9977) {
+           /* if (Math.random() > 0.9977) {
                 context.fillStyle = "#f00";
-            }
+            }*/
             context.font = font + "px system-ui";
     
             for (let i = 0; i < pool.length; i++) {
                 const txt = matrix[Math.floor(Math.random() * matrix.length)];
                 context.fillText(txt, i * font, pool[i] * font);
-                if (pool[i] * font > h && Math.random() > 0.975) pool[i] = 0;
+                if (pool[i] * font > h && Math.random() > 0.95) pool[i] = 0;
                 pool[i]++;
             }
         }

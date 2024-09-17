@@ -22,11 +22,16 @@ class Authentification extends Events.EventHandler {
       return this;
     }
 
-    private _authenticate = () => {
+    private _authenticate = async () => {
 
       const pinhash: string = localStorage.getItem('pinhash');
 
-      const queryPinControl = () => {
+      const validate = async (hash: string) => {
+        const result = await RestService.validatePinhash(hash);
+        return result;
+      }
+
+      const queryPinControl = async () => {
 
         Pincode.initialize();
 
@@ -39,27 +44,26 @@ class Authentification extends Events.EventHandler {
           const salt = genSaltSync(10);
           const hash = hashSync(pin, salt);
 
-          RestService.validatePinhash(hash).then(({ result }) => {
-            if (result) {
-              localStorage.setItem('pinhash', hash);
-              this.showSuccessView();
-              this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
-            } else {
-              this.showDefaultView();
-            }
-          });
-        });
-      }
-
-      if (pinhash) {
-        RestService.validatePinhash(pinhash).then(({ result }) => {
+          const result = await validate(hash);
           if (result) {
+            localStorage.setItem('pinhash', hash);
             this.showSuccessView();
             this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
           } else {
-            queryPinControl();
+            this.showDefaultView();
           }
-        })
+      })};
+
+
+
+      if (pinhash) {
+        const result = await validate(pinhash);
+        if (result) {
+          this.showSuccessView();
+          this.dispatchEvent(Events.NETWORK_AUTH_SUCCESS, null);
+        } else {
+          queryPinControl();
+        }
       } else {
         queryPinControl();
       }

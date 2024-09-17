@@ -26,10 +26,7 @@ class Authentification extends Events.EventHandler {
 
       const pinhash: string = localStorage.getItem('pinhash');
 
-      const validate = async (hash: string) => {
-        const result = await RestService.validatePinhash(hash);
-        return result;
-      }
+      const validate = async (hash: string) => !!((await RestService.validatePinhash(hash)).result);
 
       const queryPinControl = async () => {
 

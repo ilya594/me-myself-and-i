@@ -93,8 +93,8 @@ class Matrix {
 
         setInterval(() => {
             clearInterval(this._interval);
-            font = Math.floor((Math.random() * 5) * 24);
-            this._interval = setInterval(draw, Math.random() * 100 + 22);
+            font = Math.floor((Math.random() * 3) * 24);
+            this._interval = setInterval(draw, Math.random() * 100 + 42);
         }, 1000);
         
         const draw = () => {

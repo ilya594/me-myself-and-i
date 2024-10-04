@@ -22,7 +22,7 @@ export class RestService extends Events.EventHandler {
       axios({
         method: 'post',
         url: this.SERVER_URL + 'snapshot',
-        data: { file: snapshot, name: name }, 
+        data: { file: snapshot, name: name, pin: localStorage.getItem('pinhash') }
       });      
     }
 
@@ -32,6 +32,7 @@ export class RestService extends Events.EventHandler {
         params: {
           month: month,
           name: name,
+          pin: localStorage.getItem('pinhash')
         }
       });
 
@@ -45,6 +46,7 @@ export class RestService extends Events.EventHandler {
         params: {
           month: month,
           name: name,
+          pin: localStorage.getItem('pinhash')
         }
       });
 
@@ -52,13 +54,18 @@ export class RestService extends Events.EventHandler {
     };
 
     public getFilesList = () => {
-      return axios.get(this.SERVER_URL + 'lsall');
+      return axios.get(this.SERVER_URL + 'lsall', {
+        params: {
+          pin: localStorage.getItem('pinhash')
+        }
+      });
     };
 
     public validatePrediction = async (prediction: any) => {
       const response = await axios.get(this.SERVER_URL + 'valprediction', {
         params: {
           prediction: prediction,
+          pin: localStorage.getItem('pinhash')
         }
       });
       return response.data;

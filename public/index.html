@@ -350,11 +350,13 @@
 
     <div id="controls" style="position: absolute; top: 6%; left: 1%; visibility: hidden; background: linear-gradient(.25turn, black, 78%, transparent);">
       <div style="display: flex; flex-direction: column; gap: 20px;">
-        <button class="button" style="background-image: url(images/photo_camera.png);"><div id="snaps-button" style="opacity: 70%;"></div></button>
+        <button class="button" style="background-image: url(images/photo_camera.png);" id="tmpID" ><div id="snaps-button" style="opacity: 70%;" tabindex="-1"></div></button>
 
 
           <button id="watch-button" class="button" style="background-image: url(./images/guy_watching.png); z-index: 9990;">
-            <div style="visibility: hidden;">
+            <div tabindex="0">edsf</div>
+            <div style="visibility: hidden;"  tabindex="0">
+
               <div style="display: flex; flex-direction: column; position: absolute; left: 130px; height: 560px; min-width: 20px; top: 14%; background:#16161605"></div>
               <div id="watch-toggle-month" style="display: flex; flex-direction: column; border: 1px solid #47fe0f; position: absolute; left: 150px; height: 560px; min-width: 200px; top: 14%; background: linear-gradient(.25turn, black, 58%, transparent);"  >
                   <div style="position: absolute; color: #28e717; font-size: 28px; top: 25%; right: 100%;">ᐸ</div>
@@ -381,8 +383,8 @@
                 </div>
             </div>
           </button>
-          <button id="voice-button" class="button" style="background-image: url(./images/music_plant.png); opacity: 100%;"></button>
-          <button id="trace-button" class="button" style="background-image: url(./images/6956441_preview.png);"></button>
+          <button id="voice-button" class="button" style="background-image: url(./images/music_plant.png); opacity: 100%;" tabindex="0"></button>
+          <button id="trace-button" class="button" style="background-image: url(./images/6956441_preview.png);" tabindex="0"></button>
           </div>
 
 

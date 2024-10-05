@@ -64,7 +64,7 @@ class Matrix {
     }
 
 
-    private matrixEffect(canvas: HTMLCanvasElement, font = Math.floor((Math.random() * 5) * 24)) {
+    private matrixEffect(canvas: HTMLCanvasElement, font = 24) {
     
         const context = canvas.getContext("2d", {willReadFrequently: true});
            const w = (canvas.width = window.innerWidth);
@@ -95,7 +95,6 @@ class Matrix {
             this._interval = setInterval(draw, Math.random() * 100 + 42);
         }, (Math.random() + 0.2) * 10000);*/
 
-        font = 24;
         
         const draw = () => {
     

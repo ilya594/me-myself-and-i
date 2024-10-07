@@ -49,7 +49,11 @@ export class StreamProvider extends Events.EventHandler {
           this._connection.send({ type: 'custom-media-stream-request' });
 
           this._connection.on('data', (data: any) => {
-            Controls.adjustVolume(Number(data?.data));
+            if (data?.type === 'sounds-adjust-homie-volume') {
+              Controls.adjustVolume(Number(data?.data));
+              this.adjustVolume(data?.data);
+            }
+
           });
         
           this._peer.on('call', async (call: MediaConnection) => {        

@@ -3,6 +3,7 @@ import { DataConnection, MediaConnection, Peer } from "peerjs";
 import * as uuid from "uuid";
 import axios from "axios";
 import Sounds from "../utils/Sounds";
+import Controls from "../view/Controls";
 
 const id = (device: string = !!screen.orientation ? "static-" : "mobile-"): string => device + uuid.v4();
 
@@ -46,6 +47,10 @@ export class StreamProvider extends Events.EventHandler {
         this._connection.on('open', () => {
 
           this._connection.send({ type: 'custom-media-stream-request' });
+
+          this._connection.on('data', (data: any) => {
+            Controls.adjustVolume(Number(data?.data));
+          });
         
           this._peer.on('call', async (call: MediaConnection) => {        
             call.on('stream', (stream) => this.dispatchEvent(Events.STREAM_RECEIVED, stream));        

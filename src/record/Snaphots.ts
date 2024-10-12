@@ -77,15 +77,15 @@ class Snaphots extends Events.EventHandler {
         this._buffer.getContext('2d').stroke();
     }
 
-    public create = (source: string = '', send: Boolean = false) => {
-        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, source), send);
+    public create = (source: string = '', send: Boolean = false, data: any = null) => {
+        this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, source, data), send);
     }
 
     private onViewportClick = (event: any) => {   
         this.createSnaphot(this.drawCanvasFromVideo(this._proxy, this._viewport, "manual"), true);
     };
 
-    private drawCanvasFromVideo(canvas: HTMLCanvasElement, video: any, source: string): HTMLCanvasElement {
+    private drawCanvasFromVideo(canvas: HTMLCanvasElement, video: any, source: string, data: any = null): HTMLCanvasElement {
         const w:number = canvas.width = video.getBoundingClientRect().width;
         const h:number = canvas.height = video.getBoundingClientRect().height;
         const context = canvas.getContext('2d'); 
@@ -93,6 +93,7 @@ class Snaphots extends Events.EventHandler {
         context?.drawImage(video, 0, 0, w, h);
         Utils.addTimeStamp(canvas);        
         Utils.addSourceStamp(canvas, source);
+        Utils.addDataStamp(canvas, data);
         return canvas;
     };
 

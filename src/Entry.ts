@@ -108,7 +108,7 @@ class Entry {
       });
 
       await MotionDetector.initialize();
-            MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => Snaphots.create());
+            MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, (data: any) => Snaphots.create('', false, data));
 
 
       await Sounds.initialize();

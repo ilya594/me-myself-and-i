@@ -14,7 +14,7 @@ export class MotionDetector extends Events.EventHandler {
 
     private _showTrace: Boolean = false;
 
-    private _points: any = {
+    private _checkpoint: any = {
         size: MOTION_DETECT_CHECKPOINT_SIZE,
         coefs: [0.66, 0.33],
         canvas: null,
@@ -22,6 +22,16 @@ export class MotionDetector extends Events.EventHandler {
             return this.canvas.getContext('2d', { willReadFrequently: true });
         }
     };
+
+    private _shiftpoint: any = {
+        size: MOTION_DETECT_CHECKPOINT_SIZE,
+        coefs: [0.96, 0.96],
+        canvas: null,
+        context: function() {
+            return this.canvas.getContext('2d', { willReadFrequently: true });
+        }
+    };
+
 
     private _values: DeltaValues = new DeltaValues();
 
@@ -41,11 +51,7 @@ export class MotionDetector extends Events.EventHandler {
 
         this._container = document.getElementById("view-page");
 
-        this._points.canvas = document.createElement("canvas"); //this._container.appendChild(this._points.canvas); 
-        
-        this._points.canvas.width = this._points.size;
-        this._points.canvas.height = this._points.size;
-        this._points.context().globalCompositeOperation = "difference";  
+        this.aimview();
 
         this._label = document.createElement("label"); this._container.appendChild(this._label);       
         this._label.style.setProperty('position', 'absolute');
@@ -77,44 +83,75 @@ export class MotionDetector extends Events.EventHandler {
         this._viewport.requestVideoFrameCallback(this.onVideoEnterFrame);
     }
 
+    private aimview = () => {
+        this._checkpoint.canvas = document.createElement("canvas"); //this._container.appendChild(this._points.canvas);         
+        this._checkpoint.canvas.width = this._checkpoint.size;
+        this._checkpoint.canvas.height = this._checkpoint.size;
+        this._checkpoint.context().globalCompositeOperation = "difference";  
+
+        this._shiftpoint.canvas = document.createElement("canvas"); //this._container.appendChild(this._points.canvas);         
+        this._shiftpoint.canvas.width = this._shiftpoint.size;
+        this._shiftpoint.canvas.height = this._shiftpoint.size;
+        this._shiftpoint.context().globalCompositeOperation = "difference";  
+    }
+
     private onVideoEnterFrame = (...args: any) => {  
 
-        this.drawCheckpoints();
+        this.drawCheckpoint();
+        this.drawShiftpoint(); //TODO refactor
 
         this.analyzeVideoFrame();
     };
 
-    private drawCheckpoints = () => {
+    private drawCheckpoint = () => {
 
-        const size = this._points.size;
+        const size = this._checkpoint.size;
 
-        const context = this._points.context();
+        const context = this._checkpoint.context();
 
         context.clearRect(0, 0, size, size);
 
-        context.drawImage(
+        return context.drawImage(
             this._viewport, 
-            this._width * this._points.coefs[0], 
-            this._height * this._points.coefs[1], 
+            this._width * this._checkpoint.coefs[0], 
+            this._height * this._checkpoint.coefs[1], 
             size, size, 0, 0, size, size
         );  
     }
 
+    private drawShiftpoint = () => {
+        const size = this._shiftpoint.size;
+
+        const context = this._shiftpoint.context();
+
+        context.clearRect(0, 0, size, size);
+
+        return context.drawImage(
+            this._viewport, 
+            this._width * this._shiftpoint.coefs[0], 
+            this._height * this._shiftpoint.coefs[1], 
+            size, size, 0, 0, size, size
+        ); 
+    }
+
     private analyzeVideoFrame = (): any => {
 
-        const image: ImageData = this._points.context().getImageData(0, 0, this._points.size, this._points.size);
-
-        const rgb: {r: number, g: number, b: number}  = Utils.getRgb(image);
-
-        const hsv: {h: number, s: number, v: number} = Utils.rbgToHsv(rgb);
-
-        this.analyzeDeltaValues(hsv); 
-
-        if (this._showTrace) {
-            this.trace(hsv);
+        const getPointData = (point: any) => {
+            const image: ImageData = point.context().getImageData(0, 0, point.size, point.size);
+            const rgb: {r: number, g: number, b: number}  = Utils.getRgb(image);    
+            const hsv: {h: number, s: number, v: number} = Utils.rbgToHsv(rgb);
+            return hsv;
         }
 
-        return hsv;
+        const data = [getPointData(this._checkpoint), getPointData(this._shiftpoint)];
+
+        this.analyzeDeltaValues(data[0]); 
+
+        if (this._showTrace) {
+            this.trace(data[0]);
+        }
+
+        return data[0];
     }
 
     private analyzeDeltaValues = (value: any) => {
@@ -131,7 +168,7 @@ export class MotionDetector extends Events.EventHandler {
         ) {
             timeout = MOTION_DETECT_DELAY;
             Matrix.hide();
-            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, null);
+            this.dispatchEvent(Events.MOTION_DETECTION_STARTED, value);
         }
 
         this._values.add(value);
@@ -141,7 +178,9 @@ export class MotionDetector extends Events.EventHandler {
 
     private trace = ({ h, s, v }: any) => {     
         
-        this.drawDeltaGraphics(this._values.hue, "#00ff00", true, -100);
+        this.drawDeltaGraphics(this._values.hue, "rgb(0, 255, 0, 1)", true, -100);
+       // this.drawDeltaGraphics(this._values.saturation,"rgb(0, 188, 188, 1)", false, 50);
+        this.drawDeltaGraphics(this._values.brightness, "rgb(255, 255, 255, 1)", false, 30);
 
         this._label.textContent = 
             '[' + this._values.hue.average.toFixed(1) + 
@@ -159,15 +198,15 @@ export class MotionDetector extends Events.EventHandler {
        clear && ctx.clearRect(0, 0, this._width, this._height);
 
        ctx.lineWidth = 1;
+       ctx.lineCap = 'round';
        ctx.strokeStyle = color;
-
        ctx.beginPath();
 
         for (let i = 1; i < values.cached.length; i++) {
             ctx.moveTo(i - 1, values.cached[i - 1] + adjust);
             ctx.lineTo(i, values.cached[i] + adjust);
-            ctx.stroke();
         }
+       ctx.stroke();
        ctx.closePath();        
     }
 }

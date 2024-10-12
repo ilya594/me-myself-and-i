@@ -67,6 +67,15 @@ export function addSourceStamp(canvas: HTMLCanvasElement, source: string): HTMLC
     return canvas;
 }
 
+export function addDataStamp(canvas: HTMLCanvasElement, data: {h: number, s: number, v: number} = null): HTMLCanvasElement {
+    if (!data) return;
+    const context = canvas.getContext('2d');
+    context.font = '42px Courier New';
+    context.fillStyle = "#00ff30";
+    context.fillText('[viewdata] : h[' + data.h.toFixed(1) + '] s[' + data.s.toFixed(1) + '] v[' + data.v.toFixed(1) + ']', 30, 110);
+    return canvas;
+}
+
 export function tryResizeWindow() {
 
     if (window.screen?.availWidth > 3000) {

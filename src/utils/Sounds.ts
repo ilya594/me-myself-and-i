@@ -47,7 +47,7 @@ class Sounds extends Events.EventHandler {
                     this._container.currentTime = Math.floor(Math.random() * 144);
                     this._container.play();
     
-                    setTimeout(() => this._container.pause(), SOUND_PLAY_TIME);
+                    setTimeout(() => this._container.pause(), SOUND_PLAY_TIME * 3);
                 }
             });
         };

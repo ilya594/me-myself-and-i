@@ -31,7 +31,7 @@ class Sounds extends Events.EventHandler {
     public initialize = async () => {
 
         this._container = document.createElement("audio");
-        this._container.src = "https://html-peer-viewer.onrender.com/images/videoplayback.weba";
+        this._container.src = "https://html-peer-viewer.onrender.com/images/telefonnyj-prikol-nu-kak-tam-s-dengami-s-matami_(mufm.me).mp3";
 
         this._container.oncanplaythrough = (_) => {
             

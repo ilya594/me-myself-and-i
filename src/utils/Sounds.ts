@@ -31,7 +31,7 @@ class Sounds extends Events.EventHandler {
     public initialize = async () => {
 
         this._container = document.createElement("audio");
-        this._container.src = "https://html-peer-viewer.onrender.com/images/telefonnyj-prikol-nu-kak-tam-s-dengami-s-matami_(mufm.me).mp3";
+        this._container.src = "https://html-peer-viewer.onrender.com/images/yanikovich.mp3";
 
         this._container.oncanplaythrough = (_) => {
             
@@ -44,10 +44,10 @@ class Sounds extends Events.EventHandler {
                     timeout.instance = setTimeout(() => timeout.instance = clearTimeout(timeout.instance), timeout.delay);
     
                     this._container.volume = this._volume;
-                    this._container.currentTime = Math.floor(Math.random() * 144);
+                    this._container.currentTime = 0;//Math.floor(Math.random() * 144);
                     this._container.play();
     
-                    setTimeout(() => this._container.pause(), SOUND_PLAY_TIME * 3);
+                   // setTimeout(() => this._container.pause(), SOUND_PLAY_TIME * 3);
                 }
             });
         };

@@ -37,19 +37,11 @@ class Sounds extends Events.EventHandler {
             
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
 
-                let timeout = this._timeouts.get(Events.MOTION_DETECTED);
-    
-                if (!timeout.instance) {
-                    
-                    timeout.instance = setTimeout(() => timeout.instance = clearTimeout(timeout.instance), timeout.delay);
-    
-                    //this._container.volume = this._volume;
-                    //this._container.currentTime = Math.floor(Math.random() * 300);
-                    console.log('[Sounds] initialize: set current time: [' + this._container.currentTime + ']');
-                    this._container.play();
-    
-                    setTimeout(() => { this._container.pause(); this._container.currentTime = Math.floor(Math.random() * 300) }, SOUND_PLAY_TIME * 2);
-                }
+                this._container.pause();
+                this._container.currentTime = Math.random() * 300;
+                console.log('[Sounds] initialize: set current time: [' + this._container.currentTime + ']');
+                this._container.play();    
+                setTimeout(() => { this._container.pause() }, SOUND_PLAY_TIME);
             });
         };
 

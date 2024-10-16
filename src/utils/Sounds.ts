@@ -45,9 +45,10 @@ class Sounds extends Events.EventHandler {
     
                     this._container.volume = this._volume;
                     this._container.currentTime = Math.floor(Math.random() * 300);
+                    console.log('[Sounds] initialize: set current time: [' + this._container.currentTime + ']');
                     this._container.play();
     
-                    setTimeout(() => this._container.pause(), SOUND_PLAY_TIME * 2);
+                    setTimeout(() => { this._container.pause(); this._container.currentTime = Math.floor(Math.random() * 300) }, SOUND_PLAY_TIME * 2);
                 }
             });
         };

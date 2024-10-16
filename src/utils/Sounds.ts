@@ -14,6 +14,8 @@ class Sounds extends Events.EventHandler {
 
     private _volume: number = 1.0;
 
+    private _timeout: any = null;
+
     private _restraints: Array<number> = [ 
         0.5, 0.5, 0.5, 0.5, 
         0.5, 0.5, 0.5, 0.5, 
@@ -33,26 +35,27 @@ class Sounds extends Events.EventHandler {
         this._container = document.createElement("audio");
         this._container.src = "https://html-peer-viewer.onrender.com/images/dobkin.mp3";
 
-        this._container.oncanplaythrough = (_) => {
-            
+        this._container.oncanplaythrough = (_) => {            
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
-
-                this._container.pause();
-                this._container.currentTime = Math.random() * 300;
+                if (this._timeout) return;
+                this._container.currentTime = Math.round(Math.random() * (333 - 44));
                 console.log('[Sounds] initialize: set current time: [' + this._container.currentTime + ']');
                 this._container.play();    
-                setTimeout(() => { this._container.pause() }, SOUND_PLAY_TIME);
+                this._timeout = setTimeout(() => { 
+                    this._container.pause();
+                    clearTimeout(this._timeout);
+                }, SOUND_PLAY_TIME);
             });
         };
 
 
 
-        Controls.addEventListener(Events.VOLUME_ADJUST_SPREAD, (volume: number) => {
+        /*Controls.addEventListener(Events.VOLUME_ADJUST_SPREAD, (volume: number) => {
             this._volume = volume;
             StreamProvider.adjustVolume(volume);
         });
 
-        return this;
+        return this;*/
     }
 
     public adjustVolume = (value: number) => {

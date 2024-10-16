@@ -44,7 +44,7 @@ class Sounds extends Events.EventHandler {
                     timeout.instance = setTimeout(() => timeout.instance = clearTimeout(timeout.instance), timeout.delay);
     
                     this._container.volume = this._volume;
-                    this._container.currentTime = 0;//Math.floor(Math.random() * 144);
+                    this._container.currentTime = Math.floor(Math.random() * 300);
                     this._container.play();
     
                     setTimeout(() => this._container.pause(), SOUND_PLAY_TIME * 2);

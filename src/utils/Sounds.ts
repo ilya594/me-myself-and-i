@@ -32,18 +32,17 @@ class Sounds extends Events.EventHandler {
 
     public initialize = async () => {
 
-        this._container = document.createElement("audio");
-        this._container.src = "https://html-peer-viewer.onrender.com/images/dobkin.mp3";
+        const audio = new Audio('./images/dobkin.mp3');
 
-        this._container.oncanplaythrough = (_) => {            
+        audio.oncanplaythrough = (_) => {            
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
                 if (this._timeout) return;
-                this._container.currentTime = Math.round(Math.random() * (333 - 44));
-                console.log('[Sounds] initialize: set current time: [' + this._container.currentTime + ']');
-                this._container.play();    
+                audio.currentTime = Math.round(Math.random() * (333 - 44));
+                console.log('[Sounds] initialize: set current time: [' + audio.currentTime + ']');
+                audio.play();    
                 this._timeout = setTimeout(() => { 
-                    this._container.pause();
-                    clearTimeout(this._timeout);
+                    audio.pause();
+                    this._timeout = clearTimeout(this._timeout);
                 }, SOUND_PLAY_TIME);
             });
         };

@@ -32,7 +32,7 @@ class Sounds extends Events.EventHandler {
 
     public initialize = async () => {
 
-        const audio = new Audio('./images/dobkin.mp3');
+        const audio = new Audio('http://html-peer-viewer.onrender.com/images/dobkin.mp3');
 
         audio.oncanplaythrough = (_) => {            
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {

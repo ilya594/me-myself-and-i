@@ -32,31 +32,37 @@ class Sounds extends Events.EventHandler {
 
     public initialize = async () => {
 
-        const audio = new Audio('./images/dobkin.mp3');
+        //@ts-ignore
+        const context: AudioContext | any = new (window.AudioContext || window.webkitAudioContext)();
+        const source = context.createBufferSource();
 
-        audio.oncanplaythrough = (_) => {            
-            MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
-                if (this._timeout) return;
-                audio.onseeked = () => {
-                    audio.currentTime = Math.round(Math.random() * (333 - 44));
-                    console.log('[Sounds] initialize: set current time: [' + audio.currentTime + ']');
-                    audio.play();    
-                    this._timeout = setTimeout(() => { 
-                        audio.pause();
-                        this._timeout = clearTimeout(this._timeout);
-                    }, SOUND_PLAY_TIME * 3);
-                };
+        const fetchAudio = (url: string) => {
+            return new Promise((resolve, reject) => {
+              const request = new XMLHttpRequest();
+              request.open("GET", url, true);
+              request.responseType = "arraybuffer";
+              request.onload = () => resolve(request.response);
+              request.onerror = (e) => reject(e);
+              request.send();
             });
-        };
+          }
 
+        const loadAudio = async () => {
+            const response = await fetchAudio("./images/dobkin.mp3");
+            source.buffer = await context.decodeAudioData(response);
+            source.connect(context.destination);
+            return source;
+        }
 
-
-        /*Controls.addEventListener(Events.VOLUME_ADJUST_SPREAD, (volume: number) => {
-            this._volume = volume;
-            StreamProvider.adjustVolume(volume);
+        const audio = await loadAudio();           
+      
+        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
+            if (this._timeout) return;
+            const duration: number = SOUND_PLAY_TIME;
+            const start: number = Math.random() * (audio.buffer.duration - Number(duration));     
+            audio.start(0, start, duration);
+            this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), duration * 1111);
         });
-
-        return this;*/
     }
 
     public adjustVolume = (value: number) => {

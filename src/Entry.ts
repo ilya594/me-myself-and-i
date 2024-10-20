@@ -72,14 +72,11 @@ class Entry {
 
       const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js');
         
-      const callbacks = new Map().set('a', () => {});
-
       const streamer = new Streamer();
-          //  streamer.addEventListener*()
-      const { stream, devices } = await streamer.initialize(options, callbacks);
+      const { stream } = await streamer.initialize(options);
 
       await StreamProvider.initialize(true);
-            View.displayStream(stream, devices);
+            View.displayStream(stream);
             Controls.setVisible(true);
 
       await this.initializeCommonComponents();

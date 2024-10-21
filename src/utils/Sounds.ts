@@ -34,7 +34,6 @@ class Sounds extends Events.EventHandler {
 
         //@ts-ignore
         const context: AudioContext | any = new (window.AudioContext || window.webkitAudioContext)();
-        const source = context.createBufferSource();
 
         const fetchAudio = (url: string) => {
             return new Promise((resolve, reject) => {
@@ -47,19 +46,22 @@ class Sounds extends Events.EventHandler {
             });
           }
 
-        const loadAudio = async () => {
-            const response = await fetchAudio("./images/dobkin.mp3");
-            source.buffer = await context.decodeAudioData(response);
+        const setAudio = async () => {
+            source.buffer = await context.decodeAudioData(blob.slice(0));
             source.connect(context.destination);
             return source;
         }
 
-        const audio = await loadAudio();           
+        let source: any = null;
+        let audio: any = null;  
+        let blob: any = await fetchAudio("./images/dobkin.mp3");
       
-        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, () => {
+        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, async () => {
             if (this._timeout) return;
+            source = context.createBufferSource();
+            audio = await setAudio();
             const duration: number = SOUND_PLAY_TIME;
-            const start: number = Math.random() * (audio.buffer.duration - Number(duration));     
+            const start: number = Math.random() * (audio.buffer.duration - Number(duration));  
             audio.start(0, start, duration);
             this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), duration * 1111);
         });
@@ -69,7 +71,6 @@ class Sounds extends Events.EventHandler {
         this._volume = value;
         Controls.adjustVolume(value);
     }
-
   
 }
 

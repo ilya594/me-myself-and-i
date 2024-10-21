@@ -58,12 +58,13 @@ class Sounds extends Events.EventHandler {
       
         MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, async () => {
             if (this._timeout) return;
+            this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), SOUND_PLAY_TIME * 1111);
             source = context.createBufferSource();
             audio = await setAudio();
+            if (!audio?.buffer) return;
             const duration: number = SOUND_PLAY_TIME;
             const start: number = Math.random() * (audio.buffer.duration - Number(duration));  
             audio.start(0, start, duration);
-            this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), duration * 1111);
         });
     }
 

@@ -54,7 +54,7 @@ class Entry {
           break;
         }
         case ('show'): {
-          await this.initializeIntegratedComponents( { kind: 'videoinput' } );
+          await this.initializeIntegratedComponents();
           break;
         }
         case ('mix'): {
@@ -68,12 +68,12 @@ class Entry {
       }
     }
 
-    private initializeIntegratedComponents = async ( options: any = { label: '720' } ) => {
+    private initializeIntegratedComponents = async () => {
 
       const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js');
         
       const streamer = new Streamer();
-      const { stream } = await streamer.initialize(options);
+      const { stream } = await streamer.initialize();
 
       await StreamProvider.initialize(true);
             View.displayStream(stream);

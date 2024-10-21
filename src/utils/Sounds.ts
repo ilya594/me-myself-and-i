@@ -4,7 +4,6 @@ import Controls from "../view/Controls";
 import {
     SOUND_PLAY_TIME
 } from './Constants';
-import StreamProvider from "../network/StreamProvider";
 
 class Sounds extends Events.EventHandler {
 
@@ -35,7 +34,7 @@ class Sounds extends Events.EventHandler {
         //@ts-ignore
         const context: AudioContext | any = new (window.AudioContext || window.webkitAudioContext)();
 
-        const fetchAudio = (url: string) => {
+        const loadAudio = (url: string) => {
             return new Promise((resolve, reject) => {
               const request = new XMLHttpRequest();
               request.open("GET", url, true);
@@ -46,7 +45,7 @@ class Sounds extends Events.EventHandler {
             });
           }
 
-        const setAudio = async () => {
+        const buildAudio = async () => {
             source.buffer = await context.decodeAudioData(blob.slice(0));
             source.connect(context.destination);
             return source;
@@ -54,14 +53,14 @@ class Sounds extends Events.EventHandler {
 
         let source: any = null;
         let audio: any = null;  
-        let blob: any = await fetchAudio("./images/dobkin.mp3");
+        let blob: any = await loadAudio("./images/dobkin.mp3");
       
         MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, async () => {
-            if (this._timeout) return;
+            if (this._timeout) return console.log('[Sounds] Motion detect handler. Sound not played cuz of timeout');
             this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), SOUND_PLAY_TIME * 1111);
             source = context.createBufferSource();
-            audio = await setAudio();
-            if (!audio?.buffer) return;
+            audio = await buildAudio();
+            if (!audio?.buffer) return console.log('[Sounds] Motion detect handler. Sound not played because of no audio buffer');
             const duration: number = SOUND_PLAY_TIME;
             const start: number = Math.random() * (audio.buffer.duration - Number(duration));  
             audio.start(0, start, duration);

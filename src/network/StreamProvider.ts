@@ -65,6 +65,8 @@ export class StreamProvider extends Events.EventHandler {
     }
 
     public sendSnaphot = (snapshot: string) => {
+      //TODO replace this somewhere
+      if (!Controls.remoteSaveEnabled) return false;
       this._connection?.send({ type : 'snapshot-send-homie-message', data: snapshot });     
     }
 

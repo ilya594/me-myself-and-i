@@ -171,7 +171,28 @@ export class Controls extends Events.EventHandler {
             const button = document.getElementById("watch-toggle-month-" + i);
             button.onmouseenter = () => onButtonMouseOver(i);
             this._watchButtons_0.push(button);
-        }        
+        }     
+        
+        const localSaveButton = document.getElementById("local-save-button");
+        const remoteSaveButton = document.getElementById("remote-save-button");
+        const onSaveButtonClick = (button: any) => {
+            if (button.style.getPropertyValue('background-color')) {
+                button.style.removeProperty('background-color');
+            } else {
+                button.style.setProperty('background-color', '#00ff0077');
+            }
+        }
+        localSaveButton.onclick = () => onSaveButtonClick(localSaveButton);
+        remoteSaveButton.onclick = () => onSaveButtonClick(remoteSaveButton);       
+        
+    }
+
+    public get localSaveEnabled(): boolean {
+        return !!document.getElementById("local-save-button")?.style.getPropertyValue('background-color');
+    }
+
+    public get remoteSaveEnabled(): boolean {
+        return !!document.getElementById("remote-save-button")?.style.getPropertyValue('background-color');
     }
 
     public adjustVolume = (value: any) => {

@@ -34,6 +34,7 @@ class Sounds extends Events.EventHandler {
         //@ts-ignore
         const context: AudioContext | any = new (window.AudioContext || window.webkitAudioContext)();
 
+        console.log('[Viewer] Sounds.initialize. context here.')
         const loadAudio = (url: string) => {
             return new Promise((resolve, reject) => {
               const request = new XMLHttpRequest();

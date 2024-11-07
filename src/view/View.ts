@@ -46,13 +46,13 @@ export class View extends Events.EventHandler {
 
             this.createDevicesInfoLabel(devices);
       
-       if (document.body.requestFullscreen && document.body.scrollWidth < 2025) {
+    /*   if (document.body.requestFullscreen && document.body.scrollWidth < 2025) {
         try {
           document.body.requestFullscreen();
         } catch (error: any) {
           //
         }
-       }
+       }*/
     }
 
     private createDevicesInfoLabel = (devices: Array<MediaDeviceInfo>) => {

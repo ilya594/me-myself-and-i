@@ -68,15 +68,17 @@ class Entry {
       }
     }
 
-    private initializeIntegratedComponents = async () => {
-
-      const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js');
-        
+    private initializeRemoteStream = async () => {
+      const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js');        
       const streamer = new Streamer();
       const { stream } = await streamer.initialize();
+      return stream;
+    }
 
+    private initializeIntegratedComponents = async () => {
+      
       await StreamProvider.initialize(true);
-            View.displayStream(stream);
+            View.displayStream(await this.initializeRemoteStream());;
             Controls.setVisible(true);
 
       await this.initializeCommonComponents();

@@ -56,8 +56,9 @@ export class View extends Events.EventHandler {
     }
 
     private createDevicesInfoLabel = (devices: Array<MediaDeviceInfo>) => {
-
+      console.log('[Viewer] View.createDevicesInfoLabel. devices: ');
       devices.forEach((device: MediaDeviceInfo, index) => {
+        console.log('....deviceId: [' + device.deviceId + ']');
         const _label = document.createElement("label"); document.getElementById("view-page").appendChild(_label);       
         _label.style.setProperty('position', 'absolute');
         _label.style.setProperty('top', String(index * 5 + 45) + '%');

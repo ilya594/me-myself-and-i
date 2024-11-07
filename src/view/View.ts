@@ -16,7 +16,6 @@ export class View extends Events.EventHandler {
     private initializeView = async () => {
       //@ts-ignore-line
       //screen.lockOrientation?.("landscape") || screen.lock?.("landscape");
-
       //document.querySelector("img").src = "./images/eye_frozen.png";
 
       document.querySelector("img").onclick = () => {
@@ -34,17 +33,27 @@ export class View extends Events.EventHandler {
 
 
     // TODO move this somewhere idk/////////////////////////////////////////////////////////////////
-    public displayStream = (stream: any, devices: Array<MediaDeviceInfo> = []) => {
+    public displayStream = async (stream: any, devices: Array<MediaDeviceInfo> = []) => {
+
       document.getElementById("loader").style.setProperty('visibility', 'hidden'); 
       document.getElementById("loader").style.display = 'none';   
 
-      /*const viewport = document.querySelector("video");              
-            viewport.onloadedmetadata = viewport.play;        
-            viewport.srcObject = stream;
-            viewport.style.setProperty('visibility', 'visible');
-            viewport.style.display = 'flex';*/
 
-            this.createDevicesInfoLabel(devices);
+     const deviceId = await this.handleMediaDevices();
+
+     const viewport = document.querySelector("video");    
+     viewport.style.setProperty('visibility', 'visible');
+     viewport.style.display = 'flex';          
+     viewport.onloadedmetadata = viewport.play;       
+
+     console.log('[Viewer] displayStream setting viewport sinkId and assigning stream');
+
+    if (deviceId) {
+      (viewport as any).setSinkId(deviceId);
+    }
+    viewport.srcObject = stream;
+
+    //this.createDevicesInfoLabel(devices);
       
     /*   if (document.body.requestFullscreen && document.body.scrollWidth < 2025) {
         try {
@@ -53,6 +62,39 @@ export class View extends Events.EventHandler {
           //
         }
        }*/
+    }
+
+
+    private handleMediaDevices = async (deviceOptions: any = { label: '720'}) => {
+
+      console.log('[Viewer] handleMediaDevices. starting devices enumeration..')
+
+      let devices = await navigator.mediaDevices.enumerateDevices();
+
+      console.log('[Viewer] handleMediaDevices got devices: ');
+
+      devices?.forEach((device: any) => {
+        console.log('      .device: ' + device.label + '-' + device.kind);
+      });
+
+      let deviceId;
+
+      if (deviceOptions.label) {
+        try {
+          deviceId = (devices.find((device) => device.label.includes('720'))).deviceId;
+        } catch (e) {
+          console.log('     .device not found...');
+        }
+      } else if (deviceOptions.kind) {
+        try {
+          deviceId = (devices.find((device) => device.kind === deviceOptions.kind));
+        } catch (e) {
+          console.log('     .device not found...');
+        }
+      }      
+      console.log('[Viewer] handleMediaDevices found device: ' + deviceId);
+
+      return deviceId;
     }
 
     private createDevicesInfoLabel = (devices: Array<MediaDeviceInfo>) => {

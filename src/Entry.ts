@@ -76,9 +76,9 @@ class Entry {
     }
 
     private initializeIntegratedComponents = async () => {
-      
+
       await StreamProvider.initialize(true);
-            View.displayStream(await this.initializeRemoteStream());;
+            View.displayStream(await this.initializeRemoteStream());
             Controls.setVisible(true);
 
       await this.initializeCommonComponents();

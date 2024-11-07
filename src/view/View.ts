@@ -38,11 +38,11 @@ export class View extends Events.EventHandler {
       document.getElementById("loader").style.setProperty('visibility', 'hidden'); 
       document.getElementById("loader").style.display = 'none';   
 
-      const viewport = document.querySelector("video");              
+      /*const viewport = document.querySelector("video");              
             viewport.onloadedmetadata = viewport.play;        
             viewport.srcObject = stream;
             viewport.style.setProperty('visibility', 'visible');
-            viewport.style.display = 'flex';
+            viewport.style.display = 'flex';*/
 
             this.createDevicesInfoLabel(devices);
       

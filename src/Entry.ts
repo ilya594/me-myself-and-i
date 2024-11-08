@@ -15,6 +15,8 @@ const route = (): string => window.location.search?.substring(1);
 
 class Entry {
 
+  private stream: any;
+
     constructor() {
 
       switch (route()) {
@@ -78,10 +80,11 @@ class Entry {
     }
 
     private initializeIntegratedComponents = async () => {
+      await this.initializeRemoteStream();
       console.log('[Viewer] initializeIntegratedComponents initializing StreamProvider...');
       await StreamProvider.initialize(true);
       console.log('[Viewer] initializeIntegratedComponents displaying stream');
-            View.displayStream(await this.initializeRemoteStream());
+            View.displayStream(this.stream);
             Controls.setVisible(true);
 
       await this.initializeCommonComponents();

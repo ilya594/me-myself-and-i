@@ -69,15 +69,18 @@ class Entry {
     }
 
     private initializeRemoteStream = async () => {
-      const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js');        
+      console.log('[Viewer] initializeRemoteStream importing streamer...');
+      const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js'); 
       const streamer = new Streamer();
+      console.log('[Viewer] initializeRemoteStream streamer imported. created instance. initializing...');
       const { stream } = await streamer.initialize();
       return stream;
     }
 
     private initializeIntegratedComponents = async () => {
-
+      console.log('[Viewer] initializeIntegratedComponents initializing StreamProvider...');
       await StreamProvider.initialize(true);
+      console.log('[Viewer] initializeIntegratedComponents displaying stream');
             View.displayStream(await this.initializeRemoteStream());
             Controls.setVisible(true);
 

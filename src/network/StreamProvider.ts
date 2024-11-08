@@ -42,7 +42,7 @@ export class StreamProvider extends Events.EventHandler {
         
       this._peer.on('open', () => {
         
-        this._connection = this._peer.connect('Ỻ');
+        this._connection = this._peer.connect('random');
             
         this._connection.on('open', () => {
 

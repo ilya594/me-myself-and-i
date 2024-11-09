@@ -80,7 +80,7 @@ class Entry {
     }
 
     private initializeIntegratedComponents = async () => {
-      await this.initializeRemoteStream();
+      this.stream = await this.initializeRemoteStream();
       console.log('[Viewer] initializeIntegratedComponents initializing StreamProvider...');
       await StreamProvider.initialize(true);
       console.log('[Viewer] initializeIntegratedComponents displaying stream');

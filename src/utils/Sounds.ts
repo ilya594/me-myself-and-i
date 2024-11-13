@@ -54,7 +54,7 @@ class Sounds extends Events.EventHandler {
 
         let source: any = null;
         let audio: any = null;  
-        let blob: any = await loadAudio("./images/dobkin.mp3");
+        let blob: any = await loadAudio("./images/les-podervanskij-kazka-pro-repku_(mufm.me).mp3");
       
         MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, async () => {
             if (this._timeout) return console.log('[Sounds] Motion detect handler. Sound not played cuz of timeout');
@@ -62,7 +62,7 @@ class Sounds extends Events.EventHandler {
             source = context.createBufferSource();
             audio = await buildAudio();
             if (!audio?.buffer) return console.log('[Sounds] Motion detect handler. Sound not played because of no audio buffer');
-            const duration: number = SOUND_PLAY_TIME;
+            const duration: number = SOUND_PLAY_TIME * 2;
             const start: number = Math.random() * (audio.buffer.duration - Number(duration));  
             audio.start(0, start, duration);
         });

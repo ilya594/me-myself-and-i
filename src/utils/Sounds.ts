@@ -2,7 +2,7 @@ import * as Events from "./Events";
 import MotionDetector from "../motion/MotionDetector";
 import Controls from "../view/Controls";
 import {
-    SOUND_PLAY_TIME
+    SOUND_PLAY_TIME, MAYBE
 } from './Constants';
 
 class Sounds extends Events.EventHandler {
@@ -58,11 +58,11 @@ class Sounds extends Events.EventHandler {
       
         MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, async () => {
             if (this._timeout) return console.log('[Sounds] Motion detect handler. Sound not played cuz of timeout');
-            this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), SOUND_PLAY_TIME * 1111);
+            this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), SOUND_PLAY_TIME * MAYBE);
             source = context.createBufferSource();
             audio = await buildAudio();
             if (!audio?.buffer) return console.log('[Sounds] Motion detect handler. Sound not played because of no audio buffer');
-            const duration: number = SOUND_PLAY_TIME * 4;
+            const duration: number = SOUND_PLAY_TIME * MAYBE;
             const start: number = Math.random() * (audio.buffer.duration - Number(duration));  
             audio.start(0, start, duration);
         });

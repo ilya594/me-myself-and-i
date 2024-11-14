@@ -24,3 +24,5 @@ export const MATRIX_FONT_SIZE = 24;
 
 export const SOUND_PLAY_TIME = 11;
 
+export const MAYBE = 4;
+

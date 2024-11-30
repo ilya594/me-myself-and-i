@@ -32,6 +32,8 @@ export class StreamProvider extends Events.EventHandler {
 
     private initializePeerStream = async () => {
 
+      
+
       const params = {
         host: "nodejs-peer-server.onrender.com",
         path: "/peer",
@@ -42,7 +44,7 @@ export class StreamProvider extends Events.EventHandler {
         
       this._peer.on('open', () => {
         
-        this._connection = this._peer.connect('random');
+        this._connection = this._peer.connect('randomopdfjkspldfhsjk');
             
         this._connection.on('open', () => {
 

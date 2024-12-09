@@ -75,27 +75,7 @@ export class Controls extends Events.EventHandler {
         
         const arrow_0 = this._watchToggle_1.firstElementChild;
 
-        const contextMenu = document.getElementById("context-menu");
-              //@ts-ignore
-
-              contextMenu.firstElementChild.onclick = (event) => {
-                event.preventDefault(); event.stopPropagation();
-
-                const button = contextMenu.parentElement;
-                button.classList.toggle('button-months-deleting');
-                this._imageButtonsBlocked = true;
-
-                contextMenu.parentElement.removeChild(contextMenu);
-
-                const [month, name] = contextMenu.nonce.split('/');
-                RestService.deleteSnapshot(month, name).then((_: any) => {                    
-                          button.classList.remove('button-months-deleting');
-                          this._imageButtonsBlocked = false;
-                    this._watchToggle_1.removeChild(button);
-                });
-              }
-
-        const onImageButtonClick = (button: any) => {
+        const onImageButtonClick = async (button: any) => {
             if (button._state) return;
             const [month, name] = button.name.split('/');
 
@@ -103,12 +83,45 @@ export class Controls extends Events.EventHandler {
             button.classList.toggle('button-months-downloading');
             
 
-            RestService.getSnapshot(month, name).then((result: string) => {
+            const result: string = await RestService.getSnapshot(month, name);//.then((result: string) => {
                 button.classList.remove('button-months-downloading');
                 this._imageButtonsBlocked = false;
-                FileSaver.saveAs(result, name);
-            });
+                return FileSaver.saveAs(result, name);
+          //  });
         };
+
+        const onDeleteButtonClick = (contextMenu: any) => {
+            const button = contextMenu.parentElement;
+            button.classList.toggle('button-months-deleting');
+            this._imageButtonsBlocked = true;
+
+            contextMenu.parentElement.removeChild(contextMenu);
+
+            const [month, name] = contextMenu.nonce.split('/');
+            RestService.deleteSnapshot(month, name).then((_: any) => {                    
+                      button.classList.remove('button-months-deleting');
+                      this._imageButtonsBlocked = false;
+                this._watchToggle_1.removeChild(button);
+            });
+        }
+
+        const contextMenu = document.getElementById("context-menu");
+
+              //@ts-ignore
+              contextMenu.firstElementChild.onclick = (event) => {
+                event.preventDefault(); event.stopPropagation();
+                onDeleteButtonClick(contextMenu);
+              }
+
+              //@ts-ignore
+              contextMenu.lastElementChild.onclick = (event) => {
+                event.preventDefault(); event.stopPropagation();
+                onImageButtonClick(contextMenu.parentElement).then((_: any) => {
+                    onDeleteButtonClick(contextMenu);
+                });
+              }
+
+
 
         const addNothingFoundBackground = () => {
             const backgroundImage = document.createElement("div");

@@ -66,7 +66,7 @@ class Console extends EventHandler {
     }
 
     private executeCommand = (command: String) => {
-        switch (command) {
+        /*switch (command) {
             case 'trace': {
                 this.dispatchEvent(Events.CHANGE_TRACE_VISIBILITY, null);
                 break;
@@ -75,9 +75,17 @@ class Console extends EventHandler {
                 this.dispatchEvent(Events.CONSOLE_EXECUTE_COMMAND, command);
                 break;
             }
-        }
-        this._console.value = '>';
-        this.switchVisibility();
+        }*/
+
+
+        //this._console.value = '>';
+        //this.switchVisibility();
+
+       /* let symbolMap: Map<String, String> =  Object.entries({
+            '':''
+        });*/
+
+        
 
     }
 

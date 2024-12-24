@@ -76,12 +76,8 @@ class Sounds extends Events.EventHandler {
             return source;
         }
 
-        for (let audio in audios) {
-
-        }
-
         audios.forEach(async (name: string) => {
-            this.list.push(await loadAudio(name + ".mp3"));
+            this.list.push(await loadAudio("./images/" + name + ".mp3"));
         });
 
         let source: any = null;

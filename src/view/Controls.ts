@@ -20,6 +20,8 @@ export class Controls extends Events.EventHandler {
     private _watchButton: any;
     private _voiceButton: any;
 
+    private _fullsButton: any;
+
     private _watchToggle_0: any;
     private _watchToggle_1: any;
 
@@ -57,6 +59,19 @@ export class Controls extends Events.EventHandler {
             }
             this.dispatchEvent(Events.VOLUME_ADJUST_SPREAD, Number(this._voiceButton.style.opacity));
         }
+
+        this._fullsButton = document.getElementById("fullscreen-button");
+        this._fullsButton.onclick = () => {
+            console.log('[Controls] displayStream requesting fullscreen if avail');
+      
+            if (document.body.requestFullscreen) {
+              try {
+                document.body.requestFullscreen();
+              } catch (error: any) {
+                console.log('[Controls] displayStream requesting fullscreen error');
+              }
+             }
+        };
 
         this._snapsButton = document.getElementById("snaps-button").parentElement;
         this._snapsButton.onclick = () => Snaphots.flushBuffer();

@@ -54,16 +54,6 @@ export class View extends Events.EventHandler {
     viewport.srcObject = stream;
 
     //this.createDevicesInfoLabel(devices);
-
-    console.log('[Viewer] displayStream requesting fullscreen if avail');
-      
-      if (document.body.requestFullscreen) {
-        try {
-          document.body.requestFullscreen();
-        } catch (error: any) {
-          console.log('[Viewer] displayStream requesting fullscreen error');
-        }
-       }
     }
 
 

@@ -48,32 +48,63 @@ export function rgbToHex({r, g, b}: any) {
     return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
 }
 
+function getContrastingColor({r, g, b}: any) {
+    
+    // Применяем формулу для получения контрастного цвета
+    r = (255 - r);
+    g = (255 - g);
+    b = (255 - b);
+    
+    return rgbToHex({r, g, b});
+}
+
 export function addTimeStamp(canvas: HTMLCanvasElement, date = new Date()): HTMLCanvasElement {
-    const context = canvas.getContext('2d');
-    context.font = '42px Courier New';
-    context.fillStyle = "#00ff30";
     const dateStr =  '[time]    : ' + date.toISOString().split('T')[0] +
         ' ' + date.toTimeString().split(' ')[0] + 
-        '.' + date.getMilliseconds();
-    context.fillText(dateStr , 30, 30);
-    return canvas;
+        '.' + String(date.getMilliseconds());
+    return drawChunks(canvas, dateStr, {x: 30, y: 30});
+
+}
+
+function getAverageColor(imageData: any) {
+    const length = imageData.length;
+    let r = 0, g = 0, b = 0, count = 0;
+
+    for (let i = 0; i < length; i += 4) {
+        r += imageData[i];       // Красный
+        g += imageData[i + 1];   // Зеленый
+        b += imageData[i + 2];   // Синий
+        count++;
+    }
+
+    // Вычисляем средний цвет
+    r = Math.round(r / count);
+    g = Math.round(g / count);
+    b = Math.round(b / count);
+
+    return {r, g, b};
 }
 
 export function addSourceStamp(canvas: HTMLCanvasElement, source: string): HTMLCanvasElement {
-    const context = canvas.getContext('2d');
-    context.font = '42px Courier New';
-    context.fillStyle = "#00ff30";
-    context.fillText('[trigger] : ' + source + ' ' + navigator?.appVersion, 30, 70);
+    //@ts-ignore
+    source = ('[trigger] : ' + source + ' ' + (navigator?.userAgentData?.platform || 'ዘiㄨyяc૯Б૯!') + ' ' + (navigator?.userAgentData?.mobile ? 'ෲ?ய౦?' : 'кудахтер' ));
+    return drawChunks(canvas, source, { x: 30, y: 70 });
+}
+
+function drawChunks(canvas: HTMLCanvasElement, source: string, delta: { x: number, y: number }) {
+    const context = canvas.getContext('2d', {  alpha: true  , desynchronized: false , colorSpace: 'srgb' , willReadFrequently: false } );   
+    source.concat(' ␦ᔆ').toUpperCase().split('').forEach((symbol: any, index: number) => {
+        context.font = 'bold 36px Courier New';
+        context.fillStyle = getContrastingColor(getAverageColor(context.getImageData(delta.x + index * 26, delta.y, 42, 42)?.data));
+        context.fillText(symbol, delta.x + index * 26, delta.y);
+    });
     return canvas;
 }
 
 export function addDataStamp(canvas: HTMLCanvasElement, data: {h: number, s: number, v: number} = null): HTMLCanvasElement {
     if (!data) return;
-    const context = canvas.getContext('2d');
-    context.font = '42px Courier New';
-    context.fillStyle = "#00ff30";
-    context.fillText('[viewdata] : h[' + data.h.toFixed(1) + '] s[' + data.s.toFixed(1) + '] v[' + data.v.toFixed(1) + ']', 30, 110);
-    return canvas;
+    const source = '[viewdata] : h[' + data.h.toFixed(1) + '] s[' + data.s.toFixed(1) + '] v[' + data.v.toFixed(1) + ']';
+    return drawChunks(canvas, source, { x: 30, y: 110 })
 }
 
 export function tryResizeWindow() {

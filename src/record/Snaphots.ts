@@ -33,6 +33,10 @@ class Snaphots extends Events.EventHandler {
         this._viewport.addEventListener("click", this.onViewportClick);
         this._viewport.addEventListener("touchstart", this.onViewportClick);
 
+        const zadov = document.createElement("img");
+        zadov.src = './images/zadov.png';
+        this._container.appendChild(zadov);
+
         this._snapsaver = document.createElement("canvas"); this._container.appendChild(this._snapsaver);
         this._snapsaver.style.setProperty('position', 'absolute');
         this._snapsaver.addEventListener("click", this.onViewportClick);

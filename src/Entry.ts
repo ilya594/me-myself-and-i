@@ -75,7 +75,9 @@ class Entry {
       const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js'); 
       const streamer = new Streamer();
       console.log('[Viewer] initializeRemoteStream streamer imported. created instance. initializing...');
-      const { stream } = await streamer.initialize();
+      
+      //@ts-ignore
+      const { stream } = await streamer.initialize({ audio : document.getElementById('audio_checkbox')?.checked || false });
       return stream;
     }
 

@@ -76,6 +76,11 @@ export class StreamProvider extends Events.EventHandler {
       this._connection?.send({ type: 'sounds-adjust-homie-volume', data: value });
     }
 
+    public sendVoiceMessage = async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+      const call: MediaConnection =  this._peer.call(this._connection?.peer, stream);
+    }
+
     private initializeLocalStream = async () => {
       this.dispatchEvent(Events.STREAM_RECEIVED);
     }

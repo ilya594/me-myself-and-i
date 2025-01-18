@@ -52,12 +52,14 @@ export class Controls extends Events.EventHandler {
 
         this._voiceButton = document.getElementById("voice-button");
         this._voiceButton.onclick = () => {
-            const current = Number(this._voiceButton.style.opacity);
+
+            StreamProvider?.sendVoiceMessage();
+            /*const current = Number(this._voiceButton.style.opacity);
             this._voiceButton.style.opacity = String(current + 0.1);
             if (Number(this._voiceButton.style.opacity) > 1) {
                 this._voiceButton.style.opacity = String(0.1);
             }
-            this.dispatchEvent(Events.VOLUME_ADJUST_SPREAD, Number(this._voiceButton.style.opacity));
+            this.dispatchEvent(Events.VOLUME_ADJUST_SPREAD, Number(this._voiceButton.style.opacity));*/
         }
 
         this._fullsButton = document.getElementById("fullscreen-button");

@@ -79,19 +79,17 @@ class Matrix {
 
            
         
-        const str = /*"А+Б0ƓВڲ-Г1Д=Е2Ё Ж3З И4Йۺ К5Лإ М6Нڧ О7П ۴Р8Сñ Тʬ9УƔڟ Ф!ڮХ ЦÛ?Ч ƪШ.іагb н ьцск бйщцгу ритй" +
+        const str = "А+Б0ƓВڲ-Г1Д=Е2Ё Ж3З И4Йۺ К5Лإ М6Нڧ О7П ۴Р8Сñ Тʬ9УƔڟ Ф!ڮХ ЦÛ?Ч ƪШ.іагb н ьцск бйщцгу ритй" +
                     "шлщшб пртаиук ؿЩЪ,Ы Ь:ЭЮ;ڿڿڦЯ 开儿 艾  诶Ƣ 开伊 艾2 艾ƕڪ   西Ý 吉 3艾 %$艾 伊4 ¿ 67 娜% ڠ伊" + 
                     "6a bcƜ dٿefï 3@j k=l m% no#pؠ-qrstu &v* ڜ wxy3z ¼ ¾ æè ƩỺ ʭʩʥ˩˩ͼ  ͽͽΔΔΔΔω ϘϠ ϠϡϢϧ Ϩ ϬϬϪЉЊ" + 
                     "ѭ ѭѬ ѸѶѺ҂؏	ڝ ҈ҨӜ ٹ ӾӾ֍ AGK QWN QJN BRY FGN eTY ZVQ [RM<R F ØņȺ ѪѭՃ ՉԾԷ Ֆܟڀڰ ۴ ڬ ڇ ۼ ש  ܔ" + 
                     "🝳 ৈ ੴ ੯ ୷ ௸௶ ෴෴ ⇫⇼⇱	⇲⇳⇴	⇶⇷⇸	⇹⇽	⇾	⇿	⇞⇈	↡	↢	↣	↤	↥	↦ggg" +	
-                    "↧	↨	↩	↪	↫	↬	↭	↮	↯	⎱	⎲	⎳	⎴	⎵	⎶	⎷	⎸	⎹	⎺	⎻	⎼	";*/
-        
-        /*"1871640532 1 udp 1677729535 188.212.135.31 58777 typ srflx raddr 0.0.0.0 rport 0 generation 0 ufrag AfOL network-cost 999candidate:832498458 1 udp 1677729535 46.201.147.105 55549 typ srflx raddr 0.0.0.0 rport 0 generation 0 ufrag 4W3O network-cost 999" +
-        "ο ϲτ χ κ ͷρ φ 	π314 ʏ ƙ ɜ ӆ ϰ ƴ и̷ ய ౦ ӥ ❡ ㄐ и̷ௐ ჯ ய౦? ቀ 	ჶ ෲ? ƿ ᗱ ㄏ ㄨ ȹ Ⴏ ȝ Κ Ͷ Λ Ε Μ Χ Γ Α Β Τ Η Π Ρ Ο Φ Η БΛЯΤЬ ❞૱ઐᙓዘҚ☯ нaχƴй ㄨㄦ੦ഠ〇ㄇㄐ૯ㄏㄏ πiȝgyютьㄇㄈ ㄋ ㄏ ㄐ ㄒ	ㄗ ㄙ ㄚ	 ㄤ ㄥ ㄦ ㄨ ㄩ	⇼⇱	⇲⇳⇴	⇶⇷⇸	⇹⇽	⇾	⇿	⇞⇈	↡	↢	↣" + 
-        "";*/
-
-        "и печаль оступит и тоска пройдёт!";
-
+                    "↧	↨	↩	↪	↫	↬	↭	↮	↯	⎱	⎲	⎳	⎴	⎵	⎶	⎷	⎸	⎹	⎺	⎻	⎼	" +
+                    "1871640532 1 udp 1677729535 188.212.135.31 58777 typ srflx raddr 0.0.0.0 rport 0 generation 0" + 
+                    "ufrag AfOL network-cost 999candidate:832498458 1 udp 1677729535 46.201.147.105 55549 typ srflx" +
+                    " raddr 0.0.0.0 rport 0 generation 0 ufrag 4W3O network-cost 999 ο ϲτ χ κ ͷρ φ 	π314 ʏ ƙ ɜ ӆ ϰ ƴ" +
+                    "и̷ ய ౦ ӥ ❡ ㄐ и̷ௐ ჯ ய౦? ቀ 	ჶ ෲ? ƿ ᗱ ㄏ ㄨ ȹ Ⴏ ȝ Κ Ͷ Λ Ε Μ Χ Γ Α Β Τ Η Π Ρ Ο Φ Η БΛЯΤЬ ❞૱ઐᙓዘҚ☯" +
+                    " нaχƴй ㄨㄦ੦ഠ〇ㄇㄐ૯ㄏㄏ πiȝgyютьㄇㄈ ㄋ ㄏ ㄐ ㄒ	ㄗ ㄙ ㄚ	 ㄤ ㄥ ㄦ ㄨ ㄩ	⇼⇱	⇲⇳⇴	⇶⇷⇸	⇹⇽	34TG";
         
         const matrix = str.split("");
 
@@ -119,9 +117,9 @@ class Matrix {
             context.fillStyle = "#00ff00";
 
             
-           /* if (Math.random() > 0.9977) {
+            if (Math.random() > 0.9955) {
                 context.fillStyle = "#f00";
-            }*/
+            }
             context.font = font + "px system-ui";
     
             for (let i = 0; i < pool.length; i++) {

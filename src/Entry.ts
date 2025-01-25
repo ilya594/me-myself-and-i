@@ -97,8 +97,6 @@ class Entry {
 
     private initializeComponents = async () => {   
 
-      await Sounds.initialize();
-
       await StreamProvider.initialize();
             StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => {
               View.displayStream(stream);

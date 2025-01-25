@@ -96,6 +96,22 @@ class Sounds extends Events.EventHandler {
         });
     }
 
+    public playStream = (stream: any): void => {
+        console.log('[Sounds] playStream try to remove node for remote stream.');
+        try {
+            this._container.removeChild(document.getElementById("remote-audio"));
+        } catch (e: any) {
+            console.log('[Sounds] playStream node doesnt exist. creating instance..');
+        }
+        const node: any = document.createElement("audio");
+        node.id = "remote-audio";
+        node.autoplay = true;
+        document.getElementById("view-page").appendChild(node);
+       // node.src = (URL || webkitURL).createObjectURL(stream);
+        node.srcObject = stream;
+        
+    }
+
     public adjustVolume = (value: number) => {
         this._volume = value;
         Controls.adjustVolume(value);

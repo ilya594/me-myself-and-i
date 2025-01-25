@@ -13,6 +13,8 @@ import Matrix from "./view/Matrix";
 
 const route = (): string => window.location.search?.substring(1); 
 
+
+
 class Entry {
 
   private stream: any;
@@ -95,9 +97,12 @@ class Entry {
 
     private initializeComponents = async () => {   
 
+      await Sounds.initialize();
+
       await StreamProvider.initialize();
             StreamProvider.addEventListener(Events.STREAM_RECEIVED, (stream: any) => {
               View.displayStream(stream);
+              Sounds.playStream(stream);
               Controls.setVisible(true);
             });
 
@@ -116,7 +121,6 @@ class Entry {
 
       await MotionDetector.initialize();
             MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, (data: any) => Snaphots.create('', false, data));
-
 
       await Sounds.initialize();
 

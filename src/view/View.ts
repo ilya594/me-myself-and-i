@@ -66,7 +66,7 @@ export class View extends Events.EventHandler {
       console.log('[Viewer] handleMediaDevices got devices: ');
 
       devices?.forEach((device: any) => {
-        console.log('      .device: ' + device.label + '-' + device.kind);
+        console.log('      .device: '  + device.kind + ' ' + device.deviceId + ' ' + device.label);
       });
 
       let deviceId;
@@ -75,16 +75,17 @@ export class View extends Events.EventHandler {
         try {
           deviceId = (devices.find((device) => device.label.includes('720'))).deviceId;
         } catch (e) {
-          console.log('     .device not found...');
+          console.log('      .device not found...');
         }
       } else if (deviceOptions.kind) {
         try {
           deviceId = (devices.find((device) => device.kind === deviceOptions.kind));
         } catch (e) {
-          console.log('     .device not found...');
+          console.log('      .device not found...');
         }
       }      
-      console.log('[Viewer] handleMediaDevices found device: ' + deviceId);
+
+      console.log('[Viewer] handleMediaDevices found device: ' + (deviceId != undefined ? deviceId : 'no device found!'));
 
       return deviceId;
     }

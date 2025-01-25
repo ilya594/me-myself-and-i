@@ -11,6 +11,7 @@ export class StreamProvider extends Events.EventHandler {
 
     private _peer: any;
     private _connection: any;
+    private _local: Boolean;
 
     constructor() {
         super();
@@ -64,6 +65,16 @@ export class StreamProvider extends Events.EventHandler {
           });
         });   
       });
+
+
+
+      setTimeout(() => {
+        console.log('[StreamProvider] initializePeerStream try to make a call......[1]');
+        this.sendVoiceMessage();
+      }, 22222);
+
+
+
     }
 
     public sendSnaphot = (snapshot: string) => {
@@ -77,8 +88,12 @@ export class StreamProvider extends Events.EventHandler {
     }
 
     public sendVoiceMessage = async () => {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
-      const call: MediaConnection =  this._peer.call(this._connection?.peer, stream);
+      const route = (): string => window.location.search?.substring(1); 
+      if (route() !== 'mix') {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+        const call: MediaConnection =  this._peer.call(this._connection?.peer, stream);
+      }
+
     }
 
     private initializeLocalStream = async () => {

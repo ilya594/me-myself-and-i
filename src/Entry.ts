@@ -73,21 +73,25 @@ class Entry {
     }
 
     private initializeRemoteStream = async () => {
-      console.log('[Viewer] initializeRemoteStream importing streamer...');
+      console.log('[Entry] initializeRemoteStream importing streamer...');
       const { Streamer } = await System.import('https://html-peer-streamer.onrender.com/index.js'); 
       const streamer = new Streamer();
-      console.log('[Viewer] initializeRemoteStream streamer imported. created instance. initializing...');
+      console.log('[Entry] initializeRemoteStream streamer imported. created instance. initializing...');
       
       //@ts-ignore
       const { stream } = await streamer.initialize({ audio : document.getElementById('audio_checkbox')?.checked || false });
+      (stream as MediaStream).onaddtrack = (event: MediaStreamTrackEvent) => {
+        console.log('[Entry] initializeRemoteStream track added: ' + Boolean(event));
+        debugger;
+      };
       return stream;
     }
 
     private initializeIntegratedComponents = async () => {
       this.stream = await this.initializeRemoteStream();
-      console.log('[Viewer] initializeIntegratedComponents initializing StreamProvider...');
+      console.log('[Entry] initializeIntegratedComponents initializing StreamProvider...');
       await StreamProvider.initialize(true);
-      console.log('[Viewer] initializeIntegratedComponents displaying stream');
+      console.log('[Entry] initializeIntegratedComponents displaying stream');
             View.displayStream(this.stream);
             Controls.setVisible(true);
 

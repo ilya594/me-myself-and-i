@@ -80,10 +80,10 @@ class Entry {
       
       //@ts-ignore
       const { stream } = await streamer.initialize({ audio : document.getElementById('audio_checkbox')?.checked || false });
-      (stream as MediaStream).onaddtrack = (event: MediaStreamTrackEvent) => {
+      /*(stream as MediaStream).onaddtrack = (event: MediaStreamTrackEvent) => {
         console.log('[Entry] initializeRemoteStream track added: ' + Boolean(event));
         debugger;
-      };
+      };*/
       return stream;
     }
 

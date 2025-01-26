@@ -31,9 +31,7 @@ export class StreamProvider extends Events.EventHandler {
         return this;
     }
 
-    private initializePeerStream = async () => {
-
-      
+    private initializePeerStream = async () => {     
 
       const params = {
         host: "nodejs-peer-server.onrender.com",
@@ -56,7 +54,6 @@ export class StreamProvider extends Events.EventHandler {
               Controls.adjustVolume(Number(data?.data));
               this.adjustVolume(data?.data);
             }
-
           });
         
           this._peer.on('call', async (call: MediaConnection) => {        
@@ -65,16 +62,6 @@ export class StreamProvider extends Events.EventHandler {
           });
         });   
       });
-
-
-
-      setTimeout(() => {
-        console.log('[StreamProvider] initializePeerStream try to make a call......[1]');
-        this.sendVoiceMessage();
-      }, 22222);
-
-
-
     }
 
     public sendSnaphot = (snapshot: string) => {

@@ -10,10 +10,9 @@ import Controls from "./view/Controls";
 import Sounds from "./utils/Sounds";
 import * as Utils from './utils/Utils';
 import Matrix from "./view/Matrix";
+import WebStorage from "./store/Storage";
 
 const route = (): string => window.location.search?.substring(1); 
-
-
 
 class Entry {
 
@@ -21,6 +20,8 @@ class Entry {
 
     constructor() {
 
+      
+      
       switch (route()) {
         case ('show'): {
           this.initializeView();
@@ -36,6 +37,13 @@ class Entry {
 
     private initializeAuth = async () => {
 
+      await WebStorage.setItem('storage', 'index');
+
+      const item = await WebStorage.getItem('storage');
+     // debugger;
+      await WebStorage.removeItem('storage');
+
+    //  debugger;
       Utils.tryResizeWindow();
 
       await Console.initialize();

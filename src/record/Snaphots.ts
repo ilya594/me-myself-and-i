@@ -9,6 +9,8 @@ import {
 } from "../utils/Constants";
 import * as Utils from "../utils/Utils";
 import * as Events from "../utils/Events";    
+import Controls from '../view/Controls';
+import FileSaver from 'file-saver';
 
 class Snaphots extends Events.EventHandler {
 
@@ -174,6 +176,11 @@ class Snaphots extends Events.EventHandler {
     private bufferToDataUrl = (callback: Function): void => {
 
         (this._buffer as OffscreenCanvas).convertToBlob().then((value: Blob) => {
+
+            if (Controls?.localSaveEnabled) {
+                const name = new Date().toISOString().split('T')[0] + ' ' + new Date().toTimeString().split(' ')[0];
+                FileSaver.saveAs(value, name.toString() + '.png');
+            }
 
             const reader: FileReader = new FileReader();
 

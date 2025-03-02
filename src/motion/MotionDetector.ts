@@ -64,10 +64,11 @@ export class MotionDetector extends Events.EventHandler {
         this._label.style.setProperty('visibility', 'hidden');
 
         this._graphic = document.createElement("canvas"); this._container.appendChild(this._graphic);
+        this._graphic.style.setProperty("pointer-events", "none");
         this._graphic.style.setProperty('position', 'absolute');
         this._graphic.style.setProperty('bottom', '0%');
         this._graphic.style.setProperty('left', '0%');
-        this._graphic.style.setProperty('height', '50%');
+        this._graphic.style.setProperty('height', '40%');
         this._graphic.style.setProperty('width', '100%');
         this._graphic.style.setProperty('visibility', 'hidden');
 

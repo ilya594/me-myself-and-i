@@ -97,8 +97,16 @@ export class Controls extends Events.EventHandler {
 
     private createVoiceButton = () => {
         this._voiceButton = document.getElementById("voice-button");
-        this._voiceButton.onclick = () => StreamProvider?.sendVoiceMessage();        
-            
+        this._voiceButton.onclick = () => {
+            StreamProvider?.sendVoiceMessage(); 
+            if (this._voiceButton.style.getPropertyValue('background-color')) {
+                this._voiceButton.style.removeProperty('background-color');
+            } else {
+                this._voiceButton.style.setProperty('background-color', '#00ff0077');
+            }
+        }
+        this._voiceButton.style.opacity = String(Math.abs(Number(this._voiceButton.style.opacity - 1)));
+
         /*const current = Number(this._voiceButton.style.opacity);
           this._voiceButton.style.opacity = String(current + 0.1);
           if (Number(this._voiceButton.style.opacity) > 1) {

@@ -81,9 +81,8 @@ export class StreamProvider extends Events.EventHandler {
         const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
       //  const call: MediaConnection =  this._peer.call(this._connection?.peer, stream);
 
-        this._peer.addTrack(stream.getAudioTracks().shift(), this._stream);
+        this._stream.addTrack(stream.getAudioTracks().shift());
       }
-
     }
 
     private initializeLocalStream = async () => {

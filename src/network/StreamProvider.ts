@@ -11,8 +11,8 @@ export class StreamProvider extends Events.EventHandler {
 
     private _peer: any;
     private _connection: any;
-    private _local: Boolean;
-    private _stream: MediaStream;
+    private _call: MediaConnection;
+    private _stream: any;
 
     constructor() {
         super();
@@ -58,7 +58,11 @@ export class StreamProvider extends Events.EventHandler {
           });
         
           this._peer.on('call', async (call: MediaConnection) => {        
-            call.on('stream', (stream) => (this._stream = stream) && this.dispatchEvent(Events.STREAM_RECEIVED, stream));        
+            call.on('stream', (stream) => {
+              this.dispatchEvent(Events.STREAM_RECEIVED, stream); 
+              this._call = call;
+              this._stream = stream;
+            });
             call.answer(null);
           });
         });   
@@ -79,10 +83,12 @@ export class StreamProvider extends Events.EventHandler {
       const route = (): string => window.location.search?.substring(1); 
       if (route() !== 'mix') {
         const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
-      //  const call: MediaConnection =  this._peer.call(this._connection?.peer, stream);
-
-        this._stream.addTrack(stream.getAudioTracks().shift());
+        this._call =  this._peer.call(this._connection?.peer, stream);
       }
+    }
+
+    public stopVoiceMessage = async () => {
+      this._call.close();
     }
 
     private initializeLocalStream = async () => {

@@ -18,9 +18,7 @@ class Entry {
 
   private stream: any;
 
-    constructor() {
-
-      
+    constructor() {     
       
       switch (route()) {
         case ('show'): {
@@ -37,13 +35,6 @@ class Entry {
 
     private initializeAuth = async () => {
 
-      await WebStorage.setItem('storage', 'index');
-
-      const item = await WebStorage.getItem('storage');
-     // debugger;
-      await WebStorage.removeItem('storage');
-
-    //  debugger;
       Utils.tryResizeWindow();
 
       await Console.initialize();

@@ -79,6 +79,24 @@ export class RestService extends Events.EventHandler {
       });
       return response.data;
     }
+
+
+    public updateAudioVolume = async (volume: number) => {
+            axios({
+        method: 'post',
+        url: this.SERVER_URL + 'setvolume',
+        data: { volume: volume }
+      });    
+    }
+
+    public getAudioVolume = async () => {
+      const response = await axios.get(this.SERVER_URL + 'getvolume', {
+        params: {
+          pin: localStorage.getItem('pinhash')
+        }
+      });
+      return response.data;
+    }
 }
 
 export default new RestService();

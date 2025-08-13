@@ -92,7 +92,7 @@ class Sounds extends Events.EventHandler {
             if (!audio?.buffer) return console.log('[Sounds] Motion detect handler. Sound not played because of no audio buffer');
             this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), audio.buffer.duration * (Math.exp(Math.PI * Math.PI / Math.E + Math.PI * Math.PI / Math.E + Math.E / Math.PI)));
             //const start: number = Math.random() * (audio.buffer.duration - Number(duration));  
-            audio.start(0, 0, audio.buffer.duration);
+           // audio.start(0, 0, audio.buffer.duration);
         });
     }
 

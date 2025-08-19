@@ -24,6 +24,11 @@ class Sounds extends Events.EventHandler {
         0.5, 0.5, 0.5, 0.5 
     ];
 
+    private _youtubes = [
+        { url: 'https://www.youtube.com/embed/u-w8jobLV24?&autoplay=1&start=', start: 1319, length: 8 },
+        { url: 'https://www.youtube.com/embed/u-w8jobLV24?&autoplay=1&start=', start: 777, length: 4 },
+    ];
+
     private list: Array<any> = [];
 
     constructor() {
@@ -110,6 +115,15 @@ class Sounds extends Events.EventHandler {
        // node.src = (URL || webkitURL).createObjectURL(stream);
         node.srcObject = stream;
         
+    }
+
+    public playYoutube = () => {
+
+        const container = document.getElementById('player_youtube') as any;
+        const item = this._youtubes[Math.floor(Math.random() * this._youtubes.length)];
+
+        container.src = item.url + item.start;
+        setTimeout(() => container.src = 0, item.length * 1000);
     }
 
     public adjustVolume = (value: number) => {

@@ -25,8 +25,8 @@ class Sounds extends Events.EventHandler {
     ];
 
     private _youtubes = [
-        { url: 'https://www.youtube.com/embed/u-w8jobLV24?&autoplay=1&start=', start: 1319, length: 8 },
-        { url: 'https://www.youtube.com/embed/u-w8jobLV24?&autoplay=1&start=', start: 777, length: 4 },
+        { url: 'https://www.youtube.com/embed/7wedjXUereU?&autoplay=1&start=', start: 3, length: 3 },
+        { url: 'https://www.youtube.com/embed/KySOirxBfsM?&autoplay=1&start=', start: 3, length: 11 },
     ];
 
     private list: Array<any> = [];
@@ -90,14 +90,16 @@ class Sounds extends Events.EventHandler {
       //  let blob: any = await loadAudio("./images/les-podervanskij-kazka-pro-repku_(mufm.me).mp3");
       
         MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, async () => {
-            if (this._timeout) return console.log('[Sounds] Motion detect handler. Sound not played cuz of timeout');
+            //if (this._timeout) return console.log('[Sounds] Motion detect handler. Sound not played cuz of timeout');
 
-            source = context.createBufferSource();
-            audio = await buildAudio(this.list[Math.floor(Math.random() * this.list.length)]);
-            if (!audio?.buffer) return console.log('[Sounds] Motion detect handler. Sound not played because of no audio buffer');
-            this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), audio.buffer.duration * (Math.exp(Math.PI * Math.PI / Math.E + Math.PI * Math.PI / Math.E + Math.E / Math.PI)));
+            //source = context.createBufferSource();
+            //audio = await buildAudio(this.list[Math.floor(Math.random() * this.list.length)]);
+           // if (!audio?.buffer) return console.log('[Sounds] Motion detect handler. Sound not played because of no audio buffer');
+            //this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), audio.buffer.duration * (Math.exp(Math.PI * Math.PI / Math.E + Math.PI * Math.PI / Math.E + Math.E / Math.PI)));
             //const start: number = Math.random() * (audio.buffer.duration - Number(duration));  
            // audio.start(0, 0, audio.buffer.duration);
+
+           this.playYoutube();
         });
     }
 

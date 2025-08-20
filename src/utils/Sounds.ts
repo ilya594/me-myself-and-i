@@ -25,8 +25,8 @@ class Sounds extends Events.EventHandler {
     ];
 
     private _youtubes = [
-        { url: 'https://www.youtube.com/embed/7wedjXUereU?&autoplay=1&start=', start: 3, length: 3 },
-        { url: 'https://www.youtube.com/embed/KySOirxBfsM?&autoplay=1&start=', start: 3, length: 11 },
+        { url: 'https://www.youtube.com/embed/7wedjXUereU?&autoplay=1&start=', start: 3, length: 12 },
+        { url: 'https://www.youtube.com/embed/DVlsf_QQFX4?&autoplay=1&start=', start: 541, length: 12 },
     ];
 
     private list: Array<any> = [];

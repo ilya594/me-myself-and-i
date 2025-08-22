@@ -26,8 +26,8 @@ class Sounds extends Events.EventHandler {
 
     private _youtubes = [
         { url: '7wedjXUereU', start: 3, length: 12 },
-        { url: 'DVlsf_QQFX4', start: 541, length: 12 },
-        { url: 'hxVDT7t6XbI', start: 3, length: 12 },
+       // { url: 'DVlsf_QQFX4', start: 541, length: 12 },
+       // { url: 'hxVDT7t6XbI', start: 3, length: 12 },
         { url: 'AqYsUNFXOuM', start: 28, length: 12 },
         { url: 'XQ8JjxoP_9Y', start: 0, length: 12 },
         { url: 'j_0FwL91o7A', start: 7, length: 12 },        
@@ -149,9 +149,13 @@ class Sounds extends Events.EventHandler {
         const container = document.getElementById('player_youtube') as any;
         const item = this._youtubes[Math.floor(Math.random() * this._youtubes.length)];
 
-        container.src =  domain + item.url + params + item.start;
-
-        setTimeout(() => container.src = 0, item.length * 1000);
+        try {
+            container.src =  domain + item.url + params + item.start;
+            setTimeout(() => container.src = 0, item.length * 1000);
+        } catch (e) {
+            console.log('[Sounds] playYoutube failed with url : [' + item.url + ']');
+            this.playYoutube();
+        }
     }
 
     public adjustVolume = (value: number) => {

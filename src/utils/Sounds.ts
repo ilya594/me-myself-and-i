@@ -25,9 +25,14 @@ class Sounds extends Events.EventHandler {
     ];
 
     private _youtubes = [
-        { url: 'https://www.youtube.com/embed/7wedjXUereU?&autoplay=1&start=', start: 3, length: 12 },
-        { url: 'https://www.youtube.com/embed/DVlsf_QQFX4?&autoplay=1&start=', start: 541, length: 12 },
+        { url: '7wedjXUereU', start: 3, length: 12 },
+        { url: 'DVlsf_QQFX4', start: 541, length: 12 },
+        { url: 'hxVDT7t6XbI', start: 3, length: 12 },
+        { url: 'AqYsUNFXOuM', start: 28, length: 12 },
+        { url: 'XQ8JjxoP_9Y', start: 0, length: 12 },
+        { url: 'j_0FwL91o7A', start: 7, length: 12 },        
     ];
+
 
     private list: Array<any> = [];
 
@@ -37,6 +42,23 @@ class Sounds extends Events.EventHandler {
     }
 
     public initialize = async () => {
+
+      
+        MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, async () => {
+            //if (this._timeout) return console.log('[Sounds] Motion detect handler. Sound not played cuz of timeout');
+
+            //source = context.createBufferSource();
+            //audio = await buildAudio(this.list[Math.floor(Math.random() * this.list.length)]);
+           // if (!audio?.buffer) return console.log('[Sounds] Motion detect handler. Sound not played because of no audio buffer');
+            //this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), audio.buffer.duration * (Math.exp(Math.PI * Math.PI / Math.E + Math.PI * Math.PI / Math.E + Math.E / Math.PI)));
+            //const start: number = Math.random() * (audio.buffer.duration - Number(duration));  
+           // audio.start(0, 0, audio.buffer.duration);
+
+           this.playYoutube();
+        });
+    }
+
+    private prepareAudios = async () => {
 
         //@ts-ignore
         const context: AudioContext | any = new (window.AudioContext || window.webkitAudioContext)();
@@ -87,19 +109,18 @@ class Sounds extends Events.EventHandler {
 
         let source: any = null;
         let audio: any = null;  
-      //  let blob: any = await loadAudio("./images/les-podervanskij-kazka-pro-repku_(mufm.me).mp3");
-      
+        let blob: any = await loadAudio("./images/les-podervanskij-kazka-pro-repku_(mufm.me).mp3");
+
         MotionDetector.addEventListener(Events.MOTION_DETECTION_STARTED, async () => {
-            //if (this._timeout) return console.log('[Sounds] Motion detect handler. Sound not played cuz of timeout');
-
-            //source = context.createBufferSource();
-            //audio = await buildAudio(this.list[Math.floor(Math.random() * this.list.length)]);
-           // if (!audio?.buffer) return console.log('[Sounds] Motion detect handler. Sound not played because of no audio buffer');
-            //this._timeout = setTimeout(() => this._timeout = clearTimeout(this._timeout), audio.buffer.duration * (Math.exp(Math.PI * Math.PI / Math.E + Math.PI * Math.PI / Math.E + Math.E / Math.PI)));
+            if (this._timeout) return console.log('[Sounds] Motion detect handler. Sound not played cuz of timeout');
+            source = context.createBufferSource();
+            audio = await buildAudio(this.list[Math.floor(Math.random() * this.list.length)]);
+            if (!audio?.buffer) return console.log('[Sounds] Motion detect handler. Sound not played because of no audio buffer');
+            this._timeout = setTimeout(() => this._timeout = 
+            // в душе не єбу шо за хуйня, походу я вгашеним це писав
+                clearTimeout(this._timeout), audio.buffer.duration * (Math.exp(Math.PI * Math.PI / Math.E + Math.PI * Math.PI / Math.E + Math.E / Math.PI)));
             //const start: number = Math.random() * (audio.buffer.duration - Number(duration));  
-           // audio.start(0, 0, audio.buffer.duration);
-
-           this.playYoutube();
+            audio.start(0, 0, audio.buffer.duration);
         });
     }
 
@@ -121,10 +142,15 @@ class Sounds extends Events.EventHandler {
 
     public playYoutube = () => {
 
+        const domain = 'https://www.youtube.com/embed/';
+        const params = '?&autoplay=1&start=';
+        
+        
         const container = document.getElementById('player_youtube') as any;
         const item = this._youtubes[Math.floor(Math.random() * this._youtubes.length)];
 
-        container.src = item.url + item.start;
+        container.src =  domain + item.url + params + item.start;
+
         setTimeout(() => container.src = 0, item.length * 1000);
     }
 

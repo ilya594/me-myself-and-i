@@ -156,7 +156,7 @@ class Sounds extends Events.EventHandler {
 
         try {
             container.src =  String(domain + item.url + params + item.start);
-            this.youtube_timeout = setTimeout(() => { container.src = ''; clearTimeout(this.youtube_timeout)}, Number(item.length * 1000));
+            this.youtube_timeout = setTimeout(() => { container.src = ''; this.youtube_timeout = undefined }, item.length * 1000);
         } catch (e) {
             console.log('[Sounds] playYoutube failed with url : [' + item.url + ']');
             this.playYoutube();

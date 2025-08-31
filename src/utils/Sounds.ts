@@ -26,12 +26,16 @@ class Sounds extends Events.EventHandler {
 
     private _youtubes = [
         { url: '7wedjXUereU', start: 3, length: 12 },
-       // { url: 'DVlsf_QQFX4', start: 541, length: 12 },
-       // { url: 'hxVDT7t6XbI', start: 3, length: 12 },
         { url: 'AqYsUNFXOuM', start: 28, length: 12 },
         { url: 'XQ8JjxoP_9Y', start: 0, length: 12 },
-        { url: 'j_0FwL91o7A', start: 7, length: 12 },        
+        { url: 'j_0FwL91o7A', start: 7, length: 12 }, 
+        { url: 'WnhjDV5ZUL0', start: 8, length: 12, obscene: true }, 
+        { url: 'HnXVlPGxFH4', start: 84, length: 10, obscene: true }
+
+               
     ];
+
+    private youtube_timeout: any;
 
 
     private list: Array<any> = [];
@@ -143,15 +147,16 @@ class Sounds extends Events.EventHandler {
     public playYoutube = () => {
 
         const domain = 'https://www.youtube.com/embed/';
-        const params = '?&autoplay=1&start=';
-        
+        const params = '?&autoplay=1&start=';        
         
         const container = document.getElementById('player_youtube') as any;
-        const item = this._youtubes[Math.floor(Math.random() * this._youtubes.length)];
+        const item = this._youtubes[Math.ceil(Math.random() * (this._youtubes.length - 1))];
+
+        if (this.youtube_timeout) return console.log('[Sounds] playYoutube wont proceed cuz of timeout.');
 
         try {
-            container.src =  domain + item.url + params + item.start;
-            setTimeout(() => container.src = 0, item.length * 1000);
+            container.src =  String(domain + item.url + params + item.start);
+            this.youtube_timeout = setTimeout(() => container.src = '', Number(item.length * 1000));
         } catch (e) {
             console.log('[Sounds] playYoutube failed with url : [' + item.url + ']');
             this.playYoutube();

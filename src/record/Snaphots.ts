@@ -40,7 +40,7 @@ class Snaphots extends Events.EventHandler {
         this._snapsaver.addEventListener("click", this.onViewportClick);
         this._snapsaver.addEventListener("touchstart", this.onViewportClick);
         this._snapsaver.style.setProperty('transform', 'translate(' + 0 + 'px,' + 0 + 'px)' + 'scale(' + 1 + ',' + 1 + ')');         
-        let context = this._snapsaver.getContext('2d');
+        let context = this._snapsaver.getContext('2d', { willReadFrequently: true });
             context.clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);  
 
         this._snapshot = document.createElement("canvas"); this._container.appendChild(this._snapshot);
@@ -48,7 +48,7 @@ class Snaphots extends Events.EventHandler {
 
         this._snapshot.width = SNAP_WIDTH;
         this._snapshot.height = SNAP_HEIGHT;
-        this._snapshot.getContext('2d').globalAlpha = 0;
+        this._snapshot.getContext('2d', { willReadFrequently: true }).globalAlpha = 0;
         this._snapshot.getContext('2d').beginPath();
         this._snapshot.getContext('2d').lineWidth = "0";
         this._snapshot.getContext('2d').strokeStyle = "black"; 
@@ -72,7 +72,7 @@ class Snaphots extends Events.EventHandler {
 
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
         this._buffer.height = VIDEO_HEIGHT * SNAP_COUNT;
-        this._buffer.getContext('2d').beginPath();
+        this._buffer.getContext('2d', { willReadFrequently: true }).beginPath();
         this._buffer.getContext('2d').lineWidth = 1;
         this._buffer.getContext('2d').strokeStyle = "black";
         this._buffer.getContext('2d').rect(0, 0, VIDEO_WIDTH * 5, VIDEO_HEIGHT * 5);
@@ -90,7 +90,7 @@ class Snaphots extends Events.EventHandler {
     private drawCanvasFromVideo(canvas: HTMLCanvasElement, video: any, source: string, data: any = null): HTMLCanvasElement {
         const w:number = canvas.width = video.getBoundingClientRect().width;
         const h:number = canvas.height = video.getBoundingClientRect().height;
-        const context = canvas.getContext('2d'); 
+        const context = canvas.getContext('2d', { willReadFrequently: true }); 
         context?.clearRect(0, 0, w, h);
         context?.drawImage(video, 0, 0, w, h);
         Utils.addTimeStamp(canvas);        
@@ -105,12 +105,12 @@ class Snaphots extends Events.EventHandler {
         const x:number = (this._count % SNAP_COUNT) * VIDEO_WIDTH;
         const y:number = Math.floor(this._count/SNAP_COUNT) * VIDEO_HEIGHT;
 
-        this._buffer.getContext('2d').drawImage(source, x, y, VIDEO_WIDTH, VIDEO_HEIGHT);
+        this._buffer.getContext('2d', { willReadFrequently: true }).drawImage(source, x, y, VIDEO_WIDTH, VIDEO_HEIGHT);
 
         this._snapsaver.style.setProperty('display', 'inline'); 
         this._snapsaver.width = this.w;
         this._snapsaver.height = this.h;
-        this._snapsaver.getContext('2d').globalAlpha = SNAP_SAVER_OPACITY;  
+        this._snapsaver.getContext('2d', { willReadFrequently: true }).globalAlpha = SNAP_SAVER_OPACITY;  
         this._snapsaver.getContext('2d').drawImage(source, 0, 0, this.w, this.h); 
 
         this.startSaverTween(this.w, this.h);
@@ -133,7 +133,7 @@ class Snaphots extends Events.EventHandler {
     private onSaverTweenComplete = () => {
         this._snapshot.style.setProperty('transform', 'translate(' + String(this._viewport.getBoundingClientRect().left - this._viewport.offsetLeft - this._viewport.offsetParent.offsetLeft + (this.w - SNAP_WIDTH)/2) + 'px,' + String(-(this.h - SNAP_HEIGHT)/2) + 'px)' + 'scale(' + 1 + ',' + 1 + ')');    //TODO simplify this !!!!!
 
-        this._snapshot.getContext('2d').globalAlpha = 1;
+        this._snapshot.getContext('2d', { willReadFrequently: true }).globalAlpha = 1;
         this._snapshot.getContext('2d').clearRect(0, 0, SNAP_WIDTH + 1, SNAP_HEIGHT) + 1;
         this._snapshot.getContext('2d').drawImage(this._snapsaver, 0, 0, SNAP_WIDTH, SNAP_HEIGHT);
         this._snapshot.getContext('2d').beginPath();
@@ -144,7 +144,7 @@ class Snaphots extends Events.EventHandler {
         
         this._snapsaver.style.setProperty('transform', 'translate(' + 0 + 'px,' + 0 + 'px)' + 'scale(' + 1 + ',' + 1 + ')');    
         this._snapsaver.style.setProperty('display', 'none'); 
-        this._snapsaver.getContext('2d').clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);            
+        this._snapsaver.getContext('2d', { willReadFrequently: true }).clearRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);            
 
         document.getElementById("snaps-button").innerHTML = String(++this._count);
 
@@ -154,7 +154,7 @@ class Snaphots extends Events.EventHandler {
 
     public flushBuffer = () => {
         this.dispatchSendEvent();
-        (this._buffer.getContext('2d') as any).clearRect(0, 0, VIDEO_WIDTH * SNAP_COUNT, VIDEO_HEIGHT * SNAP_COUNT);
+        (this._buffer.getContext('2d', { willReadFrequently: true }) as any).clearRect(0, 0, VIDEO_WIDTH * SNAP_COUNT, VIDEO_HEIGHT * SNAP_COUNT);
         this._buffer.width = VIDEO_WIDTH * SNAP_COUNT;
         this._buffer.height = VIDEO_HEIGHT * SNAP_COUNT;
         document.getElementById("snaps-button").innerHTML = String(this._count = 0);

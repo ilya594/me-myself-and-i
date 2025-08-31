@@ -116,7 +116,7 @@ class Entry {
 
       await Snaphots.initialize();
             Snaphots.addEventListener(Events.SNAPSHOT_SEND_HOMIE, (data: any) => {
-              StreamProvider.sendSnaphot(data);
+              //StreamProvider.sendSnaphot(data);
               RestService.sendSnaphot(data);
       });
 

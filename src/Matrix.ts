@@ -1,12 +1,3 @@
-import MotionDetector from "../motion/MotionDetector";
-import * as Utils from "../utils/Utils";
-import * as Events from "../utils/Events"; 
-
-import { 
-    MATRIX_COOLDOWN_DELAY,
-    MATRIX_FONT_SIZE
-} from "../utils/Constants";
-import Controls from "./Controls";
 
 class Matrix {
 
@@ -36,10 +27,10 @@ class Matrix {
 
         document.onmousemove = () => this.hide();    
 
-        Controls.addEventListener(Events.CHANGE_TRACE_VISIBILITY, () => { 
-            this._enabled = !this._enabled; 
-            if (this._enabled) this.will();
-        });
+  //      Controls.addEventListener(Events.CHANGE_TRACE_VISIBILITY, () => { 
+ //           this._enabled = !this._enabled; 
+  //          if (this._enabled) this.will();
+ //       });
         
         return this;
     }
@@ -64,7 +55,7 @@ class Matrix {
 
     private will = () => {
         clearTimeout(this._timeout);
-        return (this._timeout = setTimeout(() => this.show(), MATRIX_COOLDOWN_DELAY));
+        return (this._timeout = setTimeout(() => this.show(), 10000));
     }
 
     private exists = () => {

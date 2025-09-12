@@ -1,5 +1,5 @@
 {
-  "name": "html-peer-viewer",
+  "name": "html-static-myself",
   "version": "1.0.0",
   "description": "",
   "main": "public/index.js",
@@ -12,7 +12,6 @@
   "author": "cankillah",
   "license": "ISC",
   "devDependencies": {
-    "@types/file-saver": "^2.0.7",
     "@types/systemjs": "^6.13.5",
     "@types/uuid": "^9.0.8",
     "encoding": "^0.1.13",
@@ -22,14 +21,7 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
-    "@tensorflow/tfjs": "^4.17.0",
-    "@tweenjs/tween.js": "^23.1.1",
     "axios": "^1.7.2",
-    "bcrypt-ts": "^5.0.2",
-    "expr-eval": "^2.0.2",
-    "fast-xml-parser": "^4.4.1",
-    "file-saver": "^2.0.5",
-    "peerjs": "^1.5.2",
     "systemjs": "^6.15.1",
     "uuid": "^9.0.1"
   }
